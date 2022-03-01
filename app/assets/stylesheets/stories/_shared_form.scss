@@ -1,0 +1,94 @@
+.story-tags {
+  a.tag-toggle {
+    @include rectangular-button("small", "outline", $light-font-color, $base-accent-color);
+  }
+
+  .dropdown-menu {
+    @include position(absolute, 100% null null 50%);
+    @include ui-nub(12px, top-center, #fff, rgba(0,0,0,0.2));
+    margin-left: -135px;
+    padding: 0.6em;
+    width: 270px;
+  }
+}
+
+.title-body {
+  textarea,
+  input[type="text"] {
+    transition: all 0.15s linear;
+    background: transparent;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    color: inherit;
+    display: inline-block;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    resize: none;
+
+    &::placeholder {
+      transition: all 0.15s linear;
+      color: $medium-font-color;
+    }
+
+    &:focus {
+      &::placeholder {
+        color: rgba(255,255,255, 0);
+        text-shadow: none;
+      }
+    }
+
+    &.story-location,
+    &.story-date {
+      font-size: 1em;
+      font-weight: 300;
+      padding: 0em;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+      width: 300px;
+
+      &::placeholder {
+        color: $light-font-color;
+      }
+
+      &:focus {
+        &::placeholder {
+          color: rgba(255,255,255, 0);
+          text-shadow: none;
+        }
+      }
+    }
+  }
+  .select2-container {
+    .select2-chosen {
+      color: #647184;
+      font-weight: 300;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+      &:focus {
+        &::placeholder {
+          color: rgba(255,255,255, 0);
+          text-shadow: none;
+        }
+      }
+    }
+    &::placeholder {
+      color: #647184;
+    }
+  }
+
+  .select2-container-disabled {
+    .select2-chosen {
+      color: $disabled-font-color;
+    }
+  }
+}
+
+.filepicker-wrapper {
+  .filepicker {
+    @include rectangular-button("small", "outline", $base-accent-color, $base-accent-color, '\f03e');
+    margin-top: 0.4em;
+    width: 100%;
+  }
+}

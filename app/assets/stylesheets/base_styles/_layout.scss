@@ -1,0 +1,82 @@
+html {
+  height: 100%;
+
+  body {
+    height: 100%;
+    min-height: 100%;
+    position: relative;
+  }
+}
+
+#app {
+  height: 100%;
+}
+
+.main-container {
+  height: 100%;
+}
+
+.content {
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 1px 0 10px 3px rgba(0,0,0, .08), 1px 0 0 rgb(240,240,240);
+  background: #fff;
+  min-height: 100%;
+  position: relative;
+  top: 0;
+  right: 0;
+  width: 100%;
+  z-index: 2;
+
+  // IE11 fix: min-height and flexbox dosn't work together in IE11
+  @media all and (-ms-high-contrast:none) {
+    display: block;
+  }
+}
+
+.content-wrapper {
+  @include outer-container();
+  width: 100%;
+  padding: 10em 1em 1em;
+}
+
+.pad-left {
+  padding-left: 1em;
+}
+
+.pad-right {
+  padding-right: 1em;
+}
+
+.pad-top {
+  padding-top: 1em;
+}
+
+.pad-bottom {
+  padding-bottom: 1em;
+}
+
+.container-small {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 700px;
+  width: 100%;
+}
+
+.display-flex {
+  display: flex;
+}
+.w100 {
+  width: 100%;
+}
+.g15 {
+  gap: 15px;
+}
+.input {
+  width: 100%;
+}
+.pb0 {
+  padding-bottom: 0px !important;
+}

@@ -1,0 +1,30 @@
+= form_tag admin_plan_create_path, class: 'formtastic' do
+  fieldset.inputs
+    ol
+      li.string.input.optional
+        = label_tag 'ID'
+        = text_field_tag :id
+      li.string.input.required
+        = label_tag 'Nickname'
+        = text_field_tag :nickname
+      li.string.input
+        = label_tag 'Currency'
+        = select_tag :currency, options_for_select(["usd"])
+      li.string.input.required
+        = label_tag 'Amount (in cents)'
+        = number_field_tag :amount
+      li.string.input
+        = label_tag 'Interval'
+        = select_tag :interval, options_for_select(['day', 'week', 'month', 'year'])
+      li.string.input
+        = label_tag 'Trial period days'
+        = number_field_tag :trial_period_days
+      li.string.input
+        = label_tag 'Active'
+        = check_box_tag :active
+  fieldset.actions
+    ol
+      li.action.input_action
+        = submit_tag 'Create'
+      li.cancel
+        = link_to 'Cancel', admin_plan_path

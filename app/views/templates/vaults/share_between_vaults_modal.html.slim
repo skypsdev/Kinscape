@@ -1,0 +1,33 @@
+modal.modal.vault-modal.vault-modal-flexible-height#share_between_vaults_modal(
+  ng-class='{ "active": modal.isOpen("share-between-vaults-modal") }'
+)
+  div.vault-modal-inner
+    a.close(
+      href
+      ng-click="modal.close()"
+      tooltip="#{t('vaults.share_between_vaults_modal.close')}"
+      tooltip-placement="top"
+    )
+    .modal-header
+      h3.text-light = t('vaults.share_between_vaults_modal.title')
+    .modal-section.vaults-list-section
+      vaults-slider(vaults='vaults' on-select='onVaultSelect')
+
+    .modal-section.vaults-list-section(
+      ng-if='boxes.length'
+    )
+      vault-boxes(
+        manageable='false'
+        selected-box='selectedBox'
+        boxes='boxes'
+        on-select-callback='onBoxSelect'
+        horizontally-scrollable='true'
+      )
+
+    .modal-actions
+      button(
+        ng-click='onShareToVault()'
+        ng-disabled='!selectedVault'
+        title=t('vaults.share_between_vaults_modal.share_title')
+      )
+        = t('vaults.share_between_vaults_modal.share')

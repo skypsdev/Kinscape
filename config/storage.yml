@@ -1,0 +1,32 @@
+development:
+#  service: Disk
+#  root: <%#= Rails.root.join("tmp/storage_fixtures") %>
+  service: S3
+  access_key_id: <%= ENV['S3_KEY'] %>
+  secret_access_key: <%= ENV['S3_SECRET'] %>
+  bucket: kinscape-development
+  region: us-west-2
+
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage_fixtures") %>
+#  service: S3
+#  access_key_id: <%#= ENV['S3_KEY'] %>
+#  secret_access_key: <%#= ENV['S3_SECRET'] %>
+#  bucket: kinscape-test
+#  region: us-west-2
+
+
+staging:
+  service: S3
+  access_key_id: <%= ENV['S3_KEY'] %>
+  secret_access_key: <%= ENV['S3_SECRET'] %>
+  bucket: kinscape-staging
+  region: us-west-2
+
+production:
+  service: S3
+  access_key_id: <%= ENV['S3_KEY'] %>
+  secret_access_key: <%= ENV['S3_SECRET'] %>
+  bucket: kinscape-production
+  region: us-west-2

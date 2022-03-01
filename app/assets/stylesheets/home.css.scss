@@ -1,0 +1,21 @@
+@charset 'utf-8';
+
+///////////////////////////////////////////////////////////////////////////////
+
+@import "bourbon";
+@import "normalize-rails/normalize";
+@import "base_styles/grid-settings";
+@import "glidejs/dist/css/glide.core.min";
+@import "glidejs/dist/css/glide.theme.min";
+
+///////////////////////////////////////////////////////////////////////////////
+
+// @import "helpers";
+@import "mixins/manifest";
+@import "base_styles/manifest";
+
+///////////////////////////////////////////////////////////////////////////////
+
+@import 'application/footer';
+@import 'homepage/header';
+@import "homepage/manifest";

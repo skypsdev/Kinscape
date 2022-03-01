@@ -1,0 +1,32 @@
+table#plans_list
+  thead
+    tr
+      th ID
+      th Name
+      th Amount
+      th Currency
+      th Interval
+      th Trial period days
+      th Active
+      th Actions
+  tbody
+    - plans.each do |plan|
+      tr
+        td
+          = plan.plan_id
+        td
+          = plan.nickname
+        td
+          = plan.amount/100.0
+        td
+          = plan.currency
+        td
+          = plan.interval
+        td
+          = plan.trial_period_days
+        td
+          = plan.active
+        td
+          = link_to 'Edit', admin_plan_edit_path(id: plan.plan_id)
+          | &nbsp;
+          = link_to 'Delete', admin_plan_destroy_path(id: plan.plan_id), method: :delete, data: {confirm: 'Are you sure to delete this plan?'}

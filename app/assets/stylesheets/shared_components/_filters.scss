@@ -1,0 +1,223 @@
+.page-filters {
+  @media (max-width: $large-screen) {
+    padding: 0 3%;
+
+    &.my-life-submenu-container {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  &.my-life-submenu-container.kinships-submenu {
+    text-align: left;
+  }
+
+  .flexible-filter-container {
+    margin-left: 5px;
+    @media (max-width: $large-screen) {
+      @include position(absolute, 100% 0px null 0px);
+      transition: all 0.15s linear;
+      opacity: 0;
+      float: none;
+      visibility: hidden;
+
+      &.open {
+        margin-top: 0.5em;
+        opacity: 1;
+        visibility: visible;
+      }
+
+      ul.filters {
+        background: rgba(255,255,255,0.9);
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        display: block;
+        height: auto;
+        padding: 1em 3% 0;
+      }
+
+      li.filter {
+        display: block;
+        margin-bottom: 1em;
+        width: 100%;
+      }
+
+      li.label {
+        display: none;
+      }
+    }
+  }
+
+  ul.filters {
+    display: table;
+    height: 100%;
+  }
+
+  ul.filters-toggle {
+    display: none;
+
+    @media (max-width: $large-screen) {
+      display: table;
+      height: 100%;
+      margin-right: 5px;
+    }
+
+    a.toggle {
+      &:after {
+        content: '\f107';
+        display: inline-block;
+        font-family: $icon-font;
+        font-style: normal;
+        line-height: normal;
+        margin-left: 0.5em;
+        margin-right: -0.2em;
+        text-align: center;
+      }
+
+      &.filters-open {
+        border-color: $base-accent-color;
+        color: $base-accent-color;
+
+        &:after {
+          content: '\f106';
+        }
+      }
+    }
+  }
+
+  li.filter {
+    &:not(.label) + li.filter {
+      padding-left: 0.8em;
+
+      @media (max-width: $large-screen) {
+        padding: 0;
+      }
+    }
+
+    .select-wrapper {
+      display: inline-block;
+      position: relative;
+      max-width: 135px;
+
+      @media (max-width: $large-screen) {
+        display: block;
+      }
+
+      &:after {
+        @include position(absolute, 50% 0.8em null null);
+        color: $light-font-color;
+        content: '\f107';
+        display: inline-block;
+        font-family: $icon-font;
+        font-weight: 300;
+        height: 20px;
+        margin-top: -10px;
+        pointer-events: none;
+      }
+    }
+
+    a, select {
+      transition: all 0.15s linear;
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid $base-border-color;
+      color: $light-font-color;
+      display: block;
+
+      font-size: 0.9em;
+      margin: 0;
+      padding: 0.2em 1em;
+      width: 100%;
+
+      &:hover {
+        border-color: $base-accent-color;
+        color: $base-accent-color;
+      }
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      cursor: pointer;
+      font-weight: 300;
+      max-width: 150px;
+      outline: none;
+      padding-right: 2.2em;
+
+      @media (max-width: $large-screen) {
+        max-width: 100%;
+      }
+    }
+    select::-ms-expand {
+      display: none;
+      visibility: hidden;
+    }
+
+    label {
+      cursor: pointer;
+      display: inline-block;
+      font-weight: 300;
+      margin: 0 0.6em 0 0;
+    }
+  }
+
+  .search-wrapper {
+    @include clearfix;
+    position: relative;
+
+    input.search {
+      transition: all 0.15s linear;
+      border-radius: 20px 0 0 20px;
+      border-right: none;
+      float: left;
+      font-size: 0.8em;
+      font-weight: 300;
+      height: 32px;
+      margin: 0;
+      padding: 0.6em 1em;
+      width: 180px;
+
+      @media (max-width: $extra-large-screen) {
+        width: 75px;
+      }
+    }
+
+    button {
+      background-color: #fff;
+      border-color: $base-border-color;
+      border-radius: 0 20px 20px 0;
+      color: $light-font-color;
+      float: left;
+      font-size: 0.9em;
+      height: 32px;
+      line-height: 28px;
+      padding: 0 0.8em 0 1.1em;
+      text-align: center;
+      width: auto;
+    }
+
+    input.search:hover + button {
+      border-color: darken($base-border-color, 10);
+    }
+
+    input.search:focus {
+      width: 240px;
+
+      @media (max-width: $extra-large-screen) {
+        width: 75px;
+      }
+
+      & + button {
+        background-color: $base-accent-color;
+        border-color: $base-accent-color;
+        color: #fff;
+
+        &:hover {
+          background: lighten($base-accent-color, 5%);
+          border-color: darken($base-accent-color, 10%);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+html {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+  overflow-y: scroll; // always show the vertical scrollbar so that content doesn't jump
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  text-size-adjust: 100%; // iOS on orientation change
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-style: normal;
+  backface-visibility: hidden;
+}
+
+.w {
+  &--100 {
+    width: 100%;
+  }
+}
+
+.flip-h {
+  transform: scaleX(-1);
+}

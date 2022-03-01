@@ -1,0 +1,13 @@
+@keyframes flash-fade-out {
+  0% {
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(0.94);
+    opacity: 0;
+    visibility: hidden;
+  }
+}

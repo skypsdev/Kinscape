@@ -1,0 +1,142 @@
+.vault-modal {
+  $horizontal-padding-small-screen: 15px;
+
+  @media (max-width: $medium-screen) {
+    z-index: 101; // > than Help widget z-index in order to prevent overlapping modal action button
+  }
+
+  .vertical-center {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vertical-center .vc-cell,
+  .modal-container,
+  .modal-content,
+  .modal-inner-wrapper,
+  .vault-modal-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    width: 100%;
+  }
+
+  .modal-container {
+    @media (max-width: $medium-screen) {
+      padding: 0;
+    }
+  }
+
+  .modal-content {
+    min-height: 100%;
+
+    @media (max-width: $medium-screen) {
+      width: 100%;
+    }
+  }
+
+  .vault-modal-inner {
+
+    > *:not(.vault-content-section) {
+      flex: none;
+    }
+  }
+
+  .modal-header {
+    h3 {
+      @media (max-width: $medium-screen) {
+        font-size: 1.4em;
+      }
+    }
+  }
+
+  .modal-section {
+    border-bottom: 1px solid $base-border-color;
+    padding: 25px 45px;
+
+    @media (max-width: $medium-screen) {
+      padding: 10px $horizontal-padding-small-screen;
+    }
+  }
+
+  .modal-sub-header {
+    border-bottom: 1px solid $base-border-color;
+    padding: 10px 45px;
+
+    @media (max-width: $medium-screen) {
+      padding: 5px $horizontal-padding-small-screen;
+    }
+  }
+
+  .vaults-list-section {
+    padding-left: 15px;
+    padding-right: 15px;
+
+    @media (max-width: $medium-screen) {
+      padding: 5px $horizontal-padding-small-screen;
+    }
+  }
+
+  .vault-content-section {
+    flex: 1 1 auto;
+    height: 0;
+    min-height: 75px;
+    overflow-y: scroll;
+    padding-right: 30px; //smaller by scroll width;
+  }
+
+ .modal-actions {
+    @include clearfix;
+    padding: 1em 2em;
+
+    @media (max-width: $medium-screen) {
+      padding: 10px $horizontal-padding-small-screen;
+    }
+
+    button {
+      float: right;
+      width: auto;
+    }
+  }
+
+  .attachment-blocks {
+    .attachment-item {
+      position: relative;
+      padding-bottom: 50px;
+
+      @media (min-width: $extra-large-screen-up) {
+        width: calc(12.5% - 20px);
+      }
+
+      @media (min-width: $huge-screen-up) {
+        width: calc(10% - 20px);
+      }
+
+      @media (max-width: $large-screen) {
+        width: calc(25% - 20px);
+      }
+
+      @media (max-width: $small-screen) {
+        width: calc(50% - 20px);
+      }
+    }
+    .file-name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  }
+}
+
+.modal.vault-modal-flexible-height {
+  .vertical-center {
+    height: auto;
+  }
+
+  li.current a.cover {
+    &::after {
+      display: none;
+    }
+  }
+}

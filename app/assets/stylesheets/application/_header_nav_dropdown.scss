@@ -1,0 +1,107 @@
+.header-nav-dropdown.dropdown {
+  &.open {
+    a.dropdown-toggle {
+      color: $base-accent-color;
+    }
+  }
+
+  a.dropdown-toggle:after {
+    margin-left: 0.4em;
+  }
+
+  > ul {
+    @include position(absolute, 78% null null 50%);
+    @include ui-nub(12px, top-center, #fff, rgba(0,0,0,0.2));
+    margin-left: -110px;
+    width: 220px;
+
+    &.current-user-menu {
+      margin-left: -194px;
+      @include ui-nub(12px, top-right, #fff, rgba(0,0,0,0.2));
+      top: 125%;
+    }
+
+    &.families {
+      @include ui-nub(12px, top-left, $white, $shadow-color);
+      margin-left: -20px;
+      left: 20px;
+      top: 100%;
+    }
+
+    &.vaults {
+      @include ui-nub(12px, top-left, $white, $shadow-color);
+      margin-left: 0;
+      top: 100%;
+      left: 0;
+    }
+
+    li {
+      overflow-wrap: break-word;
+      border-radius: 0px;
+      display: block;
+      vertical-align: unset;
+      padding-left: 0;
+
+      a {
+        line-height: normal;
+      }
+    }
+
+    .email {
+      font-size: 0.7em;
+    }
+  }
+
+  li:not(.new) {
+    a {
+      transition: all 0.15s linear;
+      border-bottom: 1px solid $base-border-color;
+      color: $light-font-color;
+      display: block;
+      font-weight: 300;
+      margin: 0;
+      padding: 0.8em 1em;
+      position: relative;
+
+      &:hover {
+        background-color: rgb(245,245,245);
+        color: $base-accent-color;
+      }
+
+      &.active {
+        color: $base-accent-color;
+      }
+    }
+
+    &:first-child a {
+      border-radius: 3px 3px 0 0;
+    }
+  }
+
+  li.new {
+    padding: 0.8em;
+
+    a.create-family {
+      @include rectangular-button("small", "outline", $light-font-color, $base-accent-color);
+      border-color: $base-border-color;
+      width: 100%;
+    }
+  }
+
+  .current-user-nav {
+    color: $light-font-color;
+
+    &:hover {
+      color: $base-accent-color;
+    }
+
+    &:after { display: none; }
+  }
+}
+
+.user-menu-toggle {
+  font-size: 1.3em;
+  margin-left: 10px;
+  top: 1px;
+  position: relative;
+}

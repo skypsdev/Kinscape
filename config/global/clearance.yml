@@ -1,0 +1,3 @@
+:default:
+  cookie_name: remember_token_<%= Rails.env %>
+  mailer_sender: 'Kinscape <welcome@kinscape.com>'

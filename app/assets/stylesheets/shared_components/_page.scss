@@ -1,0 +1,329 @@
+.story-container article.story-title {
+  padding-top: 4em;
+}
+
+.filter-container,
+.page-container,
+.stories-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 139px 3% 0;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+
+  // IE11 fix: min-height and flexbox dosn't work together in IE11
+  @media all and (-ms-high-contrast:none) {
+    display: block;
+  }
+}
+
+section.page-blocks-holder {
+  padding: 3% 0 1em;
+
+  .message-container {
+    padding-top: 8em;
+  }
+
+  &.family-stories {
+    padding: 0 0 1em;
+  }
+}
+
+.blocks, ul.stories {
+  @include clearfix;
+
+  @media (max-width: $small-screen) {
+    overflow-x: hidden;
+  }
+
+  .block, li.story {
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.08);
+    float: left;
+    margin: 1%;
+    padding-top: percentage(1/4) - 2;
+    position: relative;
+    width: percentage(1/4) - 2;
+
+    &:hover {
+      .meta {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      a.edit-block,
+      a.open-block {
+        span {
+          transform: translateX(0%);
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      a.edit-block {
+        width: 70px;
+      }
+
+      a.open-block {
+        width: 78px;
+      }
+    }
+
+    @media (max-width: $extra-large-screen) {
+      padding-top: percentage(1/3) - 2;
+      width: percentage(1/3) - 2;
+    }
+
+    @media (max-width: $large-screen) {
+      padding-top: percentage(1/2) - 2;
+      width: percentage(1/2) - 2;
+      margin-bottom: 2%;
+    }
+
+    @media (max-width: $small-screen) {
+      padding-top: percentage(1) - 2;
+      width: percentage(1) - 2;
+      margin: 1%;
+      margin-bottom: 5%;
+    }
+
+    .cover {
+      @include position(absolute, 0px 0px 0px 0px);
+      display: block;
+      z-index: 1;
+
+      &:before {
+        @include position(absolute, 0px 0px 60px 0px);
+        content: '';
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+        z-index: 3;
+      }
+    }
+
+    .cover-bg {
+      @include position(absolute, 0px 0px 60px 0px);
+      background-color: rgb(250, 250, 250);
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      z-index: 1;
+    }
+
+    .meta {
+      transition: all 0.15s linear;
+      background-color: rgba(0,0,0,0.4);
+      color: #fff;
+      opacity: 0;
+      padding: 0 1em;
+      text-align: center;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      visibility: hidden;
+
+      span {
+        display: inline-block;
+        width: 100%;
+      }
+
+      span {
+        font-weight: 300;
+        font-size: 1.2em;
+        letter-spacing: 1px;
+
+        &.fancy {
+          font-style: italic;
+          font-size: 1em;
+          letter-spacing: 1px;
+          margin-bottom: 0.2em;
+        }
+
+        &.small {
+          font-size: 0.8em;
+          letter-spacing: 1px;
+          margin-bottom: 0.1em;
+        }
+      }
+    }
+
+    .title {
+      @include position(absolute, null 0px 0px 0px);
+      background-color: rgb(255, 255, 255) !important;
+      border: 1px solid rgb(180,180,180) !important;
+      border-top: none !important;
+      color: $base-font-color !important;
+      height: 60px !important;
+      padding: 0% 3% !important;
+      z-index: 2 !important;
+
+      .alignment-guide {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        width: 0px;
+      }
+
+      .author {
+        @include avatar(40px);
+        @include position(absolute, 50% null null null);
+        transition: all 0.2s linear;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+        margin-top: -20px;
+        z-index: 1;
+      }
+
+      .title-wrapper {
+        transition: all 0.15s linear;
+        display: inline-block;
+        max-width: 85%;
+        padding-left: 3em;
+        position: relative;
+        vertical-align: middle;
+        z-index: 2;
+      }
+
+      h2 {
+        transition: all 0.15s linear;
+        font-size: 1.2em;
+        font-weight: 300;
+        letter-spacing: 1px;
+        line-height: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .description,
+      .location {
+        transition: all 0.15s linear;
+        color: $light-font-color;
+        font-size: 0.8em;
+        letter-spacing: 0.6px;
+        line-height: normal;
+        max-height: 33px;
+        overflow: hidden;
+      }
+
+      .story-comments-count {
+        color: $light-font-color;
+        position: relative;
+        font-size: 2.5em;
+        text-align: center;
+        float: right;
+        line-height: 60px;
+        span.count {
+          font-size: 0.4em;
+          width: 100%;
+          left: 0;
+          top: 0em;
+          position: absolute;
+          text-align: center;
+          color: $medium-font-color;
+        }
+      }
+    }
+
+    a.edit-block {
+      @include position(absolute, 4em 1em null null);
+      @include size(32px);
+      transition: all 0.15s linear;
+      border-radius: 20px;
+      box-shadow: 0 0 0 1px $purple;
+      background: transparent;
+      color: $purple;
+      background: #fff;
+      padding: 0 0.6em;
+      z-index: 2;
+
+      span {
+        transition: opacity 0.3s linear;
+        @include position(absolute, 0.2em null null 1.8em);
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      &:before {
+        content: '\f040';
+        display: inline-block;
+        font-family: $icon-font;
+        line-height: 32px;
+        margin-right: 0.3em;
+      }
+
+      &:hover {
+        background: $base-accent-color;
+        color: #fff;
+        border-color: #4527fd;
+      }
+    }
+
+    a.open-block {
+      @include position(absolute, 1em 1em null null);
+      @include size(32px);
+      transition: all 0.15s linear;
+      border-radius: 20px;
+      box-shadow: 0 0 0 1px $purple;
+      background: transparent;
+      color: $purple;
+      background: #fff;
+      padding: 0 0.6em;
+      z-index: 2;
+
+      span {
+        transition: opacity 0.3s linear;
+        @include position(absolute, 0.2em null null 1.8em);
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      &::before {
+        content: "\f06e";
+        display: inline-block;
+        font-family: $icon-font;
+        line-height: 32px;
+        margin-right: 0.3em;
+      }
+
+      &:hover {
+        background: $base-accent-color;
+        color: #fff;
+        border-color: #4527fd;
+      }
+    }
+
+    a.comment-block {
+      @include position(absolute, null 1em 13px null);
+      @include size(32px);
+      transition: all 0.15s linear;
+      border-radius: 20px;
+      box-shadow: 0 0 0 1px $purple;
+      background: transparent;
+      color: $purple;
+      background: rgba(255, 255, 255, 1);
+      padding: 0 0.6em;
+      z-index: 2;
+
+      span {
+        transition: opacity 0.3s linear;
+        @include position(absolute, 0.2em null null 1.8em);
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      &:before {
+        content: '\f0e6';
+        display: inline-block;
+        font-family: $icon-font;
+        line-height: 32px;
+        margin-right: 0.3em;
+      }
+
+      &:hover {
+        background: $base-accent-color;
+        color: #fff;
+        border-color: #4527fd;
+      }
+    }
+  }
+}

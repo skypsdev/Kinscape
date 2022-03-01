@@ -1,0 +1,113 @@
+.btn,
+button,
+input[type="submit"],
+label {
+  cursor: pointer;
+
+  &.disabled,
+  &[disabled] {
+    cursor: auto !important;
+    color: $gray !important;
+    border-color: $base-border-color !important;
+    background-color: $light-gray !important;
+  }
+}
+
+@media (max-width: $medium-screen) {
+  .btn-text {
+    display: none;
+  }
+}
+
+.btn-rounded {
+  transition: all 0.15s linear;
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid $base-border-color;
+  color: $light-font-color;
+  display: block;
+  font-size: 1em;
+  margin: 0;
+  padding: 0.2em 1em;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover, &.selected {
+    border-color: $base-accent-color;
+    color: $base-accent-color;
+  }
+
+  .icon {
+    line-height: inherit;
+  }
+}
+
+.btn-default {
+  @include rectangular-button("large", "outline", $light-font-color, $red);
+}
+
+.btn-primary {
+  @include rectangular-button("large", "solid");
+}
+
+.btn-secondary {
+  @include rectangular-button("small", "outline", $light-font-color);
+  border-radius: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  .fa {
+    position: relative;
+    top: -2px;
+    font-size: 12px;
+  }
+}
+
+.btn-add {
+  @include add-button;
+}
+
+.btn-small {
+  padding-top: .4em;
+  padding-bottom: .4em;
+
+  @media (max-width: $medium-screen) {
+    .btn-text {
+      display: none;
+    }
+
+    i {
+      margin: 0 2px;
+    }
+  }
+}
+
+.btn-remove {
+  @include add-button;
+
+  transform: rotate(45deg);
+
+  &:hover {
+    background: $red;
+    border-color: $red;
+
+    &:before, &:after {
+      background-color: #fff;
+    }
+  }
+}
+.add-family {
+  background: transparent;
+  color: #8B78FE !important;
+  background: #fff !important;
+  border-radius: 20px !important;
+  border: 1px solid #8B78FE !important;
+  padding: 0em 0.7em 0 0.2em !important;
+  line-height: 32px !important;
+
+  &:hover {
+    background: #8B78FE !important;
+    color: #FFF !important;
+    border-color: #4527fd !important;
+  }
+}

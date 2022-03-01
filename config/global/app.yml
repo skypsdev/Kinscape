@@ -1,0 +1,4 @@
+default:
+  external_links:
+    # help: 'http://help.kinscape.com'
+    help: 'http://intercom.help/kinscape'

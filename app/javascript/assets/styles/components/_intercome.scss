@@ -1,0 +1,35 @@
+.intercom-widget {
+  transition: all 0.15s linear;
+  border-radius: 100%;
+  border: 1px solid #8B78FE;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  display: inline-block;
+  padding: .07em .5em;
+  height: 60px;
+  width: 60px;
+  position: fixed;
+  bottom: 1.1em;
+  right: 1.1em;
+  z-index: 100;
+  cursor: pointer;
+  background: #8B78FE;
+  color: white;
+  &:hover {
+    background: rgba(139, 120, 254, 0.9);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    color: #fff;
+  }
+  .word {
+    padding: 15px 0px 0px 3px;
+    font-family: 'Lato';
+    font-weight: 700;
+  }
+}
+
+@import '~vuetify/src/styles/settings/_variables';
+
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .intercom-widget {
+    bottom: 60px;
+  }
+}

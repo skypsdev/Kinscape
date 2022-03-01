@@ -1,0 +1,27 @@
+@mixin block-heading {
+  position: relative;
+  margin: 0 0 1.2em 0;
+  padding-bottom: 0.8em;
+  font-weight: 300;
+  font-size: 2em;
+  letter-spacing: 1px;
+  line-height: 1.5em;
+  text-align: center;
+  text-transform: capitalize;
+  color: $base-font-color;
+
+  @media (max-width: $medium-screen) {
+    font-size: 1.5em;
+    letter-spacing: auto;
+  }
+
+  &:after {
+    @include position(absolute, null -1em 0em -1em);
+    background-image: linear-gradient(to right, rgba($base-border-color, 0),
+                                                    $base-border-color,
+                                                    rgba($base-border-color, 0));
+    content: '';
+    display: block;
+    height: 1px;
+  }
+}

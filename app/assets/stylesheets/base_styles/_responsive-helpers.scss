@@ -1,0 +1,23 @@
+.hidden-large {
+  @media (max-width: $large-screen) {
+    display: none !important;
+  }
+}
+
+.hidden-medium {
+  @media (max-width: $medium-screen) {
+    display: none !important;
+  }
+}
+
+.hidden-small {
+  @media (max-width: $small-screen) {
+    display: none !important;
+  }
+}
+
+.hidden-extra-small {
+  @media (max-width: $extra-small-screen-px) {
+    display: none !important;
+  }
+}

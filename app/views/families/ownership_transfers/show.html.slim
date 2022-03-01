@@ -1,0 +1,11 @@
+.pages-wrapper
+  h2.form-title = t('transfer.show.title')
+  .form-subtitle = t('transfer.show.subtitle')
+  = simple_form_for :transfer, url: families_ownership_transfer_path(params[:id]), method: :put do |f|
+    p = t('transfer.show.message', old_admin: @ownership_transfer.old_admin.name, family_name: @ownership_transfer.family.name)
+    p.h6 = @ownership_transfer.family.name
+
+    fieldset
+      .boolean-group
+        = f.submit t('transfer.show.accept')
+        = link_to t('transfer.show.decline'), decline_invitation_families_ownership_transfer_path, class: 'btn-default form-cancel'

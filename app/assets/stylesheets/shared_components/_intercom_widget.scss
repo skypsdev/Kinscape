@@ -1,0 +1,21 @@
+.intercom-widget {
+  @include circle-button($base-accent-color, $base-accent-color);
+  height: 60px;
+  width: 60px;
+  position: fixed;
+  bottom: 1.1em;
+  right: 1.1em;
+  z-index: 100;
+  cursor: pointer;
+  background-color: rgba(255,255,255,0.8);
+
+  .word {
+    padding: 15px 0px 0px 3px;
+  }
+}
+
+@media print {
+  .intercom-widget {
+    display: none;
+  }
+}

@@ -1,0 +1,40 @@
+$shadow: rgba(0, 0, 0, 0.16);
+
+.details-btn {
+  position: relative;
+  opacity: 1;
+  padding: 16px 22px 19px 22px !important;
+  width: 360px;
+  border-radius: 5px;
+  background: $color-secondary-lightest;
+  padding: 0;
+  filter: drop-shadow(0 10px 20px $shadow);
+
+
+  font-family: Lato;
+  font-size: 13px;
+  line-height: 16px;
+  /* identical to box height */
+
+  /* Tertiary - Title */
+
+  color: $color-tertiary;
+
+  &__tooltip {
+    z-index: 8;
+    padding: 0;
+    background: unset;
+    opacity: 1;
+    padding-top: 20px;
+  }
+
+  &::before {
+    @include pseudo($width: 0, $height: 0);
+    top: -9.5px;
+    left: 48%;
+
+    border-style: solid;
+    border-width: 0 5.5px 9.5px 5.5px;
+    border-color: transparent transparent $color-secondary-lightest transparent;
+  }
+}

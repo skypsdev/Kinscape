@@ -1,0 +1,3 @@
+:default:
+  project_key: "<%= ENV['AIRBRAKE_PROJECT_KEY'] %>"
+  project_id: "<%= ENV['AIRBRAKE_PROJECT_ID'] %>"

@@ -1,0 +1,132 @@
+.tour-tip {
+  display: none;
+  position: absolute;
+  background: rgb(255,255,255);
+  box-shadow: 0 3px 60px 0 rgba(0, 0, 0, 0.35);
+  color: #FFF;
+  z-index: 101;
+  top: 0;
+  left: 2.5%;
+  font-family: inherit;
+  max-width: 400px;
+  border-radius: 3px;
+}
+
+.tour-tip p {
+  color: $base-font-color;
+  font-size: .9em;
+  line-height: 1.5em;
+  margin: 0 0 1.125em;
+}
+
+.tour-tip button,
+.tour-tip .button {
+  float:right;
+  @include rectangular-button("small", "outline", $base-accent-color, $base-accent-color)
+}
+
+.tour-tip button small,
+.tour-tip .button small {
+  padding-top: .625em;
+  padding-bottom: .5625em;
+  -webkit-appearance: none;
+}
+
+.tour-tip .tour-arrow {
+  display: block;
+  position: absolute;
+  left: 22px;
+  width: 0;
+  height: 0;
+  border: inset 14px;
+  border-style: solid;
+}
+
+.tour-tip .tour-arrow.tt-top {
+  bottom: -28px;
+  border-color: #FFFFFF transparent transparent !important;
+}
+
+.tour-tip .tour-arrow.tt-center-top {
+  left: 50%;
+  bottom: -28px;
+  border-color: #FFFFFF transparent transparent !important;
+}
+
+.tour-tip .tour-arrow.tt-center {
+  left: 50%;
+  bottom: -28px;
+  border-color: #FFFFFF transparent transparent !important;
+}
+
+.tour-tip .tour-arrow.tt-bottom {
+  top: -28px;
+  border-color: transparent transparent #FFFFFF !important;
+}
+
+.tour-tip .tour-arrow.tt-right {
+  left: -28px;
+  top: 28px;
+  border-color: transparent #FFFFFF transparent transparent !important;
+}
+
+.tour-tip .tour-arrow.tt-left {
+  left: 100%;
+  top: 28px;
+  border-color: transparent transparent transparent #FFFFFF !important;
+}
+
+.tour-tip .tour-content-wrapper {
+  padding: 1.125em 1.25em 1.5em;
+}
+
+.tour-tip .tour-content-wrapper .button {
+  margin-bottom: 0 !important;
+}
+
+.tour-tip .tour-close-tip {
+  float:left;
+  font-size: 0.75em;
+  color: $light-font-color !important;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 0.5em;
+}
+
+.tour-tip .tour-close-tip:hover,
+.tour-tip .tour-close-tip:focus {
+  color: #eee !important;
+}
+
+.tour-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.tour-element-active {
+  z-index: 120 !important;
+  position: relative;
+  background: #fff;
+}
+
+p.tour-progress {
+  float: right;
+  color: $light-font-color;
+  padding-right: 2em;
+  padding-top: 0.5em;
+}
+
+a.tour-prev-step {
+  float: left;
+  font-size: 0.75em;
+  color: #8c98a8 !important;
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 0.5em;
+  margin-left: 1em;
+}

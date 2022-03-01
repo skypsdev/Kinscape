@@ -1,0 +1,21 @@
+.content-wrapper
+  .start-page-wrapper
+    ul
+      li
+        = link_to 'Start a Story', stories_path
+      li
+        = link_to 'Family Profile', families_path
+      li
+        = link_to 'My Profile', mylife_profile_path
+      li
+        = link_to 'Vault Storage', vaults_path
+      li
+        = link_to 'Upload from Facebook', vault_path(current_user.private_vault, source: 'facebook')
+      li
+        = link_to 'Upload from Instagram', vault_path(current_user.private_vault, source: 'instagram')
+      li
+        = link_to 'Upload from Device', vault_path(current_user.private_vault, source: 'device')
+      li
+        = link_to 'Upload from Dropbox', vault_path(current_user.private_vault, source: 'dropbox')
+      li
+        = link_to 'Help', Global.app.external_links.help, target: '_blank'

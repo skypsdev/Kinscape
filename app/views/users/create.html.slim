@@ -1,0 +1,7 @@
+- if Rails.env.production?
+  = render 'conversion_tracking_script'
+
+.content-wrapper
+  #clearance.sign-in
+    h2 = t("sessions.new.title")
+    = render partial: '/sessions/form'

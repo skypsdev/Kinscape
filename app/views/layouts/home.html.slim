@@ -1,0 +1,27 @@
+doctype html
+html ng-app="kinscape"
+  head
+    meta charset="utf-8"
+    meta name="ROBOTS" content="NOODP"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    meta http-equiv="expires" content="0"
+    link rel="apple-touch-icon" href="#{image_path('touch-icons/touch-icon-80x80.png')}"
+    link rel="apple-touch-icon" sizes="152x152" href="#{image_path('touch-icons/touch-icon-152x152.png')}"
+    link rel="apple-touch-icon" sizes="180x180" href="#{image_path('touch-icons/touch-icon-180x180.png')}"
+    link rel="apple-touch-icon" sizes="167x167" href="#{image_path('touch-icons/touch-icon-167x167.png')}"
+    title = page_title
+    = stylesheet_link_tag :home, media: 'all'
+    = csrf_meta_tags
+    = render 'analytics'
+  body
+    = render 'gtm_body_tag'
+    .content
+      = render 'home_header'
+      - flash.each do |key, value|
+        div class="alert alert-#{key}"
+          = value
+      = yield
+      = render 'footer'
+
+    = javascript_include_tag :home, async: true, defer: "defer"
+    = stylesheet_link_tag :fonts, media: 'kinscape', onload: "if(media!='all')media='all'"

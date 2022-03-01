@@ -1,0 +1,132 @@
+$gray: #e6e6e6;
+$gray2: #868686;
+$gray3: rgba(231, 231, 231, 0.4);
+$gray4: rgba(231, 231, 231, 0.7);
+
+
+.move-dialog {
+  &__content {
+    max-width: 842px;
+  }
+  &__items {
+    background: $color-lightest_purple;
+    border-radius: 10px;
+    padding: 26px 24px;
+  }
+
+  &__move-btn {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* White */
+
+    color: #ffffff;
+  }
+  &__header {
+    padding: 36px 0 37px 0;
+    h3 {
+      /* Enriqueta/Subtitle - Semibold 20 px */
+
+      font-family: Enriqueta;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 27px;
+      /* identical to box height */
+
+      /* Tertiary - Title */
+
+      color: $color-tertiary;
+    }
+
+    h4 {
+      /* Lato/Body Regular - 18 px */
+      margin-top: 9px;
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 26px;
+      /* identical to box height, or 144% */
+
+      /* Tertiary - Title */
+
+      color: $color-tertiary;
+    }
+  }
+}
+
+.copy-items {
+  &__header {
+    background: $gray;
+    padding: 12.9px 34px 11.1px;
+
+    button {
+      margin-right: 24px;
+    }
+    span {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 24px;
+      color: $color-tertiary;
+    }
+  }
+
+  &__list {
+    overflow-y: auto;
+    list-style-type: none;
+    padding-left: 0 !important;
+    padding-right: 10px;
+    margin-top: 8px;
+    max-height: 224px;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px $color-light-grey;
+      border-radius: 3px;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      box-shadow: inset 0 0 6px $gray2;
+    }
+  }
+}
+
+.copy-list__item {
+  background: $gray3;
+  padding: 12px 22px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  @include transition();
+
+  &:hover {
+    background: $gray4;
+  }
+
+  span {
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    /* or 100% */
+
+    /* Tertiary - Title */
+
+    color: $color-tertiary;
+
+    margin-left: 18.34px;
+  }
+}

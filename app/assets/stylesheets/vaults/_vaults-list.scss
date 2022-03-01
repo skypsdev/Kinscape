@@ -1,0 +1,73 @@
+.vaults-list {
+  $item-title-height: 40px;
+  $item-padding: 5px;
+  $border-color: #e5e5e5;
+  $border-bottom-width: 4px;
+  $arrow-size: 16px;
+  $mobile-cover-width: 50px;
+
+  .vault-list-item {
+    @include block-size(210px, 10px);
+    margin-left: 0;
+
+    @media (max-width: $medium-screen) {
+      padding-top: 50px;
+    }
+
+    @media (max-width: $small-screen) {
+      padding-top: 50px;
+    }
+
+    &.current {
+      .cover {
+        border-color: $doc-color;
+        box-shadow: 0 $border-bottom-width 0 0 $doc-color;
+
+        &::after {
+          @include position(absolute, 100% null null 50%);
+          @include triangle(down, $arrow-size, $arrow-size, $doc-color);
+          content: '';
+          margin-left: -$arrow-size / 2;
+          margin-top: $border-bottom-width + 1px; //total item border width
+        }
+      }
+    }
+
+    .cover {
+      border: 3px solid $border-color;
+
+      &:before {
+        display: none;
+      }
+    }
+
+    .cover-bg {
+      @include position(absolute, $item-padding $item-padding ($item-title-height + $item-padding) $item-padding);
+
+      @media (max-width: $medium-screen) {
+        right: auto;
+        bottom: $item-padding;
+        width: $mobile-cover-width;
+        padding-top: 0;
+      }
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      height: $item-title-height;
+      border: solid $border-color;
+      border-width: 1px 0 0 0;
+
+      @media (max-width: $medium-screen) {
+        height: 100%;
+        left: $mobile-cover-width + $item-padding * 2;
+        border-width: 0 0 0 1px;
+      }
+    }
+
+    .title-text {
+      @include ellipsis;
+    }
+  }
+}

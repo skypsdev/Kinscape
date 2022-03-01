@@ -1,0 +1,4 @@
+- if signed_in?
+  .intercom-widget#Intercom
+    .word= t("application.intercom_widget.help")
+  = raw(intercom_script_tag_for_current_user)

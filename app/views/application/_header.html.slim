@@ -1,0 +1,24 @@
+tour(step="currentStep")
+  header class="global-header #{'is-homepage' unless signed_in?}" headroom="" tolerance="5" offset="20"
+    div class="header-top"
+      - unless params[:controller] == 'pages' && params[:id] == 'pricing'
+        = link_to root_path, title: 'Kinscape', class: 'logo' do
+          = image_tag('logo-large.svg')
+
+        - unless signed_in?
+          .brand-text
+            = t("home.brand_text").html_safe
+
+      - if signed_in?
+        = render "header_menu"
+      / - elsif params[:controller] == "sessions"
+      /   = link_to sign_up_path, class: 'sign-in-button' do
+      /     = t('sessions.form.sign_up')
+      /     = image_tag 'homepage/arrow.svg', class: 'icon'
+      - elsif params[:controller] == "families/invitations" && params[:action] == "show"
+      / -else
+      /   = link_to sign_in_path, class: 'sign-in-button' do
+      /     = t('sessions.new.title')
+      /     = image_tag 'homepage/arrow.svg', class: 'icon'
+
+      = yield :submenu

@@ -1,0 +1,5 @@
+@mixin block-size ($width, $h-margin) {
+  padding-top: $width - $h-margin * 2;
+  width: $width - $h-margin * 2;
+  margin: $h-margin;
+}

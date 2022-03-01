@@ -1,0 +1,2 @@
+:default:
+  family_id: "<%= ENV['ADMIN_FAMILY_ID'] %>"

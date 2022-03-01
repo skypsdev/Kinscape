@@ -1,0 +1,120 @@
+@function responsiveSize($size, $total) {
+  @return calc(#{$size}vw * 100 / #{$total});
+}
+
+@function aspectRatio($width, $height) {
+  @return $width / $height * 100%;
+}
+
+@function strip-unit($num) {
+  @return $num / ($num * 0 + 1);
+}
+
+@function -zf-to-rem($value, $base: $rem-base) {
+  @if (unit($value) != 'rem') {
+    $value: strip-unit($value) / strip-unit($base) * 1rem;
+  }
+  @if ($value == 0rem) { $value: 0; }
+  @return $value;
+}
+
+@function rem-calc($values, $base: $rem-base) {
+  $rem-values: ();
+  $count: length($values);
+
+  @if $base == null {
+    $base: $rem-base;
+  }
+
+  @if $count == 1 {
+    @return -zf-to-rem($values, $base);
+  }
+
+  @for $i from 1 through $count {
+    $rem-values: append($rem-values, -zf-to-rem(nth($values, $i), $base));
+  }
+
+  @return $rem-values;
+}
+$breakpoints: (
+        "phone": $phone,
+  //360px
+        "phablet": $phablet,
+  //540px
+        "tablet": $tablet,
+  //760px
+        "tablet-narrow": $tablet-narrow,
+  //960px
+        "desktop": $desktop,
+  //1280px
+        "desktop-wide": $desktop-wide,
+  //1450px
+        "desktop-huge": $desktop-huge,
+  //1900px,,,
+);
+
+//EXAMPLE:
+//  @include mq('desktop-huge'){
+// border:red;
+// }
+// or
+// @include mq('desktop-huge','max'){
+//   border:red;
+//   }
+
+@mixin mq($width, $type: min) {
+  @if map_has_key($breakpoints, $width) {
+    $width: map_get($breakpoints, $width);
+    @if $type==max {
+      $width: $width - 1px;
+    }
+    @media screen and (#{$type}-width: $width) {
+      @content;
+    }
+  } @else {
+    @if $type==max {
+      $width: $width - 1px;
+    }
+    @media screen and (#{$type}-width: $width) {
+      @content;
+    }
+  }
+}
+
+// https://dev.to/nidhishs/5-scss-mixins-to-check-out-2bkn#pseudo
+// example:
+// .foo-bar::before{
+//   @include pseudo($width: 100px)
+// }
+@mixin pseudo($display: block, $pos: absolute, $content: '', $width: 100%, $height: 100%){
+  content: $content;
+  display: $display;
+  position: $pos;
+  width: $width;
+  height: $height;
+}
+
+@mixin center-absolute-x {
+  left:50%;
+  transform: translateX(-50%);
+}
+
+@mixin center-absolute-y {
+  top:50%;
+  transform: translateY(-50%);
+}
+
+@mixin center-absolute {
+  @include center-absolute-x;
+  @include center-absolute-y;
+
+  transform: translate(-50%, -50%);
+}
+
+@mixin transition(
+  $what: all,
+  $time: 0.2s,
+  $how: cubic-bezier(0.25, 0.8, 0.25, 1)
+) {
+  transition: $what $time $how;
+}

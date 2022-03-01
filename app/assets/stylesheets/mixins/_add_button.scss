@@ -1,0 +1,85 @@
+@mixin add-button-chapter {
+//  @include size(48px);
+  display: inline-block;
+  position: relative;
+  background: #fff;
+  border-radius: 50px;
+  font-size: 0.875em;
+  padding: 0.500em 0.750em 0.500em 1.625em;
+  border: 1px solid $base-border-color;
+  cursor: pointer;
+  text-align: center;
+  z-index: 2;
+  background: $base-accent-color;
+    border-color: $base-accent-color;
+    color: #fff;
+
+  &:before, &:after {
+    transition: all 0.5s ease-in-out;
+    content: "";
+    background-color: $light-font-color;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #fff;
+  }
+
+  &:before {
+    width: 1px;
+    height: 12px;
+    margin-top: -6px;
+    margin-left: -43px;
+  }
+
+  &:after {
+    width: 12px;
+    height: 1px;
+    margin-left: -48px;
+    margin-top: -1px;
+  }
+}
+
+@mixin add-button {
+  @include size(48px);
+  display: inline-block;
+  position: relative;
+  background: #fff;
+  border-radius: 100%;
+  border: 1px solid $base-border-color;
+  cursor: pointer;
+  text-align: center;
+  z-index: 2;
+
+  &:before, &:after {
+    transition: all 0.5s ease-in-out;
+    content: "";
+    background-color: $light-font-color;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+  &:before {
+    width: 1px;
+    height: 17px;
+    margin-top: -8px;
+  }
+
+  &:after {
+    width: 17px;
+    height: 1px;
+    margin-left: -8px;
+  }
+
+  &:hover {
+    background: $base-accent-color;
+    border-color: $base-accent-color;
+    color: #fff;
+
+    &:before, &:after {
+      background-color: #fff;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+.avatar {
+  background-position: 50% 50%;
+  background-size: cover;
+  border-radius: 50%;
+  display: inline-block;
+  overflow: hidden;
+  text-align: center;
+  vertical-align: middle;
+  margin-right: 0.6em;
+}
+
+.avatar--thumb {
+  @extend .avatar;
+  width: 30px;
+  height: 30px;
+}

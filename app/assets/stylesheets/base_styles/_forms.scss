@@ -1,0 +1,383 @@
+$form-border-color: $base-border-color;
+$form-border-color-hover: darken($base-border-color, 10);
+$form-border-color-focus: $base-accent-color;
+$form-border-radius: $base-border-radius;
+$form-box-shadow: inset 0 1px 3px hsla(0, 0%, 0%, 0.06);
+$form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color-focus, 5), 0.7);
+
+.form-wrapper,
+div#clearance {
+
+
+  position: relative;
+
+  &.sign-up {
+    @media (max-width: $medium-screen) {
+      width: 100%;
+      margin-left: 0px;
+    }
+  }
+
+  &.sign-in, &.password-reset {
+    @media (max-width: $medium-screen) {
+
+
+    }
+  }
+
+  label.message {
+    margin-bottom: 2em;
+  }
+
+  div.submit-field {
+    margin-bottom: 1em;
+  }
+
+  div.other-links {
+    text-align: center;
+
+    a {
+      color: $light-font-color;
+      font-weight: 300;
+
+      & + a {
+        margin-left: 1.2em;
+      }
+
+      &:hover {
+        color: $base-font-color;
+      }
+    }
+  }
+}
+
+div#clearance {
+  ul {
+    border-top: 1px solid $base-border-color;
+    margin: 30px 0 0 0;
+    padding: 20px 0 0 0;
+
+    li {
+      list-style: none;
+      margin-right: 1em;
+      display: inline-block;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.form-wrapper h2,
+div#clearance h2,
+h2.form-title {
+  @include block-heading();
+  margin-bottom: 0.4em;
+}
+
+.form-subtitle {
+  margin-top: -25px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form-wrapper > p,
+div#clearance > p,
+p.form-message {
+  color: $medium-font-color;
+  font-weight: 300;
+  margin-bottom: 2em;
+}
+
+a.form-cancel {
+  @include rectangular-button("large", "outline", $light-font-color, $gray);
+  display: inline-block;
+}
+
+.file-upload {
+  position: relative;
+  overflow: hidden;
+
+  input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 13px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+  }
+}
+
+.boolean-group {
+  @include clearfix;
+
+  &.flexible-group {
+    display: flex;
+
+    @media (max-width: $medium-screen) {
+      flex-direction: column;
+    }
+
+    .form-cancel,
+    .submit {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:not(:last-child) {
+        margin-right: 2%;
+      }
+
+      @media (max-width: $medium-screen) {
+        margin-bottom: 1em;
+        margin-right: 0;
+      }
+    }
+  }
+
+  button,
+  a.submit,
+  input[type="submit"] {
+    float: left;
+    margin-right: 2%;
+    width: 50%;
+
+    @media (max-width: $medium-screen) {
+      float: none;
+      margin-bottom: 1em;
+      width: 100%;
+    }
+  }
+
+  a.form-cancel {
+    float: left;
+    width: 48%;
+
+    @media (max-width: $medium-screen) {
+      float: none;
+      width: 100%;
+    }
+  }
+}
+
+.inline-form-group {
+  label {
+    display: inline-block;
+    margin: 0 0.4em 0 0;
+  }
+
+  select,
+  .input.select {
+    display: inline-block;
+  }
+}
+
+fieldset {
+  background: lighten($base-border-color, 10);
+  border: 1px solid $base-border-color;
+  margin: 0 0 ($base-line-height / 2) 0;
+  padding: $base-line-height;
+}
+
+input,
+label,
+select {
+  display: block;
+}
+
+label {
+  color: $light-font-color;
+  font-weight: 700;
+  margin-bottom: $base-line-height / 4;
+
+  &.required:after {
+    content: "*";
+    color: $red;
+  }
+
+  abbr {
+    display: none;
+  }
+}
+
+textarea,
+md-autocomplete input[type="search"],
+#{$all-text-inputs} {
+  box-sizing: border-box;
+  transition: border-color 0.15s linear;
+  background-color: white;
+  border-radius: $form-border-radius;
+  border: 1px solid $form-border-color;
+  box-shadow: $form-box-shadow;
+  margin-bottom: 1.5em;
+  padding: 0.8em 1em;
+  width: 100%;
+  color: $base-font-color;
+
+  &:hover {
+    border-color: $form-border-color-hover;
+  }
+
+  &:focus {
+    border-color: $form-border-color-focus;
+    box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.1);
+    outline: none;
+  }
+}
+
+md-autocomplete {
+  md-autocomplete-wrap {
+    button {
+      display: none;
+    }
+  }
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[type="search"] {
+  appearance: none;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  display: inline;
+  margin-right: $base-line-height / 4;
+}
+
+select {
+  margin-bottom: $base-line-height;
+  width: auto;
+}
+
+form {
+  button, input[type="submit"] {
+    @include rectangular-button("large", "solid", $green, $green);
+    outline: none;
+    width: 100%;
+  }
+}
+
+form.ng-dirty {
+  select,
+  input,
+  textarea {
+    &.ng-invalid {
+      border-color: $error-color;
+    }
+  }
+}
+
+form {
+  .checkbox-wrapper {
+    label {
+      display: inline;
+    }
+
+    display: block;
+  }
+}
+
+.sign-up-wrapper {
+  display: table;
+  max-width: 100% !important;
+  padding: 10% 0 0 0 !important;
+  height: 100%;
+  background: linear-gradient(90deg, $white 50%, $purple 50%);
+
+  div.submit-field {
+    input {
+      text-transform: uppercase;
+    }
+  }
+
+  .markup {
+    display: table-cell;
+    width: 50%;
+    padding: 0 8%;
+    color: $white;
+    text-align: center;
+
+    h2 {
+      margin-bottom: 40px;
+
+      span {
+        display: block;
+        font-weight: 900;
+        margin-top: 12px;
+      }
+    }
+
+    .subcontent {
+      margin-top: 25%;
+
+      p {
+        font-weight: 900;
+        font-size: 22px;
+        margin-bottom: 10%;
+      }
+    }
+  }
+
+  .sign-up {
+    float: none !important;
+    display: table-cell;
+    width: 50% !important;
+    padding: 0 8%;
+    left: 0 !important;
+    margin: 0;
+
+    .subtitle {
+      color: $purple;
+    }
+
+    .footer-field {
+      text-align: center;
+      font-style: italic;
+      margin-top: 28px;
+
+      p {
+        margin: 0;
+        color: $gray;
+
+        &.family {
+          font-size: 0.85em;
+        }
+      }
+    }
+  }
+  .custom_sign-up{
+    display: inline-block;
+  }
+  div#clearance {
+    position: static;
+  }
+}
+
+@media (max-width: 767px) {
+  .sign-up-wrapper .sign-up,
+  .sign-up-wrapper .markup {
+    display: block;
+    width: 100% !important;
+  }
+
+  .sign-up-wrapper {
+    background: none;
+
+    .markup {
+      margin-top: 25px;
+      padding: 30px 0;
+      background: #8B78FE;
+    }
+  }
+}
+
+@media (max-width: $small-screen) {
+  .sign-up-wrapper {
+    padding-top: 10em !important;
+  }
+}

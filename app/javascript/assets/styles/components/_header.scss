@@ -1,0 +1,31 @@
+header {
+  z-index: 50 !important;
+}
+.app-bar-button {
+  font-family: $title-font;
+  font-size: 16px;
+  color: $color-tertiary;
+  height: 60px !important;
+  border-radius: 0;
+  position: relative;
+  &::before {
+    display: none !important;
+  }
+  &:hover {
+    color: #000000;
+  }
+  &--new-story:hover {
+    color: white !important;
+    background: linear-gradient(180deg, $color-required 0%, #8B78FE 100%);
+    border-radius: 5px;
+  }
+  .v-btn__content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .v-icon {
+    font-size: 30px;
+    line-height: 24px;
+  }
+}

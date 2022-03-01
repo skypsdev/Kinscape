@@ -1,0 +1,38 @@
+h2 #{Time.zome.today.strftime("%F")}
+<br>
+table.mc-table cellpadding='6' border='1' width='100%'
+  th KPI
+  th Week
+  th Month
+  th Total
+  tbody
+    = render partial: 'row', collection: @weekly_data
+
+<br>
+<br>
+
+table.mc-table cellpadding='6' border='1' width='40%'
+  th KPI
+  th Value
+  tbody
+    tr
+      td Draft Stories
+      td = Story.draft.count
+    tr
+      td Published Stories
+      td = Story.published.count
+    tr
+      td Publised Users
+      td = Story.published.group(:user_id).count.size
+    tr
+      td Connectors
+      td = Family.select(:connector_id).distinct.count.to_s
+    tr
+      td Vaults w/Uploads
+      td = Vault.joins(:attachments).distinct.count
+    / tr
+    /   td Trial Users
+    /   td = Subscription.where(status: "trialing").count
+    / tr
+    /   td Active Users
+    /   td = Subscription.where(status: "active").count

@@ -1,0 +1,8 @@
+.rounded-image {
+  position: relative;
+  height: 220px;
+  width: 220px;
+  border: 2px solid $shadow-color;
+  border-radius: 50%;
+  object-fit: cover;
+}

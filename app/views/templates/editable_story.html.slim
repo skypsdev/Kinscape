@@ -1,0 +1,124 @@
+section.story-cover ng-class='coverState'
+  .cover-bg ng-style='coverStyles()'
+  article.story-title
+    .title-wrapper
+      .cover-image-wrapper(
+          tooltip=t('placeholders.story.cover_image')
+          tooltip-placement="right"
+        )
+        .style-wrapper
+          .cover-image ng-style='coverStyles()'
+          .filepicker-wrapper
+            button.filepicker(
+              type='button'
+              ng-click='openFileUpload()'
+              title=t('stories.select_cover_title')
+              ng-disabled='!canEdit'
+            )
+              = t('stories.select_cover')
+            - if Rails.env.test?
+              input id='story_cover_image_url' name='story[cover_image][url]' type='text' ng-model='story.coverImage.url'
+      .title-body
+        h1.story-title(
+          contentEditable='{{ canEdit }}'
+          ng-model='story.title'
+          title=t('stories.meta.story_title')
+        )
+
+        .meta.editing
+          .author title=t('stories.meta.author_title')
+            .face style=background_image_css(@story.author_avatar_url)
+            = @story.user.name
+          span.description(
+            title=t('stories.meta.description_title')
+            tooltip=t('placeholders.story.description_example')
+            tooltip-placement="left"
+          )
+            input.story-location#story_location(
+              type="text"
+              placeholder=t('placeholders.story.description')
+              ng-model="story.description"
+              ng-disabled='!canEdit'
+            )
+          .dates title=t('stories.meta.date_title')
+            .datesHolder
+              div.fromDate
+                span.story-label(
+                  ng-show="story.isRange"
+                )
+                  = "from"
+                input.story-startYear#story-startYear(
+                  type="text"
+                  placeholder=t('placeholders.story.year')
+                  ng-model="story.startYear"
+                  ng-change="updateNumberOfStartDays()"
+                  ng-disabled='!canEdit'
+                )
+                select.story-startMonth#story-startMonth (
+                  ng-model="story.startMonth"
+                  ng-disabled='!story.startYear || !canEdit'
+                  ng-change="updateNumberOfStartDays()"
+                  ui-select2="select2Date"
+                )
+                  option(
+                    ng-repeat="month in dateWidget.months"
+                    value="{{ month.id }}"
+                  )
+                    ="{{ month.name }}"
+                select.story-startDay#story-startDay(
+                  ng-model="story.startDay"
+                  ng-disabled='!story.startYear || !story.startMonth || !canEdit'
+                  ui-select2="select2Date"
+                )
+                  option(
+                    ng-repeat="day in dateWidget.days | limitTo:numberOfStartDays"
+                    value="{{ day.id }}"
+                  )
+                    ="{{ day.name }}"
+              div.toDate ng-show="story.isRange"
+                span.story-label to
+                input.story-endYear#story-endYear(
+                  type="text"
+                  placeholder=t('placeholders.story.year')
+                  ng-model="story.endYear"
+                  ng-change="updateNumberOfEndDays()"
+                  ng-disabled='!canEdit'
+                )
+                select.story-endMonth#story-endMonth (
+                  ng-model="story.endMonth"
+                  ng-disabled='!story.endYear || !canEdit'
+                  ng-change="updateNumberOfEndDays()"
+                  ui-select2="select2Date"
+                )
+                  option(
+                    ng-repeat="month in dateWidget.months"
+                    value="{{ month.id }}"
+                  )
+                    ="{{ month.name }}"
+                select.story-endDay#story-endDay(
+                  ng-model="story.endDay"
+                  ui-select2="select2Date"
+                  ng-disabled='!story.endYear || !story.endMonth || !canEdit'
+                )
+                  option(
+                    ng-repeat="day in dateWidget.days | limitTo:numberOfEndDays"
+                    value="{{ day.id }}"
+                  )
+                    ="{{ day.name }}"
+              div.isRange()
+                input.story-isRange(
+                  type="checkbox"
+                  ng-model="story.isRange"
+                  ng-true-value=1
+                  ng-false-value=0
+                  ng-checked="{{story.isRange}}"
+                  ng-disabled='!canEdit'
+                )
+                span=t('placeholders.story.range')
+  a#scroll-to-story(
+    href="#"
+    scroll-to="story-wrapper"
+    tooltip=t('stories.write')
+    tooltip-placement="top"
+  )
+    i.fa.fa-angle-down

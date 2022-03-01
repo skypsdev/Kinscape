@@ -1,0 +1,37 @@
+.slider {
+  $arrow-width: 22px;
+  $slider-padding: $arrow-width + 7px;
+
+  position: relative;
+  padding-left: $slider-padding;
+  padding-right: $slider-padding;
+  overflow: hidden;
+
+  .prev,
+  .next {
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: $arrow-width;
+    height: $arrow-width;
+    margin-top: -$arrow-width / 2;
+    transform: rotate(45deg);
+    border: solid #cecece;
+    border-width: 3px 3px 0 0;
+    text-indent: -99999px;
+    cursor: pointer;
+
+    &:hover {
+      border-color: #a0a0a0;
+    }
+  }
+
+  .next {
+    right: 5px;
+  }
+
+  .prev{
+    left: 5px;
+    transform: scale(-1) rotate(45deg);
+  }
+}

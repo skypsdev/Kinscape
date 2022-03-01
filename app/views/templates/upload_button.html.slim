@@ -1,0 +1,8 @@
+img.rounded-image(ng-src='{{ imagePreview }}')
+input type='hidden' name='{{ url }}' ng-value='imageUrl'
+input type='hidden' name='{{ mimeType }}' ng-value='imageMimeType'
+input type='hidden' name='{{ fileName }}' ng-value='imageFileName'
+input type='hidden' name='{{ size }}' ng-value='imageSize'
+div
+  a.btn-rounded
+    | {{ text }}

@@ -1,0 +1,14 @@
+development:
+  adapter: redis
+
+test:
+  adapter: test
+
+staging:
+  adapter: redis
+  url: 'redis://redistogo:63d8f59bc9d34fadb504a6fdef06ca15@pike.redistogo.com:11494'
+
+production:
+  adapter: redis
+  url: 'redis://redistogo:fa41fced092aa000d4c27c76fac9774c@pike.redistogo.com:11490'
+  channel_prefix: kinscape_production

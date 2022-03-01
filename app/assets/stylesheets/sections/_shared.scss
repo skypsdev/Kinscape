@@ -1,0 +1,366 @@
+.medium-editor,
+section.text,
+section.rich,
+.trix-content {
+  color: $medium-font-color;
+  display: block;
+  font-size: 1.2rem;
+  outline: none;
+  padding: 0 2em;
+
+  @media (max-width: $medium-screen) {
+    padding: 0 1em;
+  }
+
+  &:focus {
+    &:after {
+      opacity: 0;
+    }
+  }
+
+  h1, h3 {
+    font-weight: 300;
+    color: $base-font-color;
+    font-size: 2.88rem !important;
+    margin: 0.6em 0;
+  }
+
+  p {
+    margin: 0;
+    padding-bottom: 1em;
+  }
+
+  a {
+    color: $base-accent-color;
+    text-decoration: underline;
+  }
+
+  b {
+    font-weight: bold;
+  }
+
+  blockquote {
+    color: $medium-font-color;
+    border: none;
+    font-size: 1.6em;
+    font-style: italic;
+    line-height: 1.4em;
+    margin: 1.4em 0;
+    padding: 0;
+    text-align: center;
+
+    &:before {
+      content: "\201C";
+    }
+
+    &:after {
+      content: "\201D";
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  pre {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+    font-family: monospace;
+    font-size: 0.9em;
+    margin: 0;
+    padding: 0.5em;
+    white-space: pre;
+    background-color: #eee;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+
+  i:not(.fa) {
+    font-style: italic;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  span {
+    color: inherit !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-style: inherit !important;
+    line-height: inherit !important;
+    text-align: inherit !important;
+  }
+}
+
+section.rich {
+  @media (max-width: $medium-screen) {
+    padding: 0 !important;
+  }
+}
+
+section.video,
+section.audio,
+section.document,
+section.rich,
+.trix-content {
+  @include clearfix;
+  position: relative;
+
+  .comment-count {
+    @include position(absolute, 0.6em -1em null null);
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
+
+    @media (max-width: $medium-screen) {
+      @include position(absolute, 0.6em 2em null null);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .video-wrapper,
+  .audio-wrapper,
+  a.download-doc {
+    background-color: $white;
+    border: 1px solid $base-border-color;
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,0.06);
+    padding: 1rem;
+    text-decoration: none !important;
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+
+    video,
+    audio {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  action-text-attachment {
+    .video-wrapper {
+      &:before {
+        content: none !important;
+      }
+    }
+
+    .attachment__caption {
+      text-align: center;
+    }
+  }
+
+  .video-wrapper {
+    &:before {
+      position: absolute;
+      color: #696969;
+      color: rgba(50,50,50,.8);
+      font: normal normal normal 125px FontAwesome;
+      content: '\f008';
+      text-align: center;
+      margin-left: -70px;
+      margin-top: -65px;
+      left: 50%;
+      top: 50%;
+    }
+    &.playing:before,
+    &.load-error:before { display: none; }
+  }
+  .processing-message {
+    color: $light-font-color;
+    text-align: center;
+
+    &:before {
+      content: '\f021';
+      display: inline-block;
+      font-family: $icon-font;
+      margin-right: 0.4em;
+    }
+  }
+
+  a.download-doc {
+    transition: all 0.15s linear;
+    display: block;
+    color: $light-font-color;
+    padding-right: 3.4em;
+    position: relative;
+    text-align: left;
+
+    &:before {
+       @include position(absolute, 1rem 1rem null null);
+       transition: all 0.15s linear;
+       content: '\f0ed';
+       color: rgb(210,210,210);
+       display: inline-block;
+       font-size: 1.1rem;
+       font-family: $icon-font;
+    }
+
+    &:hover {
+      border-color: $doc-color;
+      color: $doc-color;
+
+      &:before {
+        color: $doc-color;
+      }
+    }
+
+    i {
+      margin-right: 0.5em;
+    }
+  }
+
+  .iframe-wrapper {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    height: auto;
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  }
+}
+
+section.photoset {
+  transition: all .15s linear;
+  position: relative;
+
+  ul.collage {
+    padding: 0 0.6em;
+    margin: 0 -0.6em;
+    text-align: center;
+
+    li.photo {
+      display: inline-block;
+      position: relative;
+
+      &:hover {
+        .edit-image,
+        .meta-indicator {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      &:before {
+        @include position(absolute, 0px null null 0px);
+        @include size(100%);
+        background: rgb(245,245,245);
+        content: "";
+        display: block;
+        z-index: 1;
+      }
+
+      a.image-wrapper {
+        display: block;
+        position: relative;
+        z-index: 2;
+      }
+
+      .edit-image {
+        @include position(absolute, 0px 0px 0px 0px);
+        transition: all 0.15s linear;
+        background: rgba(0,0,0,0.4);
+        opacity: 0;
+        text-align: center;
+        visibility: hidden;
+        z-index: 3;
+
+        a.remove {
+          @include rectangular-button("small", "outline", $white, $red);
+        }
+        a.reorder {
+          @include rectangular-button("small", "outline", $white, $green);
+          text-align: center;
+          margin-top: 10px;
+          margin-right: 10px;
+
+          .touch & {
+            display: none;
+          }
+        }
+
+      }
+
+      .meta-indicator {
+        @include position(absolute, null null 0px 0px);
+        transition: all 0.2s ease-in;
+        opacity: 0;
+        padding: 0.8em 1em;
+        pointer-events: none;
+        text-align: right;
+        visibility: hidden;
+        width: 100%;
+        z-index: 3;
+
+        i.fa-comment {
+          text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        }
+      }
+    }
+  }
+
+  a.add-images {
+    transition: all 0.15s linear;
+    border: 2px dashed $base-border-color;
+    color: $light-font-color;
+    display: block;
+    font-size: 0.9em;
+    letter-spacing: 2px;
+    margin: 0 0 1.2em 0;
+    padding: 2%;
+    text-align: center;
+    text-transform: uppercase;
+
+    &:hover {
+      background: lighten($image-color, 30%);
+      border-color: $image-color;
+    }
+  }
+}
+
+.comment-count {
+  transition: all 0.15s linear;
+  color: $white;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+
+  i.fa-comment {
+    font-size: 2.3em;
+    text-shadow: 0 0 1px rgb(120,120,120);
+  }
+
+  span {
+    @include position(absolute, 5px null null 0px);
+    color: $light-font-color;
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+}
+.rich-body {
+  h1 {
+    line-height: 1.2;
+    margin: 0;
+    font-weight: 300;
+    color: #293439;
+    font-size: 1.88rem !important;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+  }
+}

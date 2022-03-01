@@ -1,0 +1,10 @@
+:default:
+  site_key: "<%= ENV['RECAPTCHA_SITE_KEY'] %>"
+  secret_key: "<%= ENV['RECAPTCHA_SECRET_KEY'] %>"
+  site_key_v3: "<%= ENV['RECAPTCHA_SITE_KEY_V3'] %>"
+  secret_key_v3: "<%= ENV['RECAPTCHA_SECRET_KEY_V3'] %>"
+development:
+  site_key: "<%= ENV['RECAPTCHA_SITE_KEY'] || "mock_site" %>"
+  secret_key: "<%= ENV['RECAPTCHA_SECRET_KEY'] || "mock_key" %>"
+  site_key_v3: "<%= ENV['RECAPTCHA_SITE_KEY_V3'] || "mock_site" %>"
+  secret_key_v3: "<%= ENV['RECAPTCHA_SECRET_KEY_V3'] || "mock_key" %>"

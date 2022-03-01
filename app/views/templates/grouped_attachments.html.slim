@@ -1,0 +1,5 @@
+.section(class="page-blocks-holder attachments" ng-repeat="(groupDate, attachmentsGroup) in attachments | orderBy: '-createdAt' | groupBy: 'groupDate'")
+  p(class="group-title" ng-bind='groupDate' title=t('vaults.attachments.group_name_title'))
+  ul(class="blocks attachment-blocks" ng-class="{ 'selectable': isSelectable }")
+    li(class="attachment-item" ng-repeat='attachment in attachmentsGroup' ng-class="{ 'selected': attachment.isSelected }")
+      attachment(attachment='attachment' on-click-callback='onAttachmentClick(attachment)')

@@ -1,0 +1,17 @@
+base_url: https://s3-us-west-2.amazonaws.com
+
+development:
+  bucket: kinscape-development
+  cloudfront_base: https://d2e2dk7751ymam.cloudfront.net
+
+test:
+  bucket: kinscape-test
+  cloudfront_base: https://d2e2dk7751ymam.cloudfront.net
+
+staging:
+  bucket: kinscape-staging
+  cloudfront_base: https://d3hi9yjtauaoa9.cloudfront.net
+
+production:
+  bucket: kinscape-production
+  cloudfront_base: https://d13755hp6jmrr8.cloudfront.net

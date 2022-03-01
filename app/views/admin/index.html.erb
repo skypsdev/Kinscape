@@ -1,0 +1,43 @@
+<div class="content-wrapper">
+  <center>
+    <label>CURRENT ACTIVATION</label>
+    <h1><%= "#{@current_activation}%" %></h1>
+    <p>
+      <%= "#{@total_new_users} users joined in the last thirty days," %>
+      <br>
+      <%= "#{@activated_new_users} of them published at least one story" %>
+    </p>
+
+    <div id="activation_history" style="width: 900px; height: 500px;"></div>
+  </center>
+</div>
+
+<script src="//www.google.com/jsapi" type="text/javascript"></script>
+
+<script type="text/javascript">
+  google.load("visualization", "1", {packages:["corechart"]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Date', 'Activation Rate'],
+      <% @activation_data.each do |data| %>
+        ['<%= data[:dates] %>', <%= data[:activation] %> ],
+      <% end %>
+    ]);
+
+    var options = {
+      title: 'Historical User Activation',
+      legend: { position: 'bottom' },
+      vAxis: {
+          viewWindow: {
+              min: 0,
+              max: 100
+          },
+          ticks: [0, 25, 50, 75, 100]
+      }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('activation_history'));
+    chart.draw(data, options);
+  }
+</script>

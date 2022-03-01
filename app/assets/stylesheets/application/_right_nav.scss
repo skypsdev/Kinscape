@@ -1,0 +1,132 @@
+body.menu-active,
+.main-container.global-nav-open {
+  #slide-menu .inner-wrapper {
+    opacity: 1;
+  }
+
+  .content {
+    margin-left: -$global-nav-width;
+  }
+}
+
+nav#slide-menu {
+  @include size($global-nav-width, 100%);
+  @include position(fixed, 0px 0px 0px null);
+  background: rgb(255,255,255);
+  display: block;
+  z-index: 1;
+
+  .inner-wrapper {
+    transition: all, 0.35s linear;
+    height: 100%;
+    opacity: 0;
+    padding: 5em 1.2em 1em;
+    overflow-y: scroll;
+
+    a.selected span {
+      color: $purple;
+    }
+  }
+
+  .close {
+    @include position(absolute, 1.2em 1em null null);
+    color: $light-font-color;
+    font-size: 1.2em;
+    z-index: 3;
+
+    &:hover {
+      color: $base-font-color;
+    }
+  }
+}
+
+ul.user-info {
+  @include position(absolute, 0px 0px null 0px);
+  background: rgb(255, 255, 255);
+  border-bottom: 1px solid $base-border-color;
+  padding: 1.4em 1.2em 0.5em;
+  z-index: 2;
+
+  li {
+    @include clearfix;
+    margin-right: 1.6em;
+  }
+
+  .avatar {
+    @include avatar(26px);
+    float: left;
+    margin-right: 0.5em;
+  }
+
+  a.name {
+    color: $light-font-color;
+    display: block;
+    font-weight: 300;
+    line-height: 26px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      color: $base-accent-color;
+    }
+  }
+
+  .email {
+    color: $light-font-color;
+    font-size: 0.7em;
+  }
+}
+
+ul.main-links {
+  &.flexible {
+    display: none;
+
+    @media (max-width: $large-screen) {
+      display: block;
+    }
+  }
+
+  i.fa {
+    width: 20px;
+  }
+
+  > li {
+    margin: 1em 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.divider {
+      border-bottom: 1px dotted $base-border-color;
+      margin: 1em;
+    }
+  }
+
+  a {
+    color: $light-font-color;
+    display: block;
+    font-weight: 300;
+    letter-spacing: 1px;
+    vertical-align: middle;
+
+    &:hover {
+      i.fa {
+        margin-right: 0.5em;
+        opacity: 1;
+      }
+    }
+
+    span {
+      display: inline-block;
+    }
+
+    i.fa {
+      transition: all .15s linear;
+      color: $base-accent-color;
+      display: inline-block;
+      margin-right: 0em;
+      opacity: 0;
+    }
+  }
+}

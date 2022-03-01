@@ -1,0 +1,3316 @@
+---
+openapi: 3.0.1
+components:
+  securitySchemes:
+    cookie:
+      type: apiKey
+      name: cookie
+      in: header
+      description: use remember_token_development
+info:
+  title: API V1
+  version: v1
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  "/api/v1/chapters":
+    get:
+      summary: list chapters
+      security:
+      - cookie: []
+      tags:
+      - Chapter
+      parameters:
+      - name: object_id
+        in: query
+        schema:
+          type: string
+      - name: object_type
+        in: query
+        enum:
+        - Family
+        - Kinship
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: '2'
+                  type: chapter
+                  attributes:
+                    title: With a family header
+                    body: 
+                    media_type: text
+                    position: 0
+                    created_at: '2021-12-13T08:57:15.238Z'
+                    updated_at: '2021-12-13T08:57:15.241Z'
+                    rich_body:
+                      id: 2
+                      name: rich_body
+                      body: "&gt;<p>This is a text chapter</p><p></p>"
+                      record_type: Chapter
+                      record_id: 2
+                      created_at: '2021-12-13T08:57:15.241Z'
+                      updated_at: '2021-12-13T08:57:15.241Z'
+                      html: <div class="trix-content">  &gt;<p>This is a text chapter</p><p></p></div>
+                  relationships:
+                    attachments:
+                      data:
+                      - id: '2'
+                        type: attachment
+    post:
+      summary: create chapter
+      security:
+      - cookie: []
+      tags:
+      - Chapter
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '5'
+                  type: chapter
+                  attributes:
+                    title: Brzeczyszczykiewicz
+                    body: 
+                    media_type: text
+                    position: 1
+                    created_at: '2021-12-13T08:57:15.367Z'
+                    updated_at: '2021-12-13T08:57:15.374Z'
+                    rich_body:
+                      id: 5
+                      name: rich_body
+                      body: '{"body"=&gt;"some body"}'
+                      record_type: Chapter
+                      record_id: 5
+                      created_at: '2021-12-13T08:57:15.372Z'
+                      updated_at: '2021-12-13T08:57:15.372Z'
+                      html: <div class="trix-content">  {"body"=&gt;"some body"}</div>
+                  relationships:
+                    attachments:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                media_type:
+                  type: string
+                object_id:
+                  type: string
+                object_type:
+                  type: string
+                  enum:
+                  - Family
+                  - Kinship
+                position:
+                  type: integer
+                title:
+                  type: string
+                rich_body:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+              example:
+                media_type: text
+                position: 1
+                rich_body:
+                  body: some body
+                title: Brzeczyszczykiewicz
+                object_id: 5eaD80bYwvg
+                object_type: Family
+  "/api/v1/chapters/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: update chapter
+      security:
+      - cookie: []
+      tags:
+      - Chapter
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '7'
+                  type: chapter
+                  attributes:
+                    title: Brzeczyszczykiewicz
+                    body: 
+                    media_type: text
+                    position: 1
+                    created_at: '2021-12-13T08:57:15.435Z'
+                    updated_at: '2021-12-13T08:57:15.487Z'
+                    rich_body:
+                      record_id: 7
+                      body: some body
+                      id: 7
+                      name: rich_body
+                      record_type: Chapter
+                      created_at: '2021-12-13T08:57:15.437Z'
+                      updated_at: '2021-12-13T08:57:15.472Z'
+                      html: <div class="trix-content">  some body</div>
+                  relationships:
+                    attachments:
+                      data:
+                      - id: '6'
+                        type: attachment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                media_type:
+                  type: string
+                position:
+                  type: integer
+                object_id:
+                  type: string
+                object_type:
+                  type: string
+                  enum:
+                  - Family
+                  - Kinship
+                title:
+                  type: string
+                rich_body:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+              example:
+                media_type: text
+                position: 1
+                rich_body:
+                  body: some body
+                title: Brzeczyszczykiewicz
+                object_id: 8zszw48jYn4
+                object_type: Family
+    delete:
+      summary: delete chapter
+      security:
+      - cookie: []
+      tags:
+      - Chapter
+      parameters:
+      - name: object_id
+        in: query
+        schema:
+          type: string
+      - name: object_type
+        in: query
+        enum:
+        - Family
+        - Kinship
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+  "/api/v1/families/{family_id}/invitations/resend":
+    parameters:
+    - name: family_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: resend invitations
+      security:
+      - cookie: []
+      tags:
+      - Invitation
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: c3a3db14-d93e-4ac2-ae7b-37cee074ed34
+                  type: invitation
+                  attributes:
+                    created_at: '2021-12-13T08:57:15.658Z'
+                    sender_id: 19
+                    recipient_id: 20
+                    email: user20@example.com
+                    accepted_at: 
+                    message: ''
+                    role: member
+                    newcomer: true
+                    family_id: 5qHeUPgiX7l
+                    family_name: Test family
+                    family_cover_url: 
+                    sender_name: Kala
+                  relationships:
+                    family:
+                      data:
+                        id: 5qHeUPgiX7l
+                        type: family
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: string
+              required:
+              - ids
+              example:
+                ids:
+                - c3a3db14-d93e-4ac2-ae7b-37cee074ed34
+  "/api/v1/families/{family_id}/invitations":
+    parameters:
+    - name: family_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list invitations
+      security:
+      - cookie: []
+      tags:
+      - Invitation
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: 1ace8a74-4944-428b-b919-e46e9fe74b11
+                  type: invitation
+                  attributes:
+                    created_at: '2021-12-13T08:57:15.825Z'
+                    sender_id: 24
+                    recipient_id: 26
+                    email: user26@example.com
+                    accepted_at: 
+                    message: ''
+                    role: member
+                    newcomer: true
+                    family_id: AOuZC0uKYbX
+                    family_name: Test family
+                    family_cover_url: 
+                    sender_name: Ernesto
+                  relationships:
+                    family:
+                      data:
+                        id: AOuZC0uKYbX
+                        type: family
+                included:
+                - id: AOuZC0uKYbX
+                  type: family
+                  attributes:
+                    name: Test family
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 24
+                    - 25
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 24
+                    connector_name: Ernesto
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '13'
+                        type: kinship
+                      - id: '14'
+                        type: kinship
+                    chapters:
+                      data: []
+    post:
+      summary: create invitation
+      security:
+      - cookie: []
+      tags:
+      - Invitation
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                users:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      id:
+                        type: string
+                      role:
+                        type: string
+                        enum:
+                        - co_admin
+                        - member
+                        - guest
+  "/api/v1/families/{family_id}/kinships":
+    parameters:
+    - name: family_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list kinships
+      security:
+      - cookie: []
+      tags:
+      - Kinship
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: '20'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:15.973Z'
+                    user_id: 34
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 20
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: 
+                    media_avatar: 
+                    nickname: Sammie
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: admin
+                    profile_attrs:
+                      emails:
+                      - name: email
+                        value: ''
+                      website: ''
+                      facebook: ''
+                      addresses:
+                      - name: address
+                        value: ''
+                      instagram: ''
+                      locations:
+                      - name: location
+                        value: ''
+                      birth_date: ''
+                      birth_place: ''
+                      phone_numbers:
+                      - name: phone number
+                        value: ''
+                    description: 
+                    family_id: 8DVKmSXGBMS
+                    links: []
+                    name: Sammie
+                    user_type: administrator
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: true
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 8DVKmSXGBMS
+                        type: family
+                    chapters:
+                      data: []
+  "/api/v1/families/{family_id}/offline_members":
+    parameters:
+    - name: family_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create offline_member
+      security:
+      - cookie: []
+      tags:
+      - Offline Member
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              example:
+                message: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '23'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:16.057Z'
+                    user_id: 
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 23
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: http://www.example.com/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDVG9JYTJWNVNTSWhaM1F4Wkcxd2VXVTJiWGRtZW5admRHNWtaakZ4YTJoc05YbDRaUVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpUFdsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1sdFlXZGxMbXB3WnlJN0lHWnBiR1Z1WVcxbEtqMVZWRVl0T0NjbmFXMWhaMlV1YW5CbkJqc0dWRG9SWTI5dWRHVnVkRjkwZVhCbFNTSVBhVzFoWjJVdmFuQmxad1k3QmxRNkVYTmxjblpwWTJWZmJtRnRaVG9KZEdWemRBPT0iLCJleHAiOiIyMDIxLTEyLTEzVDA5OjU3OjE2LjExN1oiLCJwdXIiOiJibG9iX2tleSJ9fQ==--e860c0d4bf528990de68259dd8f6dbe0aeda19ae/image.jpg
+                    media_avatar: 
+                    nickname: johnny bravo
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: member
+                    profile_attrs:
+                      emails:
+                      - value: johnny@email.com
+                        name: email - private
+                    description: my fav anime character
+                    family_id: 33xNwt1WSzB
+                    links: []
+                    name: johnny bravo
+                    user_type: offline member
+                    user_title: 
+                    invited_by: Neil Wiza
+                    is_connected_by_current_user: false
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 33xNwt1WSzB
+                        type: family
+                    chapters:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                nickname:
+                  type: string
+                description:
+                  type: string
+                profile_attrs:
+                  type: json
+              example:
+                avatar: eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--ef187f73b9ff47a2c5543b4be8e9028d8456d903
+                nickname: johnny bravo
+                description: my fav anime character
+                profile_attrs:
+                  emails:
+                  - value: johnny@email.com
+                    name: email - private
+  "/api/v1/families/{family_id}/offline_members/{id}":
+    parameters:
+    - name: family_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: update offline_member
+      security:
+      - cookie: []
+      tags:
+      - Offline Member
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              example:
+                message: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '25'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:16.155Z'
+                    user_id: 38
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 25
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: http://www.example.com/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDVG9JYTJWNVNTSWhkR3hzYnpsck5tUjFkR3hqYkhWbWVqaDJOemRvZDJJellXaHNNQVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpUFdsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1sdFlXZGxMbXB3WnlJN0lHWnBiR1Z1WVcxbEtqMVZWRVl0T0NjbmFXMWhaMlV1YW5CbkJqc0dWRG9SWTI5dWRHVnVkRjkwZVhCbFNTSVBhVzFoWjJVdmFuQmxad1k3QmxRNkVYTmxjblpwWTJWZmJtRnRaVG9KZEdWemRBPT0iLCJleHAiOiIyMDIxLTEyLTEzVDA5OjU3OjE2LjIxNloiLCJwdXIiOiJibG9iX2tleSJ9fQ==--413bf0b14173c5011758d53ee62f9b1227aa3d5f/image.jpg
+                    media_avatar: 
+                    nickname: johnny bravo
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: admin
+                    profile_attrs:
+                      emails:
+                      - value: johnny@email.com
+                        name: email - private
+                    description: my fav anime character
+                    family_id: 6msB81BSReZ
+                    links: []
+                    name: johnny bravo
+                    user_type: administrator
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: true
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 6msB81BSReZ
+                        type: family
+                    chapters:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                nickname:
+                  type: string
+                description:
+                  type: string
+                profile_attrs:
+                  type: json
+              example:
+                avatar: eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c28d0f4bb4415c802d37a685868a0414b0fdc3a1
+                nickname: johnny bravo
+                description: my fav anime character
+                profile_attrs:
+                  emails:
+                  - value: johnny@email.com
+                    name: email - private
+  "/api/v1/families/quick_list":
+    get:
+      summary: quick_list family
+      security:
+      - cookie: []
+      tags:
+      - Family
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: 8Bm4RuCin4j
+                  type: family
+                  attributes:
+                    name: Barkins
+                    cover_url: 
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '31'
+                        type: kinship
+                - id: 8t3dJZlmbJd
+                  type: family
+                  attributes:
+                    name: Purrkins
+                    cover_url: 
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '30'
+                        type: kinship
+                - id: 4Ec9Y30Oj6v
+                  type: family
+                  attributes:
+                    name: Z-last
+                    cover_url: 
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '29'
+                        type: kinship
+                included:
+                - id: '31'
+                  type: kinship
+                  attributes:
+                    nickname: Perry
+                    avatar_url: 
+                    user_id: 40
+                  relationships: {}
+                - id: '30'
+                  type: kinship
+                  attributes:
+                    nickname: Perry
+                    avatar_url: 
+                    user_id: 40
+                  relationships: {}
+                - id: '29'
+                  type: kinship
+                  attributes:
+                    nickname: some nick
+                    avatar_url: 
+                    user_id: 40
+                  relationships: {}
+  "/api/v1/families":
+    get:
+      summary: list families
+      security:
+      - cookie: []
+      tags:
+      - Family
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: 2FVSDogC2JN
+                  type: family
+                  attributes:
+                    name: Barkins
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 42
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 42
+                    connector_name: Sanford
+                  relationships: {}
+                - id: 7p57R1uiu4U
+                  type: family
+                  attributes:
+                    name: Purrkins
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 42
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 42
+                    connector_name: Sanford
+                  relationships: {}
+                - id: 3HZrwhIaDyS
+                  type: family
+                  attributes:
+                    name: Z-last
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 42
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 42
+                    connector_name: Sanford
+                  relationships: {}
+    post:
+      summary: create family
+      security:
+      - cookie: []
+      tags:
+      - Family
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: 6qvTx9wBAgo
+                  type: family
+                  attributes:
+                    name: some name
+                    motto: some test description
+                    family_type: some
+                    description: 
+                    users_ids:
+                    - 44
+                    admin_avatar_url: 
+                    cover_url: http://www.example.com/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDVG9JYTJWNVNTSWhaemhsZFhKbmJEaHNOWFF5TjNWb2NIaG1PWGR4WlRscWF6bHJhQVk2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpUFdsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1sdFlXZGxMbXB3WnlJN0lHWnBiR1Z1WVcxbEtqMVZWRVl0T0NjbmFXMWhaMlV1YW5CbkJqc0dWRG9SWTI5dWRHVnVkRjkwZVhCbFNTSVBhVzFoWjJVdmFuQmxad1k3QmxRNkVYTmxjblpwWTJWZmJtRnRaVG9KZEdWemRBPT0iLCJleHAiOiIyMDIxLTEyLTEzVDA5OjU3OjE2LjU1N1oiLCJwdXIiOiJibG9iX2tleSJ9fQ==--e0901618a1bef2d7b9c7f5a0f88bd1ecbe253915/image.jpg
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 44
+                    connector_name: Madlyn
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '44'
+                        type: kinship
+                    chapters:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                motto:
+                  type: string
+                cover:
+                  type: string
+                family_type:
+                  type: string
+              example:
+                name: some name
+                motto: some test description
+                cover: eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBEUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e1f87b5bbad84d0799a9fb412c70a862adc10770
+                family_type: some
+  "/api/v1/families/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show family
+      security:
+      - cookie: []
+      tags:
+      - Family
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: qinDnoVnaE
+                  type: family
+                  attributes:
+                    name: Z-last
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 46
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 46
+                    connector_name: Hubert
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '48'
+                        type: kinship
+                    chapters:
+                      data: []
+    patch:
+      summary: update family
+      security:
+      - cookie: []
+      tags:
+      - Family
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: 4KO7TI13ct5
+                  type: family
+                  attributes:
+                    name: some name
+                    motto: some test description
+                    family_type: Community
+                    description: some body
+                    users_ids:
+                    - 48
+                    admin_avatar_url: 
+                    cover_url: http://www.example.com/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDVG9JYTJWNVNTSWhOVzQxYUhkb1pUYzFibWwzTlRVMmR6ZHVlV0l4Tm5kaFl6UXpjZ1k2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpUFdsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1sdFlXZGxMbXB3WnlJN0lHWnBiR1Z1WVcxbEtqMVZWRVl0T0NjbmFXMWhaMlV1YW5CbkJqc0dWRG9SWTI5dWRHVnVkRjkwZVhCbFNTSVBhVzFoWjJVdmFuQmxad1k3QmxRNkVYTmxjblpwWTJWZmJtRnRaVG9KZEdWemRBPT0iLCJleHAiOiIyMDIxLTEyLTEzVDA5OjU3OjE2Ljc4OFoiLCJwdXIiOiJibG9iX2tleSJ9fQ==--9ba601a863eeda4fcef7d883c345042bff83f7fe/image.jpg
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 48
+                    connector_name: Deandre
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '54'
+                        type: kinship
+                    chapters:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                motto:
+                  type: string
+                cover:
+                  type: string
+                description:
+                  type: string
+              example:
+                name: some name
+                motto: some test description
+                description: some body
+                cover: eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBFQT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a5d706634cc0b73e556ad8b32c279b1e544d32b4
+    delete:
+      summary: delete family
+      security:
+      - cookie: []
+      tags:
+      - Family
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+  "/api/v1/invitations/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show invitation
+      security:
+      - cookie: []
+      tags:
+      - Invitation
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: 2ffa7309-3ac3-4cf5-b45f-ca067628c8b7
+                  type: invitation
+                  attributes:
+                    created_at: '2021-12-13T08:57:16.966Z'
+                    sender_id: 54
+                    recipient_id: 55
+                    email: user2@example.com
+                    accepted_at: 
+                    message: ''
+                    role: member
+                    newcomer: true
+                    family_id: 54SISq9Gy8d
+                    family_name: Test family
+                    family_cover_url: 
+                    sender_name: Beverlee
+                  relationships:
+                    family:
+                      data:
+                        id: 54SISq9Gy8d
+                        type: family
+                included:
+                - id: 54SISq9Gy8d
+                  type: family
+                  attributes:
+                    name: Test family
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 54
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: false
+                    connector_id: 54
+                    connector_name: Beverlee
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '65'
+                        type: kinship
+                    chapters:
+                      data: []
+        '403':
+          description: user already present in family
+    patch:
+      summary: update invitation
+      security:
+      - cookie: []
+      tags:
+      - Invitation
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: 647f26ae-f4de-4656-a650-cb9c35326d49
+                  type: invitation
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.073Z'
+                    sender_id: 60
+                    recipient_id: 61
+                    email: user5@example.com
+                    accepted_at: '2021-12-13T08:57:17.085Z'
+                    message: ''
+                    role: member
+                    newcomer: false
+                    family_id: 8Lt18vbxBPJ
+                    family_name: Test family
+                    family_cover_url: 
+                    sender_name: Marlo
+                  relationships:
+                    family:
+                      data:
+                        id: 8Lt18vbxBPJ
+                        type: family
+                included:
+                - id: 8Lt18vbxBPJ
+                  type: family
+                  attributes:
+                    name: Test family
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 60
+                    - 61
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: false
+                    connector_id: 60
+                    connector_name: Marlo
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '69'
+                        type: kinship
+                      - id: '70'
+                        type: kinship
+                    chapters:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nickname:
+                  type: string
+                profile_attrs:
+                  type: json
+              example:
+                invitation:
+                  avatar: eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBFdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--cd27a563188b44e8324eb341b1b8b2162b902c01
+                  nickname: some nickname
+                  profile_attrs:
+                    emails:
+                    - value: some@email.com
+                      name: email - private
+                    - value: some_work@email.com
+                      name: email - work
+  "/api/v1/invitations":
+    delete:
+      summary: delete invitation
+      security:
+      - cookie: []
+      tags:
+      - Invitation
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+              example:
+                ids:
+                - d1a59844-1a4c-48ad-975b-0168920fd18f
+  "/api/v1/kinships/{kinship_id}/invitation":
+    parameters:
+    - name: kinship_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: 'offline member to active: create invitation - user_id or email required'
+      security:
+      - cookie: []
+      tags:
+      - Offline Member
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: 83454373-8a96-456b-b4f5-4ac78607d073
+                  type: invitation
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.280Z'
+                    sender_id: 70
+                    recipient_id: 
+                    email: non_db@valid.com
+                    accepted_at: 
+                    message: some
+                    role: co_admin
+                    newcomer: true
+                    family_id: 3Q1IRXj1pIC
+                    family_name: Test family
+                    family_cover_url: 
+                    sender_name: Wendy
+                  relationships:
+                    family:
+                      data:
+                        id: 3Q1IRXj1pIC
+                        type: family
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                email:
+                  type: string
+                role:
+                  type: string
+                  enum:
+                  - co_admin
+                  - member
+                  - guest
+                user_id:
+                  type: string
+  "/api/v1/kinships/{kinship_id}/offline_member":
+    parameters:
+    - name: kinship_id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: migrate active user to offline member
+      security:
+      - cookie: []
+      tags:
+      - Offline Member
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '81'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.340Z'
+                    user_id: 
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 81
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: 
+                    media_avatar: 
+                    nickname: Curtis
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: member
+                    profile_attrs:
+                      emails:
+                      - name: email
+                        value: ''
+                      website: ''
+                      facebook: ''
+                      addresses:
+                      - name: address
+                        value: ''
+                      instagram: ''
+                      locations:
+                      - name: location
+                        value: ''
+                      birth_date: ''
+                      birth_place: ''
+                      phone_numbers:
+                      - name: phone number
+                        value: ''
+                    description: 
+                    family_id: 75IUvJWMS8V
+                    links: []
+                    name: Curtis
+                    user_type: offline member
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: false
+                    is_current_user_connector: false
+                  relationships:
+                    family:
+                      data:
+                        id: 75IUvJWMS8V
+                        type: family
+                    chapters:
+                      data: []
+        '422':
+          description: error
+  "/api/v1/kinships/{kinship_id}/role":
+    parameters:
+    - name: kinship_id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: update role
+      security:
+      - cookie: []
+      tags:
+      - Role
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '84'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.435Z'
+                    user_id: 77
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 84
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: 
+                    media_avatar: 
+                    nickname: Dianne
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: co_admin
+                    profile_attrs:
+                      emails:
+                      - name: email
+                        value: ''
+                      website: ''
+                      facebook: ''
+                      addresses:
+                      - name: address
+                        value: ''
+                      instagram: ''
+                      locations:
+                      - name: location
+                        value: ''
+                      birth_date: ''
+                      birth_place: ''
+                      phone_numbers:
+                      - name: phone number
+                        value: ''
+                    description: 
+                    family_id: 130cBYDSvJr
+                    links: []
+                    name: Dianne
+                    user_type: default
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: false
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 130cBYDSvJr
+                        type: family
+                    chapters:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum:
+                    co_admin: co_admin
+                    member: member
+                    guest: guest
+  "/api/v1/kinships/by_family/{family_id}":
+    parameters:
+    - name: family_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show kinship
+      security:
+      - cookie: []
+      tags:
+      - Kinship
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '88'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.540Z'
+                    user_id: 81
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 88
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: 
+                    media_avatar: 
+                    nickname: Dustin
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: admin
+                    profile_attrs:
+                      emails:
+                      - name: email
+                        value: ''
+                      website: ''
+                      facebook: ''
+                      addresses:
+                      - name: address
+                        value: ''
+                      instagram: ''
+                      locations:
+                      - name: location
+                        value: ''
+                      birth_date: ''
+                      birth_place: ''
+                      phone_numbers:
+                      - name: phone number
+                        value: ''
+                    description: 
+                    family_id: 3zVOQXmdnom
+                    links: []
+                    name: Dustin
+                    user_type: administrator
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: true
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 3zVOQXmdnom
+                        type: family
+                    chapters:
+                      data: []
+  "/api/v1/kinships/kinship_data":
+    parameters:
+    - name: family_id
+      in: query
+      schema:
+        type: string
+    - name: user_id
+      in: query
+      schema:
+        type: string
+    get:
+      summary: kinship_data kinship
+      security:
+      - cookie: []
+      tags:
+      - Kinship
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '90'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.590Z'
+                    user_id: 83
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 90
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: 
+                    media_avatar: 
+                    nickname: Jonah
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: admin
+                    profile_attrs:
+                      emails:
+                      - name: email
+                        value: ''
+                      website: ''
+                      facebook: ''
+                      addresses:
+                      - name: address
+                        value: ''
+                      instagram: ''
+                      locations:
+                      - name: location
+                        value: ''
+                      birth_date: ''
+                      birth_place: ''
+                      phone_numbers:
+                      - name: phone number
+                        value: ''
+                    description: 
+                    family_id: 4sRF1330tNk
+                    links: []
+                    name: Jonah
+                    user_type: administrator
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: true
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 4sRF1330tNk
+                        type: family
+                    chapters:
+                      data: []
+  "/api/v1/kinships/{id}/upload_config":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: upload_config kinship
+      deprecated: true
+      security:
+      - cookie: []
+      tags:
+      - Kinship
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+  "/api/v1/kinships/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show kinship
+      security:
+      - cookie: []
+      tags:
+      - Kinship
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '94'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.680Z'
+                    user_id: 87
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 94
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: 
+                    media_avatar: 
+                    nickname: Lyman
+                    location: 
+                    birth_date: 
+                    birth_place: 
+                    address: 
+                    phone: 
+                    email: 
+                    death_date: 
+                    role: admin
+                    profile_attrs:
+                      emails:
+                      - name: email
+                        value: ''
+                      website: ''
+                      facebook: ''
+                      addresses:
+                      - name: address
+                        value: ''
+                      instagram: ''
+                      locations:
+                      - name: location
+                        value: ''
+                      birth_date: ''
+                      birth_place: ''
+                      phone_numbers:
+                      - name: phone number
+                        value: ''
+                    description: 
+                    family_id: 1PhOdCyM67M
+                    links: []
+                    name: Lyman
+                    user_type: administrator
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: true
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 1PhOdCyM67M
+                        type: family
+                    chapters:
+                      data: []
+    patch:
+      summary: update kinship
+      security:
+      - cookie: []
+      tags:
+      - Kinship
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '96'
+                  type: kinship
+                  attributes:
+                    created_at: '2021-12-13T08:57:17.746Z'
+                    user_id: 89
+                    rich_profile:
+                      id: 
+                      name: rich_profile
+                      body: 
+                      record_type: Kinship
+                      record_id: 96
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    avatar_url: http://www.example.com/rails/active_storage/disk/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDVG9JYTJWNVNTSWhNMnhyY21GaU1tZHBaV1ZpYTJadGF6YzVibVZxY1d4NGVYa3had1k2QmtWVU9oQmthWE53YjNOcGRHbHZia2tpUFdsdWJHbHVaVHNnWm1sc1pXNWhiV1U5SW1sdFlXZGxMbXB3WnlJN0lHWnBiR1Z1WVcxbEtqMVZWRVl0T0NjbmFXMWhaMlV1YW5CbkJqc0dWRG9SWTI5dWRHVnVkRjkwZVhCbFNTSVBhVzFoWjJVdmFuQmxad1k3QmxRNkVYTmxjblpwWTJWZmJtRnRaVG9KZEdWemRBPT0iLCJleHAiOiIyMDIxLTEyLTEzVDA5OjU3OjE3LjgxMFoiLCJwdXIiOiJibG9iX2tleSJ9fQ==--ea83415f2bcc1072e3884a1167fb07bfb1d57ee6/image.jpg
+                    media_avatar: 
+                    nickname: some nickname
+                    location: some location
+                    birth_date: '2020'
+                    birth_place: January
+                    address: '1'
+                    phone: '2020'
+                    email: February
+                    death_date: '2'
+                    role: admin
+                    profile_attrs:
+                      emails:
+                      - value: some@email.com
+                        name: email - private
+                      - value: some_work@email.com
+                        name: email - work
+                    description: 
+                    family_id: 9F0qkhvEPWD
+                    links: []
+                    name: some nickname
+                    user_type: administrator
+                    user_title: 
+                    invited_by: 
+                    is_connected_by_current_user: true
+                    is_current_user_connector: true
+                  relationships:
+                    family:
+                      data:
+                        id: 9F0qkhvEPWD
+                        type: family
+                    chapters:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                nickname:
+                  type: string
+                location:
+                  type: string
+                birth_date:
+                  type: string
+                birth_place:
+                  type: string
+                death_date:
+                  type: string
+                address:
+                  type: string
+                phone:
+                  type: string
+                email:
+                  type: string
+                profile_attrs:
+                  type: json
+                rich_profile:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+              example:
+                avatar: eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBGZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--b8ef962422f59e5a2c571a60107e69768d3e5c7d
+                nickname: some nickname
+                location: some location
+                birth_date: '2020'
+                birth_place: January
+                death_date: '2'
+                address: '1'
+                phone: '2020'
+                email: February
+                profile_attrs:
+                  emails:
+                  - value: some@email.com
+                    name: email - private
+                  - value: some_work@email.com
+                    name: email - work
+                rich_profile:
+                  body: some body
+  "/api/v1/publications/{publication_id}/appreciations":
+    parameters:
+    - name: publication_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create appreciation
+      security:
+      - cookie: []
+      tags:
+      - Appreciation
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '1'
+                  type: appreciation
+                  attributes:
+                    reaction: smile
+                    created_at: '2021-12-13T08:57:17.923Z'
+                    appreciable_type: Publication
+                    appreciable_id: 4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reaction:
+                  type: string
+                  enum:
+                  - smile
+                appreciable_id:
+                  type: string
+                appreciable_type:
+                  type: string
+                  enum:
+                  - Story
+              required:
+              - reaction
+              - appreciable_id
+              - appreciable_type
+  "/api/v1/publications/{publication_id}/appreciations/{id}":
+    parameters:
+    - name: publication_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete appreciation
+      security:
+      - cookie: []
+      tags:
+      - Appreciation
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+  "/api/v1/publications/{publication_id}/comments":
+    parameters:
+    - name: publication_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create comment
+      security:
+      - cookie: []
+      tags:
+      - Comment
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: EHoABR4uGz
+                  type: comment
+                  attributes:
+                    body: some body!
+                    created_at: '2021-12-13T08:57:18.229Z'
+                    user_id: 106
+                    commentable_type: Publication
+                    comments_count: 0
+                    commentable_id: 11
+                    user_name: Gabriel
+                    user_avatar_url: 
+                  relationships:
+                    comments:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                commentable_type:
+                  type: string
+                  enum:
+                  - Story
+                  - Publication
+                  - Comment
+                  - Section
+                commentable_id:
+                  type: string
+              required:
+              - body
+  "/api/v1/publications/{publication_id}/comments/{id}":
+    parameters:
+    - name: publication_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete comment
+      security:
+      - cookie: []
+      tags:
+      - Comment
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+  "/api/v1/publications":
+    get:
+      summary: list publications
+      tags:
+      - Publication
+      security:
+      - cookie: []
+      parameters:
+      - name: family_id
+        in: query
+        schema:
+          type: string
+          example: 98
+      - name: publication_visibility
+        in: query
+        schema:
+          type: string
+          enum:
+          - private_stories
+          - shared_stories
+      - name: categories
+        in: query
+        schema:
+          type: array
+      - name: author_id
+        in: query
+        schema:
+          type: string
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: sort_by
+        in: query
+        enum:
+        - created_at
+        - updated_at
+        - title
+        default: updated_at
+        schema:
+          type: string
+      - name: sort_direction
+        in: query
+        enum:
+        - ASC
+        - DESC
+        default: DESC
+        schema:
+          type: string
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: '21'
+                  type: publication
+                  attributes:
+                    appreciations_count: 0
+                    publish_on: 
+                    comments_count: 0
+                    all_comments_count: 0
+                    share_type: community
+                    appreciation_id: 
+                    unread: true
+                    user_name: 
+                    user_avatar: 
+                    can_collaborate: true
+                  relationships:
+                    family:
+                      data:
+                        id: 3M7dKIpbWDO
+                        type: family
+                    story:
+                      data:
+                        id: AK2gmI97LMb
+                        type: story
+                    comments:
+                      data: []
+                - id: '22'
+                  type: publication
+                  attributes:
+                    appreciations_count: 0
+                    publish_on: '2022-01-13'
+                    comments_count: 0
+                    all_comments_count: 0
+                    share_type: community
+                    appreciation_id: 
+                    unread: true
+                    user_name: Goldie
+                    user_avatar: 
+                    can_collaborate: true
+                  relationships:
+                    family:
+                      data:
+                        id: 3M7dKIpbWDO
+                        type: family
+                    story:
+                      data:
+                        id: 6udKVaqbZgE
+                        type: story
+                    comments:
+                      data: []
+                - id: '20'
+                  type: publication
+                  attributes:
+                    appreciations_count: 0
+                    publish_on: 
+                    comments_count: 1
+                    all_comments_count: 1
+                    share_type: community
+                    appreciation_id: 
+                    unread: true
+                    user_name: Goldie
+                    user_avatar: 
+                    can_collaborate: true
+                  relationships:
+                    family:
+                      data:
+                        id: 3M7dKIpbWDO
+                        type: family
+                    story:
+                      data:
+                        id: 6udKVaqbZgE
+                        type: story
+                    comments:
+                      data:
+                      - id: 9uhqLOqfh2C
+                        type: comment
+                included:
+                - id: 3M7dKIpbWDO
+                  type: family
+                  attributes:
+                    name: Test family
+                  relationships: {}
+                - id: AK2gmI97LMb
+                  type: story
+                  attributes:
+                    date: ''
+                    description: ''
+                    categories: []
+                    title: title 16
+                    start_year: 
+                    start_month: 
+                    start_day: 
+                    end_year: 
+                    end_month: 
+                    end_day: 
+                    user_id: 123
+                    is_range: false
+                    date_as_text: ''
+                    contributors_count: 0
+                    sections_count: 0
+                    created_at: '2021-12-13T08:57:18.501Z'
+                    updated_at: '2021-12-13T08:57:18.501Z'
+                    unread: true
+                    published: true
+                    is_time_capsule: false
+                    time_capsule_released: false
+                    publish_on: 
+                    cover_url: 
+                  relationships: {}
+                - id: 6udKVaqbZgE
+                  type: story
+                  attributes:
+                    date: ''
+                    description: ''
+                    categories: []
+                    title: title 15
+                    start_year: 
+                    start_month: 
+                    start_day: 
+                    end_year: 
+                    end_month: 
+                    end_day: 
+                    user_id: 121
+                    is_range: false
+                    date_as_text: ''
+                    contributors_count: 0
+                    sections_count: 0
+                    created_at: '2021-12-13T08:57:18.479Z'
+                    updated_at: '2021-12-13T08:57:18.479Z'
+                    unread: true
+                    published: true
+                    is_time_capsule: true
+                    time_capsule_released: false
+                    publish_on: '2022-01-13'
+                    cover_url: 
+                  relationships: {}
+                - id: 9uhqLOqfh2C
+                  type: comment
+                  attributes:
+                    body: Hello world
+                    created_at: '2021-12-13T08:57:18.491Z'
+                    user_id: 122
+                    commentable_type: Publication
+                    comments_count: 0
+                    commentable_id: 20
+                    user_name: 
+                    user_avatar_url: 
+                  relationships:
+                    comments:
+                      data: []
+  "/api/v1/publications/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show publication
+      tags:
+      - Publication
+      security:
+      - cookie: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '24'
+                  type: publication
+                  attributes:
+                    appreciations_count: 0
+                    publish_on: 
+                    comments_count: 1
+                    all_comments_count: 3
+                    share_type: community
+                    appreciation_id: 
+                    unread: 
+                    user_name: Venita
+                    user_avatar: 
+                    can_collaborate: true
+                    all_publications:
+                    - id: 24
+                      title: title 18
+                  relationships:
+                    family:
+                      data:
+                        id: 191gw3b46IU
+                        type: family
+                    story:
+                      data:
+                        id: 2FumLykDoEV
+                        type: story
+                    comments:
+                      data:
+                      - id: 7fWhXuyt5oM
+                        type: comment
+                    all_comments:
+                      data:
+                      - id: 7fWhXuyt5oM
+                        type: comment
+                      - id: 97jdfDNW6YX
+                        type: comment
+                      - id: 7ezvDy4Jrj6
+                        type: comment
+                included:
+                - id: 7fWhXuyt5oM
+                  type: comment
+                  attributes:
+                    body: Hello world
+                    created_at: '2021-12-13T08:57:18.675Z'
+                    user_id: 130
+                    commentable_type: Publication
+                    comments_count: 0
+                    commentable_id: 24
+                    user_name: 
+                    user_avatar_url: 
+                  relationships:
+                    comments:
+                      data: []
+                - id: 97jdfDNW6YX
+                  type: comment
+                  attributes:
+                    body: Hello world
+                    created_at: '2021-12-13T08:57:18.705Z'
+                    user_id: 132
+                    commentable_type: Section
+                    comments_count: 1
+                    commentable_id: 2
+                    user_name: 
+                    user_avatar_url: 
+                  relationships:
+                    comments:
+                      data:
+                      - id: 7ezvDy4Jrj6
+                        type: comment
+                - id: 7ezvDy4Jrj6
+                  type: comment
+                  attributes:
+                    body: Hello world
+                    created_at: '2021-12-13T08:57:18.715Z'
+                    user_id: 133
+                    commentable_type: Comment
+                    comments_count: 0
+                    commentable_id: 97jdfDNW6YX
+                    user_name: 
+                    user_avatar_url: 
+                  relationships:
+                    comments:
+                      data: []
+                - id: '24'
+                  type: publication
+                  attributes:
+                    appreciations_count: 0
+                    publish_on: 
+                    comments_count: 1
+                    all_comments_count: 3
+                    share_type: community
+                    appreciation_id: 
+                    unread: 
+                    user_name: Venita
+                    user_avatar: 
+                    can_collaborate: true
+                    all_publications:
+                    - id: 24
+                      title: title 18
+                  relationships:
+                    family:
+                      data:
+                        id: 191gw3b46IU
+                        type: family
+                    story:
+                      data:
+                        id: 2FumLykDoEV
+                        type: story
+                    comments:
+                      data:
+                      - id: 7fWhXuyt5oM
+                        type: comment
+                    all_comments:
+                      data:
+                      - id: 7fWhXuyt5oM
+                        type: comment
+                      - id: 97jdfDNW6YX
+                        type: comment
+                      - id: 7ezvDy4Jrj6
+                        type: comment
+                - id: 191gw3b46IU
+                  type: family
+                  attributes:
+                    name: Test family
+                    motto: ''
+                    family_type: Community
+                    description: 
+                    users_ids:
+                    - 129
+                    admin_avatar_url: 
+                    cover_url: 
+                    links: []
+                    is_connected_by_current_user: true
+                    connector_id: 129
+                    connector_name: Venita
+                  relationships:
+                    kinships:
+                      data:
+                      - id: '116'
+                        type: kinship
+                    chapters:
+                      data: []
+                - id: 2FumLykDoEV
+                  type: story
+                  attributes:
+                    date: ''
+                    description: ''
+                    categories: []
+                    title: title 18
+                    start_year: 
+                    start_month: 
+                    start_day: 
+                    end_year: 
+                    end_month: 
+                    end_day: 
+                    user_id: 129
+                    is_range: false
+                    date_as_text: ''
+                    contributors_count: 0
+                    sections_count: 1
+                    created_at: '2021-12-13T08:57:18.664Z'
+                    updated_at: '2021-12-13T08:57:18.682Z'
+                    unread: 
+                    published: true
+                    links:
+                    - id: 2
+                      title: 
+                      position: 0
+                    is_time_capsule: false
+                    time_capsule_released: false
+                    publish_on: 
+                    cover_url: 
+                    full_size_cover_url: 
+                  relationships:
+                    sections:
+                      data:
+                      - id: '2'
+                        type: section
+                    families:
+                      data:
+                      - id: 191gw3b46IU
+                        type: family
+                    publications:
+                      data:
+                      - id: '24'
+                        type: publication
+  "/api/v1/stories/{story_id}/publications":
+    parameters:
+    - name: story_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create publication
+      security:
+      - cookie: []
+      tags:
+      - Publication
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: '30'
+                  type: publication
+                  attributes:
+                    appreciations_count: 0
+                    publish_on: '3030-06-01'
+                    comments_count: 0
+                    all_comments_count: 0
+                    share_type: community
+                    appreciation_id: 
+                    unread: 
+                    user_name: James
+                    user_avatar: 
+                    can_collaborate: true
+                    all_publications:
+                    - id: 29
+                      title: title 22
+                  relationships:
+                    family:
+                      data:
+                        id: AiwMC47Nx3d
+                        type: family
+                    story:
+                      data:
+                        id: 5dwKHKTflD9
+                        type: story
+                    comments:
+                      data: []
+                    all_comments:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                families_ids:
+                  type: array
+                publish_on:
+                  type: string
+                share_type:
+                  type: string
+                  enum:
+                  - community
+                  - shared
+                  - private
+              example:
+                publication:
+                  families_ids:
+                  - AiwMC47Nx3d
+                  publish_on:
+                    year: '3030'
+                    month: June
+                    day: '1'
+                  share_type: community
+  "/api/v1/stories/{story_id}/publications/{id}":
+    parameters:
+    - name: story_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete publication
+      security:
+      - cookie: []
+      tags:
+      - Publication
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+  "/api/v1/stories/{story_id}/sections":
+    parameters:
+    - name: story_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list sections
+      security:
+      - cookie: []
+      tags:
+      - Section
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                - id: '4'
+                  type: section
+                  attributes:
+                    body: Section body
+                    media_type: image
+                    position: 0
+                    created_at: '2021-12-13T08:57:19.082Z'
+                    updated_at: '2021-12-13T08:57:19.082Z'
+                    title: 
+                    comments_count: 0
+                    story_id: 4pHFP2kZQqU
+                    rich_body:
+                      id: 
+                      name: rich_body
+                      body: ''
+                      record_type: Section
+                      record_id: 4
+                      created_at: 
+                      updated_at: 
+                      html: ''
+                    is_author: true
+                    is_story_author: true
+                    is_connector: false
+                    author_avatar_url: 
+                    author_name: 
+                  relationships:
+                    attachments:
+                      data:
+                      - id: '12'
+                        type: attachment
+                    comments:
+                      data: []
+    post:
+      summary: create section
+      security:
+      - cookie: []
+      tags:
+      - Section
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '7'
+                  type: section
+                  attributes:
+                    body: 
+                    media_type: text
+                    position: 1
+                    created_at: '2021-12-13T08:57:19.182Z'
+                    updated_at: '2021-12-13T08:57:19.190Z'
+                    title: Brzeczyszczykiewicz
+                    comments_count: 0
+                    story_id: 6nYE63W87U7
+                    rich_body:
+                      id: 10
+                      name: rich_body
+                      body: '{"body"=&gt;"some body"}'
+                      record_type: Section
+                      record_id: 7
+                      created_at: '2021-12-13T08:57:19.189Z'
+                      updated_at: '2021-12-13T08:57:19.189Z'
+                      html: <div class="trix-content">  {"body"=&gt;"some body"}</div>
+                    is_author: true
+                    is_story_author: true
+                    is_connector: false
+                    author_avatar_url: 
+                    author_name: 
+                  relationships:
+                    attachments:
+                      data: []
+                    comments:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                media_type:
+                  type: string
+                position:
+                  type: integer
+                title:
+                  type: string
+                rich_body:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+  "/api/v1/stories/{story_id}/sections/{id}":
+    parameters:
+    - name: story_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: update section
+      security:
+      - cookie: []
+      tags:
+      - Section
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '9'
+                  type: section
+                  attributes:
+                    body: Section body
+                    media_type: text
+                    position: 1
+                    created_at: '2021-12-13T08:57:19.254Z'
+                    updated_at: '2021-12-13T08:57:19.280Z'
+                    title: Brzeczyszczykiewicz
+                    comments_count: 0
+                    story_id: ARjHdOP7FrS
+                    rich_body:
+                      id: 11
+                      name: rich_body
+                      body: some body
+                      record_type: Section
+                      record_id: 9
+                      created_at: '2021-12-13T08:57:19.279Z'
+                      updated_at: '2021-12-13T08:57:19.279Z'
+                      html: <div class="trix-content">  some body</div>
+                    is_author: true
+                    is_story_author: true
+                    is_connector: false
+                    author_avatar_url: 
+                    author_name: 
+                  relationships:
+                    attachments:
+                      data:
+                      - id: '16'
+                        type: attachment
+                    comments:
+                      data: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                media_type:
+                  type: string
+                position:
+                  type: integer
+                title:
+                  type: string
+                rich_body:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+    delete:
+      summary: delete section
+      security:
+      - cookie: []
+      tags:
+      - Section
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+  "/api/v1/stories/{id}/duplicate":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: duplicate story
+      security:
+      - cookie: []
+      tags:
+      - Story
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: duplicate created
+          content:
+            application/json:
+              example:
+                data:
+                  id: 7c2qQY93Ipq
+                  type: story
+                  attributes:
+                    date: ''
+                    description: ''
+                    categories: []
+                    title: Copy Old Title
+                    start_year: 
+                    start_month: 
+                    start_day: 
+                    end_year: 
+                    end_month: 
+                    end_day: 
+                    user_id: 158
+                    is_range: false
+                    date_as_text: ''
+                    contributors_count: 0
+                    sections_count: 0
+                    created_at: '2021-12-13T08:57:19.478Z'
+                    updated_at: '2021-12-13T08:57:19.478Z'
+                    unread: 
+                    published: false
+                    links: []
+                    is_time_capsule: false
+                    time_capsule_released: false
+                    publish_on: 
+                    cover_url: 
+                    full_size_cover_url: 
+                  relationships:
+                    sections:
+                      data: []
+                    families:
+                      data: []
+                    publications:
+                      data: []
+  "/api/v1/stories/{id}/notify":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: notify contributors about new story changes
+      security:
+      - cookie: []
+      tags:
+      - Story
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: 8ukGVelMqLn
+                  type: story
+                  attributes:
+                    date: ''
+                    description: ''
+                    categories: []
+                    title: Old Title
+                    start_year: 
+                    start_month: 
+                    start_day: 
+                    end_year: 
+                    end_month: 
+                    end_day: 
+                    user_id: 160
+                    is_range: false
+                    date_as_text: ''
+                    contributors_count: 0
+                    sections_count: 0
+                    created_at: '2021-12-13T08:57:19.537Z'
+                    updated_at: '2021-12-13T08:57:19.537Z'
+                    unread: 
+                    published: true
+                    links: []
+                    is_time_capsule: false
+                    time_capsule_released: false
+                    publish_on: 
+                    cover_url: 
+                    full_size_cover_url: 
+                  relationships:
+                    sections:
+                      data: []
+                    families:
+                      data:
+                      - id: 2mjAvy5qxL7
+                        type: family
+                    publications:
+                      data:
+                      - id: '37'
+                        type: publication
+  "/api/v1/stories/{id}/chapter_links":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list chapter_links
+      security:
+      - cookie: []
+      tags:
+      - Story
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: 421a3fZzfiv
+                  type: story
+                  attributes:
+                    date: ''
+                    description: ''
+                    categories: []
+                    title: Old Title
+                    start_year: 
+                    start_month: 
+                    start_day: 
+                    end_year: 
+                    end_month: 
+                    end_day: 
+                    user_id: 162
+                    is_range: false
+                    date_as_text: ''
+                    contributors_count: 0
+                    sections_count: 0
+                    created_at: '2021-12-13T08:57:19.605Z'
+                    updated_at: '2021-12-13T08:57:19.605Z'
+                    unread: 
+                    published: true
+                    links: []
+                    is_time_capsule: false
+                    time_capsule_released: false
+                    publish_on: 
+                    cover_url: 
+                    full_size_cover_url: 
+                  relationships:
+                    sections:
+                      data: []
+                    families:
+                      data:
+                      - id: 3pWrSNzvNC9
+                        type: family
+                    publications:
+                      data:
+                      - id: '39'
+                        type: publication
+  "/api/v1/stories/{id}/upload_config":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: filestack config
+      deprecated: true
+      security:
+      - cookie: []
+      tags:
+      - Story
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+  "/api/v1/stories":
+    post:
+      summary: create story
+      security:
+      - cookie: []
+      tags:
+      - Story
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: story created
+          content:
+            application/json:
+              example:
+                data:
+                  id: 3RFwWU7y3Up
+                  type: story
+                  attributes:
+                    date: ''
+                    description: some test description
+                    categories:
+                    - category1
+                    - category2
+                    - category3
+                    title: some title
+                    start_year: '2020'
+                    start_month: January
+                    start_day: '1'
+                    end_year: '2020'
+                    end_month: February
+                    end_day: '2'
+                    user_id: 168
+                    is_range: true
+                    date_as_text: January 1st - February 2nd, 2020
+                    contributors_count: 0
+                    sections_count: 0
+                    created_at: '2021-12-13T08:57:19.807Z'
+                    updated_at: '2021-12-13T08:57:19.813Z'
+                    unread: 
+                    published: false
+                    links: []
+                    is_time_capsule: false
+                    time_capsule_released: false
+                    publish_on: 
+                    cover_url: "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBHdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--7f21db87af572d189f0b62422817d7c6673dfdee/image.jpg"
+                    full_size_cover_url: "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBHdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--7f21db87af572d189f0b62422817d7c6673dfdee/image.jpg"
+                  relationships:
+                    sections:
+                      data: []
+                    families:
+                      data: []
+                    publications:
+                      data:
+                      - id: '46'
+                        type: publication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                categories:
+                  type: array
+                description:
+                  type: string
+                start_year:
+                  type: string
+                start_month:
+                  type: string
+                start_day:
+                  type: string
+                end_year:
+                  type: string
+                end_month:
+                  type: string
+                end_day:
+                  type: string
+                cover:
+                  type: string
+                is_range:
+                  type: boolean
+              example:
+                story:
+                  title: some title
+                  description: some test description
+                  start_year: '2020'
+                  start_month: January
+                  start_day: '1'
+                  end_year: '2020'
+                  end_month: February
+                  end_day: '2'
+                  cover: eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBHdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--7f21db87af572d189f0b62422817d7c6673dfdee
+                  is_range: true
+                  categories:
+                  - category1
+                  - category2
+                  - category3
+  "/api/v1/stories/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete story
+      security:
+      - cookie: []
+      tags:
+      - Story
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+  "/api/v1/user":
+    patch:
+      summary: update user
+      security:
+      - cookie: []
+      tags:
+      - User
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '172'
+                  type: user
+                  attributes:
+                    name: new first new last
+                    first_name: new first
+                    last_name: new last
+                    location: 
+                    email: user172@example.com
+                    phone: 
+                    birth_date: 
+                    admin: false
+                    avatar_url: 
+                    vault_id: 173
+                    guest: 
+                    trialing: 
+                    active: 
+                  relationships:
+                    vaults:
+                      data:
+                      - id: '173'
+                        type: vault
+                    families:
+                      data:
+                      - id: GD5HYPQ6QI
+                        type: family
+                    kinships:
+                      data:
+                      - id: '139'
+                        type: kinship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+  "/api/v1/vaults/{vault_id}/attachments":
+    parameters:
+    - name: vault_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create attachment
+      security:
+      - cookie: []
+      tags:
+      - Attachment
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                box_id:
+                  type: string
+                file:
+                  type: string
+              required:
+              - file
+  "/api/v1/vaults/{vault_id}/attachments/move":
+    parameters:
+    - name: vault_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: move attachment
+      security:
+      - cookie: []
+      tags:
+      - Attachment
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                box_id:
+                  type: string
+                ids:
+                  type: array
+              required:
+              - update_me_param
+  "/api/v1/vaults/{vault_id}/attachments/copy":
+    parameters:
+    - name: vault_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: copy attachment
+      security:
+      - cookie: []
+      tags:
+      - Attachment
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                new_vault_id:
+                  type: string
+                box_id:
+                  type: string
+              required:
+              - ids
+              - new_vault_id
+  "/api/v1/vaults/{vault_id}/attachments/{id}":
+    parameters:
+    - name: vault_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: update attachment
+      security:
+      - cookie: []
+      tags:
+      - Attachment
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+              required:
+              - title
+  "/api/v1/vaults/{vault_id}/boxes":
+    parameters:
+    - name: vault_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create box
+      security:
+      - cookie: []
+      tags:
+      - Box
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                parent_box_id:
+                  type: string
+              required:
+              - name
+  "/api/v1/vaults/{vault_id}/boxes/{id}":
+    parameters:
+    - name: vault_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show box
+      security:
+      - cookie: []
+      tags:
+      - Box
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+    patch:
+      summary: update box
+      security:
+      - cookie: []
+      tags:
+      - Box
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: change name
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                parent_box_id:
+                  type: string
+  "/api/v1/vaults/{vault_id}/items":
+    parameters:
+    - name: vault_id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: bulk_delete files and boxes
+      security:
+      - cookie: []
+      tags:
+      - Vault
+      parameters: []
+      responses:
+        '401':
+          description: with selected file of another user it return error
+        '204':
+          description: successful
+        '403':
+          description: with child box it return error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                boxes_ids:
+                  type: array
+                files_ids:
+                  type: array
+  "/api/v1/vaults/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: query
+      in: query
+      schema:
+        type: string
+    - name: box_id
+      in: query
+      schema:
+        type: string
+    - name: sort_direction
+      in: query
+      enum:
+      - ASC
+      - DESC
+      default: DESC
+      schema:
+        type: string
+    - name: sort_by
+      in: query
+      enum:
+      - name
+      - content_type
+      - created_at
+      default: created_at
+      schema:
+        type: string
+    - name: per_page
+      in: query
+      default: 10
+      schema:
+        type: integer
+    - name: only_boxes
+      in: query
+      default: false
+      schema:
+        type: boolean
+    get:
+      summary: show vault
+      security:
+      - cookie: []
+      tags:
+      - Vault
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              example:
+                data:
+                  id: '175'
+                  type: vault
+                  attributes:
+                    name: My Vault
+                    can_add_box: false
+                    cover_url: 
+                  relationships:
+                    attachments:
+                      data: []
+                    boxes:
+                      data: []
+                    media_files:
+                      data: []
+                included: []
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000

@@ -1,0 +1,9 @@
+test:
+  adapter: postgresql
+  database: kinscape_test
+  encoding: utf8
+  min_messages: warning
+  host: localhost
+  username: postgres
+  pool: 10
+  timeout: 20000

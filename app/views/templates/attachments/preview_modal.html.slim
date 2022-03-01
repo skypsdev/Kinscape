@@ -1,0 +1,43 @@
+modal.modal.attachment-preview-modal#attachment-preview-modal(
+  ng-class='{ "active": modal.isOpen("attachment-preview-modal") }'
+)
+  a.close(
+    href
+    ng-click="modal.close()"
+    tooltip='{{i18n.t("vaults.attachment_modal.close")}}'
+    tooltip-placement="top"
+  )
+  .modal-header
+    .file-name ng-bind='modal.context.filename'
+
+  .image-container
+    .vertical-center
+      .vc-cell(ng-switch on='modal.context.type')
+        .image-wrapper ng-switch-when='Image'
+          img ng-src="{{ modal.context.convertedUrl('collage') || modal.context.trustedUrl() }}"
+        .audio-wrapper ng-switch-when='Audio'
+          audio.audio(
+            file-load
+            controls
+            ng-hide="loadError"
+            ng-src="{{ modal.context.convertedUrl('mp3') }}"
+          )
+
+          .processing-message(ng-cloak ng-show="loadError")
+            = t('media_files.processing', type: 'audio')
+        .video-wrapper(
+          ng-switch-when='Video'
+          ng-class="{'playing': isPlaying, 'load-error': loadError}"
+        )
+          video(
+            controls
+            pause-overlay
+            ng-hide="loadError"
+          )
+            source(file-load ng-src="{{modal.context.convertedUrl('mp4')}}")
+
+          .processing-message(
+            ng-cloak
+            ng-show="loadError"
+          )
+            | {{i18n.t('media_files.processing', {type: 'video'})}}

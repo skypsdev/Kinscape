@@ -1,0 +1,68 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: Ruby
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13.4
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: kinscape_test
+        ports:
+          - 5432:5432
+    env:
+      RAILS_ENV: test
+      GEMFILE_RUBY_VERSION: 2.7.2
+      POSTGRES_HOST: localhost
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      GITHUB_TOKEN: ${{ secrets.BUNDLE_ACCESS_TOKEN }}
+      BUNDLE_GITHUB__COM: x-access-token:${{ secrets.BUNDLE_ACCESS_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: FedericoCarboni/setup-ffmpeg@v1
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Create DB
+      run: |
+        bundle exec rails db:create db:schema:load db:test:prepare
+    - name: Run tests
+      run: bundle exec rspec
+
+  rubocop-lint:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        bundler-cache: true
+    - name: Run Rubocop
+      run: bundle exec rubocop
+
+  es-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install JS dependencies
+        run: bin/yarn
+      - name: Run Yarn Lint
+        run: yarn lint

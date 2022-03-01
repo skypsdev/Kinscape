@@ -1,0 +1,66 @@
+---
+en:
+  clearance_mailer:
+    change_password:
+      closing: If you didn't request this, ignore this email. Your password
+        has not been changed.
+      opening: 'Someone, hopefully you, requested we send you a link to change
+        your password:'
+  flashes:
+    failure_after_create: Bad email or password. Try again!
+    failure_after_update: Password can't be blank.
+    password_not_match: Doesn't Match Password.
+    failure_when_forbidden: Please double check the URL or try submitting
+      the form again.
+    send_instructions: You will receive an email with instructions on how to reset 
+      your password in a few minutes.
+  helpers:
+    label:
+      password:
+        email: Email address
+      password_reset:
+        password: Choose password
+    submit:
+      password:
+        submit: Send me reset password instructions
+      password_reset:
+        submit: Update password
+      session:
+        submit: Sign in
+      user:
+        create: Sign up
+  layouts:
+    application:
+      sign_in: Sign in
+      sign_out: Sign out
+  passwords:
+    create:
+      description: If an account with that email address exists, you will receive an email within the next few minutes. It contains instructions for changing your password.
+    edit:
+      description: Choose a new password below.
+      title: Change your password
+    new:
+      description: To be emailed a link to reset your password, please enter
+        your email address.
+      title: Forgot your password?
+      email: can't be blank
+  sessions:
+    form:
+      forgot_password: Forgot password?
+      sign_up: Sign up
+    new:
+      title: Sign in
+  users:
+    new:
+      sign_in: Sign in
+      title: Sign up
+      subtitle: No credit card required
+      subtitle2: Subscription or storage fees may apply in future
+      footer_term1: Subscription Fee $%{amount}/%{interval} after Free Trial
+      footer_term2: Includes all-features & 20 GB Storage
+      footer_term3: Community Subscriptions Coming Soon!
+      markup_title1: Build a Lasting Family History
+      markup_content1: Capture Treasured Family Moments
+      markup_content2: Privately Share Stories, Photos & Keepsakes
+      markup_content3: 100% Private
+      markup_content4: No Advertising

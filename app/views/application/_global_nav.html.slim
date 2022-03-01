@@ -1,0 +1,67 @@
+nav#slide-menu
+  .inner-wrapper
+    = link_to '#', class: 'close', 'ng-click' => 'menu.toggle()' do
+      i.fa.fa-times
+
+    ul.user-info
+      li
+        = link_to stories_path(user: current_user.id), class: 'name' do
+          = current_user.name
+        .email = current_user.email
+
+    ul.main-links.flexible
+      - unless current_user.guest?
+        li
+          = link_to stories_path, method: :post, title: t('stories.new_title') do
+            i.fa.fa-pencil
+            span = t('stories.new')
+
+      li
+        = link_to stories_path, title: t('header.stories_title') do
+          i.fa.fa-book
+          span = t('header.stories')
+
+      li
+        = link_to families_path, title: t('header.families_title'), class: params[:controller] == 'families' ? 'selected' : '' do
+          i.fa.fa-users
+          span = t('header.families')
+
+      li
+        = link_to mylife_profile_path, title: t('header.mylife_title'), class: params[:controller] == 'mylife/profile' ? 'selected' : '' do
+          i.fa.fa-user
+          span = t('header.mylife')
+
+      li
+        = link_to '/vaults', title: t('header.vault_title'), class: params[:controller] == 'vaults' ? 'selected' : '' do
+          i.fa.fa-archive
+          span = t('header.vault')
+
+      - unless current_user.guest?
+        li.menu-item
+          menu-item(:user="#{current_user_serialize(@user) || 'undefined'}":current-user="#{current_user_serialize(current_user)}" portal-id="" )
+            i.fa.fa-send
+            span = t('header.message')
+
+      li.divider
+
+    ul.main-links
+      li
+        = link_to mylife_profile_path do
+          i.fa.fa-cog
+          span = t("user_menu.edit_profile")
+      li
+        = link_to Global.app.external_links.help, target: '_blank' do
+          i.fa.fa-info-circle
+          span = t("user_menu.help_center")
+      li
+        = link_to sign_out_path, method: :delete do
+          i.fa.fa-sign-out
+          span = t('user_menu.sign_out')
+
+    - if current_user&.admin?
+      ul.main-links
+        li.divider
+        li
+          a(href='/admin')
+            i.fa.fa-lock
+            span Admin Panel

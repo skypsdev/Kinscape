@@ -1,0 +1,19 @@
+= form_tag admin_plan_update_path, class: 'formtastic' do
+  = hidden_field_tag :id, @plan.plan_id
+  fieldset.inputs
+    ol
+      li.string.input.required
+        = label_tag 'Nickname'
+        = text_field_tag :nickname, @plan.nickname
+      li.string.input
+        = label_tag 'Trial period days'
+        = number_field_tag :trial_period_days, @plan.trial_period_days
+      li.string.input
+        = label_tag 'Active'
+        = check_box_tag :active, true, @plan.active
+  fieldset.actions
+    ol
+      li.action.input_action
+        = submit_tag 'Update'
+      li.cancel
+        = link_to 'Cancel', admin_plan_path

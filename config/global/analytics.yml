@@ -1,0 +1,37 @@
+:default:
+  adwords:
+    enabled: false
+    key: "<%= ENV['ADWORDS_KEY'] %>"
+  ga:
+    enabled: false
+    key: "<%= ENV['GA_KEY'] %>"
+  gtm:
+    enabled: false
+    key: "<%= ENV['GTM_KEY'] %>"
+  mixpanel:
+    enabled: false
+    key: "<%= ENV['MIXPANEL_KEY'] %>"
+  segment:
+    enabled: false
+    key: "<%= ENV['SEGMENT_WRITE_KEY'] %>"
+development:
+  gtm:
+    enabled: true
+staging:
+  adwords:
+    enabled: false
+  ga:
+    enabled: true
+  gtm:
+    enabled: true
+production:
+  adwords:
+    enabled: true
+  ga:
+    enabled: true
+  mixpanel:
+    enabled: true
+  segment:
+    enabled: true
+  gtm:
+    enabled: true

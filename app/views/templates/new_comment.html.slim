@@ -1,0 +1,16 @@
+.commenter
+  .avatar style=background_image_css(current_user.avatar_url(size: :medium))
+
+.comment-body
+  form ng-submit='create($event)'
+    textarea(
+      rows='1'
+      name='comment[body]'
+      placeholder="#{t('comments.new')}"
+      autocomplete="off"
+      ng-model='body'
+      ng-keypress="($event.charCode==13 && !$event.shiftKey)?create($event):return"
+      autogrow
+    )
+    button.send-comment-btn
+      i.fa.fa-paper-plane aria-hidden='true'

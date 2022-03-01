@@ -1,0 +1,124 @@
+/* Success, error & notice boxes for messages and errors. */
+
+.field_with_errors {
+  margin-bottom: 1.5em;
+
+  input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: shade($error-color, 15%);
+    margin-bottom: 0;
+  }
+
+  span.error {
+    border-radius: 0 0 3px 3px;
+    display: block;
+    margin-top: -1px;
+    padding: 0.3em 1em;
+    text-transform: capitalize;
+    width: 100%;
+  }
+}
+
+.flash {
+  animation: flash-zoom-in 0.2s ease-out;
+  animation-fill-mode: both;
+  @include position(fixed, 70px 0px null 0px);
+  text-align: center;
+  z-index: 100;
+
+  &.close {
+    animation: flash-fade-out 0.4s ease-out;
+    animation-fill-mode: both;
+    animation-delay: 0.05s;
+  }
+
+  .alert {
+    @include clearfix;
+    box-shadow: 0 1px 8px 0 rgba(0,0,0,0.08);
+    margin: 2% 2% 0 2%;
+    padding: 0.6em 1em;
+  }
+
+  .close {
+    transition: all 0.15s linear;
+    color: inherit;
+    cursor: pointer;
+    display: block;
+    float: right;
+  }
+
+  .alert {
+    .close {
+      margin-right: 20px;
+    }
+
+    &.alert-info {
+      @extend %flash;
+      background: $white;
+      border-color: shade($purple, 15%);
+      color: $purple;
+    }
+  }
+}
+
+%flash {
+  border-radius: 5px;
+  border: 1px solid;
+  font-weight: 300;
+  padding: 0.5em 1em 0.3em;
+  position: relative;
+  z-index: 5;
+
+  &:before {
+    display: inline-block;
+    font-family: $icon-font;
+    font-size: 1.2em;
+    margin-right: 0.6em;
+    position: relative;
+    top: 1px;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.error, .alert-danger, .alert-alert {
+  @extend %flash;
+  background: $error-color;
+  border-color: shade($error-color, 15%);
+  color: #fff;
+
+  &:before {
+    border-color: shade($error-color, 15%);
+    color: shade($error-color, 30%);
+    content: "\f06a";
+  }
+}
+
+.notice, .alert-warning {
+  @extend %flash;
+  background: $notice-color;
+  border-color: shade($notice-color, 15%);
+  color: shade($notice-color, 40%);
+
+  &:before {
+    border-color: shade($notice-color, 15%);
+    color: shade($notice-color, 30%);
+    content: "\f06a";
+  }
+}
+
+.success, .alert-success, .alert-notice {
+  @extend %flash;
+  background: $success-color;
+  border-color: shade($success-color, 15%);
+  color: #fff;
+
+  &:before {
+    border-color: shade($success-color, 15%);
+    color: shade($success-color, 30%);
+    content: "\f14a";
+  }
+}

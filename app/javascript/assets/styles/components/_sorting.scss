@@ -1,0 +1,55 @@
+.sorting-switcher {
+  border-radius: 5px;
+  box-shadow: none;
+  &__activator {
+    .v-text-field--solo > .v-input__control > .v-input__slot {
+      cursor: pointer !important;
+      padding-right: 4px !important;
+    }
+    .v-text-field .v-input__append-inner {
+      margin: 0 !important;
+      padding: 0;
+      .v-input__icon {
+        opacity: 1 !important;
+      }
+    }
+    input {
+      font-family: Enriqueta;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 21px;
+      color: $tertiary !important;
+    }
+  }
+  &__wrapper {
+    background: $dark-white;
+    border: 1px solid $primary-grey;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  &__list {
+    background-color: transparent;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 16px 16px 10px 16px;
+  }
+  &__link {
+    min-height: 28px;
+    background: $medium-grey;
+    border-radius: 5px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 21px;
+    margin-bottom: 6px;
+    font-family: Enriqueta;
+    &.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+      color: $tertiary !important;
+    }
+    &--active.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+      background-color: #A293FE;
+      color: white !important;
+    }
+  }
+}

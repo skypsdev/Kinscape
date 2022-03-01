@@ -1,0 +1,16 @@
+:default:
+  address: "<%= ENV['SMTP_ADDRESS'] %>"
+  user_name: "<%= ENV['SMTP_USERNAME'] %>"
+  password: "<%= ENV['SMTP_PASSWORD'] %>"
+production:
+  authentication: :plain
+  domain: kinscape.com
+  port: 587
+staging:
+  authentication: :plain
+  domain: staging.kinscape.com
+  port: 587
+development:
+  authentication: :cram_md5
+  domain: mailtrap.io
+  port: 2525

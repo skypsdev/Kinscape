@@ -1,0 +1,13 @@
+.horizontally-scrollable {
+  ul.blocks.attachment-blocks {
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+
+    li.attachment-item {
+      float: none;
+      display: inline-block;
+    }
+  }
+}

@@ -1,0 +1,93 @@
+.edit-actions {
+  @include clearfix;
+  @include position(absolute, 0em null null 0em);
+  transition: all 0.15s linear;
+  z-index: 10;
+
+  @media (max-width: $medium-screen) {
+    visibility: visible;
+  }
+
+  a, button {
+    @include size(48px);
+    transition: all 0.15s linear;
+    background: #fff;
+    border: 1px solid $base-border-color;
+    color: $light-font-color;
+    display: block;
+    font-size: 1em;
+    line-height: 1.1em;
+    padding: 0 1em;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 2;
+    cursor: pointer;
+
+    @media (max-width: $medium-screen) {
+      float: left;
+    }
+
+    & ~ a, & ~ button {
+      margin-top: -1px;
+
+      @media (max-width: $medium-screen) {
+        margin: 0 0 0 -1px;
+      }
+    }
+
+    &:first-of-type {
+      border-radius: 3px 3px 0 0;
+
+      @media (max-width: $medium-screen) {
+        border-radius: 3px 0 0 3px;
+      }
+    }
+
+    &:last-of-type {
+      border-radius: 0 0 3px 3px;
+
+      @media (max-width: $medium-screen) {
+        border-radius: 0 3px 3px 0;
+      }
+    }
+
+    &:first-of-type:last-of-type {
+      border-radius: 3px;
+    }
+
+    &:hover,
+    &.active {
+      background-color: $base-accent-color;
+      border-color: $base-accent-color;
+      color: #fff;
+      z-index: 3;
+    }
+
+    &:focus, &:active {
+      outline: none;
+    }
+
+
+    i {
+      line-height: 47px;
+    }
+
+    &.remove-section:hover {
+      background-color: $red;
+      border-color: $red;
+    }
+
+    &.reorder-section {
+      cursor: move;
+    }
+  }
+
+  .btn-block {
+    @include clearfix;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+}

@@ -1,0 +1,102 @@
+@charset 'utf-8';
+
+@import "font-awesome";
+
+.legacy-styles {
+  ///////////////////////////////////////////////////////////////////////////////
+
+  @import "base_styles/global_style";
+
+  ///////////////////////////////////////////////////////////////////////////////
+
+  @import "angular/angular-csp";
+  @import "bourbon";
+  @import "normalize-rails/normalize";
+  @import "base_styles/grid-settings";
+  @import "base_styles/avatars";
+
+  @import "glidejs/dist/css/glide.core.min";
+  @import "glidejs/dist/css/glide.theme.min";
+  @import "angular-material/angular-material.min";
+  @import "cookieconsent/build/cookieconsent.min";
+
+  ///////////////////////////////////////////////////////////////////////////////
+
+  @import "actiontext";
+  @import "helpers";
+  @import "mixins/manifest";
+  @import "mixins/manifest";
+  @import "animations/manifest";
+  @import "base_styles/manifest";
+  @import "application/manifest";
+
+  @import "shared_components/manifest";
+  @import "vendor_components/manifest";
+
+  @import "medium-editor/dist/css/medium-editor";
+  @import "medium-editor/dist/css/themes/default";
+
+  @import "angular-flash-alert/dist/angular-flash.min";
+
+  @import "simpleLightbox.min";
+
+  ///////////////////////////////////////////////////////////////////////////////
+
+  @import "attachments/base";
+
+  @import "modal/_base";
+  @import "modal/md-dialog";
+  @import "modal/attachment_modal";
+  @import "modal/vault_modal";
+  @import "modal/comments_only_modal";
+  @import "modal/image_modal";
+
+  @import "accounts/show";
+
+  @import "vaults/index";
+  @import "vaults/show";
+  @import "vaults/vaults-list";
+  @import "vaults/vault_box";
+  @import "vaults/vault_boxes";
+  @import "billing/cards";
+  @import "families/index";
+  @import "families/edit";
+  @import "families/show";
+  @import "families/family-info";
+  @import "families/new";
+
+  @import "fonts";
+
+  @import "homepage/manifest";
+
+  @import "invitations/show";
+
+  @import "sections/add_content";
+  @import "sections/edit";
+  @import "sections/edit_actions";
+  @import "sections/shared";
+  @import "sections/show";
+
+  @import "pages/base";
+  @import "pages/pricing";
+  @import "pages/start";
+  @import "profile/characteristics";
+
+  @import "stories/comments";
+  @import "stories/empty_index_messages";
+  @import "stories/index";
+  @import "stories/published";
+  @import "stories/shared_form";
+  @import "stories/subnav";
+  @import "stories/story";
+  @import "stories/share_modal";
+
+  @import "users/show";
+
+  @import "kinships/characteristics";
+
+  @import "welcome/index";
+
+  @import "print/base";
+  @import "print/story";
+}

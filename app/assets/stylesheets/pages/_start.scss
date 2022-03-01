@@ -1,0 +1,29 @@
+.start-page-wrapper {
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+
+    li {
+      flex-grow: 1;
+      padding: 15px 30px;
+      width: 30%;
+
+      a {
+        @include rectangular-button("small", "outline", $base-accent-color, $base-accent-color);
+        width: 100%;
+      }
+
+      @media (max-width: $large-screen) {
+        width: 50%;
+      }
+
+      @media (max-width: $medium-screen) {
+        width: 100%;
+      }
+
+      @media (max-width: $extra-small-screen-px) {
+        width: 100%;
+      }
+    }
+  }
+}

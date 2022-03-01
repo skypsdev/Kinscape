@@ -1,0 +1,30 @@
+img.rounded-image(ng-src='{{family.coverUrl}}')
+div(ng-if='editable')
+  a.btn-rounded(ng-click='openFileUpload()' title="{{i18n.t('families.update.change_cover_image_title')}}")
+    | {{i18n.t('families.update.change_cover_image')}}
+.family-title
+  div(div ng-switch='editable')
+    div(ng-switch-when='true')
+      .edit-content-wrapper
+        h1.medium-editor.family-name#family_name(
+          contentEditable='true'
+          ng-model='family.name'
+          title="{{i18n.t('families.name_title')}}"
+        )
+        .family-motto#family_motto(
+          contentEditable='true'
+          placeholder="{{i18n.t('families.motto_placeholder')}}"
+          ng-model='family.motto'
+          title="{{i18n.t('families.editable_motto_title')}}"
+        )
+
+    div(ng-switch-default)
+      h1.family-name#family_name(
+        title="{{i18n.t('families.name_title')}}"
+      )
+        | {{i18n.t('families.title', { family_name: family.name })}}
+
+      p.family-motto#family_motto(
+        contentEditable='false'
+        ng-model='family.motto'
+      )

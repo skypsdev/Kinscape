@@ -1,0 +1,30 @@
+= active_link_to t('header.families'),
+  families_path,
+  class: 'nav-link',
+  active: /communities/,
+  title: t('header.families_title')
+
+= active_link_to t('header.stories'),
+  stories_path,
+  class: "nav-link",
+  title: t('header.stories_title')
+
+= active_link_to t('header.mylife'),
+  mylife_profile_path,
+  class: "nav-link",
+  active: /mylife/,
+  title: t('header.mylife_title')
+
+div.header-divider
+
+= yield :menu
+- if false #Temp. remove payment feature
+  - unless current_user.active?
+    = link_to new_billing_card_path, class: 'nav-button upgrade-subscription', title: t('subscriptions.upgrade_title') do
+      - if current_user.guest?
+        = t('subscriptions.upgrade')
+      - else
+        = t('subscriptions.upgrade_with_trial_days', day: current_user.subscription&.trial_days)
+
+.flash-message
+  flash-message

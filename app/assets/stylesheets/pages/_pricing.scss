@@ -1,0 +1,381 @@
+#pricing {
+  section {
+    text-align:center;
+    padding: 10em 0;
+    color: #000;
+  }
+
+  .section1 {
+    background-color: #FFF2CC;
+
+    h3 {
+      color: $purple;
+    }
+
+    div.plan_desc {
+      width: 50%;
+      margin: 30px auto;
+      text-align: left;
+      border: 1px solid $gray;
+      border-radius: 20px;
+      padding: 20px;
+      background-color: $white;
+
+      div {
+        p {
+          display:inline-block;         
+        }
+
+        .button {
+          @include rectangular-button("large", "solid", $green, $green);
+          font-weight: 700;
+          width: auto;
+          padding: 4px 10px;
+          float: right;
+        }
+
+        p.trial {
+          font-weight: 700;
+          font-size: 1.6em;
+
+          span {
+            margin-left: 10px;
+            font-weight: 500;
+            font-size: 0.6em;
+          }
+        }
+      }
+
+      div:first-child {
+        border-bottom: 1px solid $purple;
+        margin-bottom: 30px;
+
+        span {
+          display:block;
+        }
+      }
+    }
+  }
+
+  .section2 {
+    width: 60%;
+    margin: 0 auto;
+
+    h1 {
+      color: $purple;
+      font-weight: 700;
+      margin-bottom: 1em;
+    }
+
+    div {
+      display: table;
+      width: 100%;
+
+      article {
+        display: table-cell;
+        width: 25%;        
+        text-align: center;
+
+        h5 {
+          font-size: 1em;
+        }
+
+        img {
+          width: 80%;
+
+          &.last {
+            width: 60%;
+          }
+        }
+      }
+    }
+
+    div:last-child {
+      margin: 0 auto;
+      width: 75%;
+
+      img {
+        width: 70%;
+      }
+    }
+  }
+
+  .section3 {
+    background-color: $purple;
+    padding: 10% 20%;
+    color: $white;
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 4em;
+      font-weight: 700;
+
+      span {
+        font-size: 0.8em;
+      }
+    }
+
+    p {
+      margin: 0;
+
+      &.family {
+        font-style: italic;
+      }
+    }
+
+    div {
+      margin-top: 3em;
+
+      button {
+        @include rectangular-button("large", "solid", $green, $green);
+        width: 40%;
+        border-radius: 10px;
+        padding: 5px 10px;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-size: 1.8em;
+        font-weight: 700;
+        height: 2.8em;
+        vertical-align: bottom;
+
+        a {
+          color: #fff;
+          cursor: pointer;
+        }
+      }
+
+      button:first-child {
+        height: 3.6em;
+        font-size: 1.4em;
+      }
+
+      button:last-child {
+        @include rectangular-button("large", "solid", #9999FF, #9999FF);
+        margin-left: 30px;
+        letter-spacing: 0px;
+        width: 40%;
+        border-radius: 10px;
+        padding: 5px 10px;
+        text-transform: capitalize;
+        font-size: 1.8em;
+        font-weight: 700;
+        height: 2.8em;
+        vertical-align: bottom;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  #pricing{
+    .section3{
+      padding: 10%;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  #pricing {
+    .section1 {
+      div.plan_desc {
+        div {
+          .button {
+            display: block;
+            margin: 0 auto;
+            float: none;
+          }
+        }     
+      }
+    }
+
+    .section3 {     
+      div {
+        button {
+          font-size: 1em;
+          width: 80% !important;
+          height: auto !important;
+          margin-bottom: 10px;
+          margin-left: 0px !important;
+          padding: 5px 10px !important;
+          span {
+            font-size: 12px;
+          }
+
+          a{
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 960px) {
+  #pricing {
+    .section3 {
+      h1 {
+        font-size: 3em;
+      }
+
+      h3 {
+        font-size: 1.5em;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #pricing {
+    .section1 {
+      padding: 11em 0 9em 0;
+      div.plan_desc {
+        width: 68%;   
+      }
+    }
+
+    .section2 {
+      div {
+        width: 100% !important;
+        article {
+          width: 50%;
+          display: inline-block;
+        }
+      }     
+    }
+
+    .section3 {
+     
+      div {
+        button {
+          font-size: 1em;
+          width: 80% !important;
+          height: auto !important;
+
+          padding: 5px 10px !important;
+
+          span {
+            font-size: 12px;
+          }
+
+          a{
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 667px) {
+  #pricing {
+    .section1 {
+      h2 {
+        width: 80%;
+        margin: 0 auto;
+      }
+
+      h3 {
+        width: 80%;
+        font-size: 1.5em;
+        margin: 0 auto;
+      }
+
+      div {
+        h2 {
+          width: 100%;
+        }
+
+        p.trial {
+          span {
+            display: block;
+            line-height: 1.5em;
+          }
+        }
+      }
+    }
+
+    .section2 {
+      width: 80%;
+
+      h1 {
+        font-size: 2em;
+      }
+    }
+
+    .section3 {
+      h1 {
+        font-size: 2em;
+      }
+
+      h3 {
+        font-size: 1.2em;
+      }
+
+      p {
+        font-size: 0.8em;
+      }
+
+      div {
+        button {
+          font-size: 1.2em;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #pricing {
+    .section1 {
+      div.plan_desc {
+        h2 {
+          font-size: 1.6em;
+        }
+
+        div {
+          p.trial {
+            font-size: 1.4em;
+          }
+        }
+      }
+    }
+
+    .section2 {
+      width: 80%;
+    }
+
+    .section3 {
+      padding: 10%;
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      h3 {
+        font-size: 1.2em;
+      }
+
+      p {
+        font-size: 0.8em;
+      }
+
+      div {
+        button {
+          font-size: 1em;
+          width: 100% !important;
+          height: auto !important;
+
+          padding: 5px 10px !important;
+
+          span {
+            font-size: 12px;
+          }
+
+          a {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}

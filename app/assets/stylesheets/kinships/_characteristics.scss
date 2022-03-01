@@ -1,0 +1,28 @@
+.characteristics {
+  .characteristic-title {
+    margin-bottom: 25px;
+    font-weight: normal;
+    color: $purple;
+  }
+
+  .attachment-blocks {
+    margin-left: -10px;
+    margin-right: -10px;
+  }
+
+  .attachment-item {
+    width: calc(25% - 20px);
+
+    @media (max-width: $large-screen) {
+      width: calc(33.33% - 20px);
+    }
+
+    @media (max-width: $medium-screen) {
+      width: calc(25% - 20px);
+    }
+
+    @media (max-width: $small-screen) {
+      width: calc(50% - 20px);
+    }
+  }
+}

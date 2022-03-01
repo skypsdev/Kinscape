@@ -1,0 +1,11 @@
+.flexslider.slider
+  ul#vaults-list.blocks.vaults-list.slides
+    li.block.vault-list-item(
+      ng-repeat="vault in vaults"
+      ng-class='{ "current": isCurrentVault(vault) }'
+    )
+      a.cover(ng-click='setCurrentVault(vault)' href)
+        .cover-bg(ng-style="{'background-image': 'url({{vault.coverUrl}})'}")
+        .title
+          .title-text
+            |{{vault.name}}

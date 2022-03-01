@@ -1,0 +1,101 @@
+<template>
+  <div class="breadcrumbs d-flex pl-0">
+    <div
+        v-for="(item, index) in items"
+        :key="index"
+        class="d-flex flex-row"
+    >
+      <v-menu
+          v-if="item.list"
+          class="breadcrumbs__menu"
+          bottom
+          offset-y
+          max-height="208"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+              plain
+              x-small
+              class="breadcrumbs__item"
+              :class="isLastItem(index) && 'breadcrumbs__item--last'"
+              v-bind="attrs"
+              v-on="on"
+          >
+            <v-icon class="mr-1">{{ item.icon }}</v-icon>
+            {{ item.label }}
+          </v-btn>
+        </template>
+        <v-card>
+          <v-list dense>
+            <v-list-item
+                v-for="listItem in item.list"
+                :key="listItem.id"
+                :to="{ name: listItem.routeName || $route.name, params: { id: listItem.id } }"
+            >
+              <v-list-item-content>
+                <v-list-item-title class="pr-2">{{ listItem.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-menu>
+      <v-btn
+          v-else
+          plain
+          x-small
+          class="breadcrumbs__item d-flex pl-0"
+          :class="isLastItem(index) && 'breadcrumbs__item--last'"
+          :to="item.to"
+      >
+        <v-icon class="mr-1">{{ item.icon }}</v-icon>
+        {{ item.label }}
+      </v-btn>
+      <v-icon v-if="!isLastItem(index)" small>mdi-chevron-right</v-icon>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  props: {
+    items: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  methods: {
+    isLastItem(index) {
+      return this.items.length === index + 1
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.breadcrumbs {
+  height: 24px;
+  ::v-deep .v-btn__content {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: normal;
+    .v-icon {
+      font-size: 16px;
+    }
+  }
+  &__item {
+    ::v-deep .v-btn__content {
+      font-family: Enriqueta;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 25px;
+    }
+    &--last {
+      color: $color-primary !important;
+    }
+  }
+}
+</style>
+<style lang="scss">
+.v-menu__content {
+  overscroll-behavior: none;
+}
+</style>

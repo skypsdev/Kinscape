@@ -1,0 +1,30 @@
+// Neat Overrides
+///////////////////////////////////////////////////////////////////////////////
+$column: 90px;
+$gutter: 20px;
+$grid-columns: 12;
+$max-width: 1088px;
+
+// Neat Breakpoints
+///////////////////////////////////////////////////////////////////////////////
+$extra-small-screen-px: 390px;
+$small-screen: 540px;
+$medium-screen: 760px;
+$medium-screen-up: 761px;
+$large-screen: 960px;
+$extra-large-screen: 1280px;
+$extra-large-screen-up: 1281px;
+$xx-large-screen: 1450px;
+$huge-screen-up: 1900px;
+
+$stories-single: 620px;
+$home-small: 420px;
+
+// $story-mobile: new-breakpoint(max-width 1200px 12);
+
+// Neat Breakpoints (in px)
+///////////////////////////////////////////////////////////////////////////////
+$small-screen-px: $small-screen;
+$medium-screen-px: $medium-screen;
+$large-screen-px: $large-screen;
+$extra-large-screen-px: $extra-large-screen;

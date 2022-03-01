@@ -1,0 +1,25 @@
+@mixin home-title {
+  font-size: 50px;
+  letter-spacing: -1px;
+  line-height: 1.17;
+
+  @media (min-width: $huge-screen-up) {
+    font-size: 58px;
+  }
+
+  @media (max-width: $xx-large-screen) {
+    font-size: 43px;
+  }
+
+  @media (max-width: $extra-large-screen) {
+    font-size: 38px;
+  }
+
+  @media (max-width: $small-screen) {
+    font-size: 33px;
+  }
+
+  @media (max-width: $home-small) {
+    font-size: 30px;
+  }
+}

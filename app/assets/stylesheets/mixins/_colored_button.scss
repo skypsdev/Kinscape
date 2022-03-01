@@ -1,0 +1,48 @@
+@mixin colored-button($bgColor, $textColor) {
+  display: inline-block;
+  position: relative;
+  top: 0;
+  margin-bottom: 2em;
+  padding: 0.8em 1.3em;
+  min-width: 170px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  background-color: $bgColor;
+  border-radius: 1em;
+  text-align: center;
+  // text-transform: uppercase;
+  color: $textColor;
+  box-shadow: 0 1.2em 3em -1em rgba($bgColor, 0.75);
+  transition: box-shadow .15s ease-out, top .15s ease-out;
+
+  &:active,
+  &:focus {
+    color: white;
+  }
+
+  @media (min-width: $huge-screen-up) {
+    padding: 1em 1.5em;
+    min-width: 180px;
+  }
+
+  @media (max-width: $xx-large-screen) {
+    min-width: 145px;
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+    font-size: 0.75em;
+  }
+
+  @media (max-width: $home-small) {
+    font-size: 0.65em;
+  }
+
+  &:hover {
+    top: 4px;
+    box-shadow: 0 0 0 0 rgba($bgColor, 1);
+    color: white;
+  }
+
+  &.is-untransformed {
+    text-transform: none;
+  }
+}

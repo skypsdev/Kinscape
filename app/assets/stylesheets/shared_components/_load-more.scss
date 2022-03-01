@@ -1,0 +1,26 @@
+.load-more {
+  color: #8b70ff;
+  display: block;
+  text-align: center;
+  user-select: none;
+  background: image-url('dash.png') 50% repeat-x;
+}
+
+.load-more__button {
+  cursor: pointer;
+  color: #8b70ff;
+  border: 1px solid #8b70ff;
+  border-radius: 20px;
+  padding: 0.6em 1.2em 0.6em 0.8em;
+  font-style: italic;
+  background-color: #fff;
+}
+
+.load-more__button__text {
+  color: #8b70ff;
+  &:before {
+    content: '\f107';
+    font-family: "FontAwesome";
+    margin-right: 0.8em;
+  }
+}

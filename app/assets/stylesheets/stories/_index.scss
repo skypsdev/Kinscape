@@ -1,0 +1,214 @@
+.filter-container {
+  z-index: 2;
+  max-width: 100%;
+
+  @media (max-width: $large-screen) {
+    padding: 0;
+  }
+}
+
+.stories, .searches {
+  .my-stories, .my-stories-mobile {
+
+    margin-right: 0.5em;
+
+    @media (max-width: $medium-screen) {
+      margin: 0;
+    }
+
+    z-index: 2;
+
+    @media (max-width: $medium-screen) {
+      padding: 0 0.2em;
+    }
+
+    .inner-wrapper {
+      @include clearfix;
+      display: inline-block;
+    }
+
+    .profile {
+      float: left;
+      display: none;
+
+      @media (max-width: $medium-screen) {
+        display: block;
+      }
+
+      .avatar {
+        @include avatar(34px);
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+        vertical-align: middle;
+      }
+
+      > span {
+        display: inline-block;
+        margin-left: 0.6em;
+        vertical-align: middle;
+
+        @media (max-width: $small-screen) {
+          display: none;
+        }
+      }
+    }
+
+    .story-tabs {
+      @include clearfix;
+      display: inline-block;
+      vertical-align: middle;
+
+      @media (max-width: $medium-screen) {
+        float: right;
+      }
+
+      .tab,
+      a.all-stories {
+        border: 1px solid $purple;
+        border-left-width: 0;
+        display: block;
+        float: left;
+        font-size: 0.9em;
+        font-weight: 300;
+        letter-spacing: 1px;
+        padding: 0.2em 0.8em 0.2em 0.6em;
+        background: transparent;
+        color: $purple;
+        background: #fff;
+
+        @media (max-width: $medium-screen) {
+          letter-spacing: normal;
+        }
+
+        &:hover {
+          background-color: lighten($light-font-color, 42%);
+          color: #fff;
+          border-color: #4527fd;
+          span {
+            color: #fff;
+          }
+        }
+
+        &.active {
+          background: $purple;
+          border-color: #4527fd;
+          color: #fff;
+
+          span.count {
+            background: #fff;
+            color: $purple;
+          }
+
+          span {
+            color: #fff;
+          }
+        }
+
+        &:first-of-type {
+          border-radius: 20px 0 0 20px;
+          border-left-width: 1px;
+        }
+
+        &:last-of-type {
+          border-radius: 0 20px 20px 0;
+        }
+
+        span {
+          display: inline-block;
+          vertical-align: middle;
+          color: $purple;
+        }
+
+        span.count {
+          transition: all 0.15s linear;
+          background: $purple;
+          border-radius: 20px;
+          color: #fff;
+          height: 20px;
+          line-height: 19px;
+          margin-right: 0.4em;
+          min-width: 30px;
+          text-align: center;
+        }
+      }
+    }
+
+    .story-request {
+      display: inline-block;
+      color: $medium-font-color;
+      font-weight: 300;
+
+      @media (max-width: $medium-screen) {
+        float: right;
+
+        span.request-message {
+          display: none;
+        }
+      }
+
+      a {
+        @include rectangular-button("small", "outline", $base-accent-color, $base-accent-color);
+        margin-left: 1em;
+      }
+    }
+
+    ul.stories {
+      height: 100%;
+      overflow: scroll;
+      padding: 7em 5% 4em;
+      position: relative;
+      z-index: 1;
+
+      @media (max-width: $medium-screen) {
+        padding: 6em 3% 4em;
+      }
+    }
+
+    li.story {
+      margin: 1%;
+      padding-top: percentage(1/3) - 2;
+      width: percentage(1/3) - 2;
+
+      @media (max-width: $extra-large-screen) {
+        padding-top: percentage(1/2) - 2;
+        width: percentage(1/2) - 2;
+        margin-bottom: 2%;
+      }
+
+      @media (max-width: $large-screen) {
+        padding-top: percentage(1) - 2;
+        width: percentage(1) - 2;
+        margin-bottom: 5%;
+      }
+
+      @media (max-width: $medium-screen) {
+        padding-top: percentage(1/2) - 2;
+        width: percentage(1/2) - 2;
+        margin-bottom: 2%;
+      }
+
+      @media (max-width: $small-screen) {
+        padding-top: percentage(1) - 2;
+        width: percentage(1) - 2;
+        margin-bottom: 5%;
+      }
+    }
+  }
+  .my-stories {
+    @media (max-width: $large-screen) {
+      display: none;
+    }
+  }
+  .my-stories-mobile {
+    display: none;
+    margin: 1em 0;
+    text-align: center;
+
+    @media (max-width: $large-screen) {
+      display: block;
+    }
+
+    .story-tabs {
+      float: none;
+    }
+  }
+}

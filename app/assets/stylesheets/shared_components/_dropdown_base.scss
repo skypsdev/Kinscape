@@ -1,0 +1,32 @@
+.dropdown {
+  position: relative;
+
+  &.open {
+    .dropdown-menu {
+      z-index: 200;
+      opacity: 1;
+      visibility: visible;
+      margin-top: 0.5em;
+    }
+  }
+
+  .dropdown-menu {
+    /* This still overflows on phone screens, but fixes height issues on desktops */
+    display: block;
+    max-height: 70vh;
+    overflow-y: scroll;
+
+    transition: all 0.15s linear;
+    background: rgb(255,255,255);
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 3px 60px 0 rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+
+    p.message {
+      color: $light-font-color;
+      font-style: italic;
+      margin-bottom: 0.6em;
+    }
+  }
+}

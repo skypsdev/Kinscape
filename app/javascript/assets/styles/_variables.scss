@@ -1,0 +1,52 @@
+$body-font-family: 'Lato';
+$title-font: 'Enriqueta';
+
+$btn-sizes: (
+        'x-small': 20,
+        'small': 24,
+        'default': 32,
+        'large': 40,
+        'x-large': 48
+);
+$btn-font-sizes: (
+        'x-small': 10,
+        'small': 12,
+        'default': 14,
+        'large': 16,
+        'x-large': 18
+);
+$btn-text-transform: initial;
+$btn-font-weight: 700;
+$btn-hover-opacity: 0.3;
+
+$breadcrumbs-padding: 5px;
+
+// TODO: moved to ../variables/colors.scss
+// names was changed
+$color-primary: #E75739;
+$color-secondary: #8B78FE;
+$color-tertiary: #4B4B4B;
+$color-text: #666666;
+$color-light-grey: #E7E7E7;
+$color-grey: #939393;
+$color-medium-grey: #C4C4C4;
+$color-dark-white: #F7F7F7;
+$color-secondary-lightest: #E8E4FF;
+$color-lightest_purple: #F9F8FF;
+$color-disabled: #E6E6E6;
+$color-required: #E95631;
+
+$img-preload-filter: blur(0);
+
+$btn-letter-spacing: 0;
+$tabs-item-letter-spacing: 0;
+$card-title-letter-spacing: 0;
+$card-text-letter-spacing: 0;
+
+$phone: 390px;
+$phablet: 540px;
+$tablet: 760px;
+$tablet-narrow: 960px;
+$desktop: 1280px;
+$desktop-wide: 1450px;
+$desktop-huge: 1900px;

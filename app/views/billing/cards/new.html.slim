@@ -1,0 +1,136 @@
+.pages-wrapper
+  .payment-method
+    .payment-plan
+      .plan-title
+        = t('billing.payment_method.select_plan_title')
+      .plan-cards
+        - @plans.each do |plan|
+          .card class=(plan.plan_id == @current_plan_id ? "selected" : "") data-plan-id=plan.plan_id
+            p.title
+              = t('billing.payment_method.plan_title', name: plan.nickname)
+            p.amount
+              = t('billing.payment_method.amount', amount: amount(plan), interval: plan.interval.capitalize)
+            p
+              = t('billing.payment_method.includes', desc: includes_spec(plan))
+            p
+              = t('billing.payment_method.storage', size: storage_size(plan))
+            p
+              = t('billing.payment_method.feature')
+    .payment-method__desc
+      p.method-title
+        = t('billing.payment_method.title')
+      p
+        = t('billing.payment_method.desc_content')
+    - if @current_card
+      .current-card
+        = t('billing.payment_method.last_digits')
+        |:&nbsp;
+        b
+          = @current_card.last4
+    = render 'billing/cards/form'
+
+script(src="//js.stripe.com/v3/")
+javascript:
+  var stripe = Stripe("#{Global.stripe.publishable_key}");
+  var elements = stripe.elements();
+  var card = elements.create('card');
+  var displayError = document.getElementById('card-errors');
+  var enteringCard = false;
+  const selected_plan = document.getElementsByClassName("card selected")[0].getAttribute('data-plan-id');
+  const current_card = document.getElementsByClassName("current-card")[0] != undefined
+
+  document.onreadystatechange = function () {
+    if (document.readyState == "interactive") {
+      card.mount('#card-element');
+
+      card.addEventListener('change', function(event) {
+        if (event.empty) {
+          enteringCard = false;
+        } else {
+          enteringCard = true;
+        }
+
+        if (event.error) {
+          displayError.textContent = event.error.message;
+          document.querySelectorAll('.payment-method__submit input')[0].disabled = true;
+        } else {
+          displayError.textContent = '';
+          document.querySelectorAll('.payment-method__submit input')[0].disabled = false;
+        }
+      })
+
+      var form = document.getElementById('payment-form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var planInput = stripePlanHandler();
+        form.appendChild(planInput);
+
+        if (card._complete) {
+          stripe.createToken(card).then(function(result) {
+            if (result.error) {
+              var errorElement = document.getElementById('card-errors');
+              errorElement.textContent = result.error.message;
+              return false;
+            } else {
+              var tokenInput = stripeTokenHandler(result.token);
+              form.appendChild(tokenInput);
+              form.submit();
+            }
+          });
+        } else {
+          form.submit();
+        }
+      });
+    }
+  }
+
+  function stripeTokenHandler(token) {
+    var hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type', 'hidden');
+    hiddenInput.setAttribute('name', 'stripe_token');
+    hiddenInput.setAttribute('value', token.id);
+
+    return hiddenInput;
+  }
+
+  function stripePlanHandler() {
+    var hiddenInput = document.createElement('input');
+    var plan_id = document.getElementsByClassName("card selected")[0].getAttribute('data-plan-id');
+    hiddenInput.setAttribute('type', 'hidden');
+    hiddenInput.setAttribute('name', 'plan_id');
+    hiddenInput.setAttribute('value', plan_id);
+
+    return hiddenInput;
+  }
+
+  var abbrs = document.getElementsByClassName('card');
+  var i=0;
+  function addEvent(elem){
+    elem.addEventListener("click", function(event){
+      var valid_new_card = displayError.textContent.length == 0
+
+      if (!current_card && !enteringCard || enteringCard && !valid_new_card) {
+        document.querySelectorAll('.payment-method__submit input')[0].disabled = true;
+      } else {
+        var selectedElem = document.getElementsByClassName("card selected")[0];
+        var targetElem = event.target.closest('.card');
+        selectedElem.className = 'card';
+        targetElem.className += ' selected';
+
+        if (targetElem.getAttribute('data-plan-id') == selected_plan) {
+          if (!enteringCard) {
+            document.querySelectorAll('.payment-method__submit input')[0].disabled = true;
+          }
+        } else {
+          if (valid_new_card) {
+            document.querySelectorAll('.payment-method__submit input')[0].disabled = false;
+          }
+        }
+      }
+    });
+  }
+
+  for( ; i < abbrs.length ; i++){
+    addEvent(abbrs[i]);
+  }

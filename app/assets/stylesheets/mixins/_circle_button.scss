@@ -1,0 +1,27 @@
+@mixin circle-button($base-color: $base-accent-color, $icon: "") {
+  @include size(30px);
+  transition: all 0.15s linear;
+  border-radius: 100%;
+  border: 1px solid $base-color;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  color: $base-color;
+  display: inline-block;
+  padding: .07em .5em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+
+  &:hover {
+    background: $base-accent-color;
+    color: #fff;
+  }
+
+  i {
+    margin-right: 0.4em;
+  }
+
+  &:before {
+    content: $icon;
+    display: inline;
+    font-family: $icon-font;
+    margin-right: 0.4em;
+  }
+}

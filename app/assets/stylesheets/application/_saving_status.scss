@@ -1,0 +1,11 @@
+.saving-status {
+  @include position(fixed, null null -1px -1px);
+  background-color: rgba(255, 255, 255, 0.8);
+  color: $base-accent-color;
+  z-index: 1000;
+  font-size: 14px;
+  padding: 0 15px;
+  border-top-right-radius: 7px;
+  line-height: 22px;
+  border: 1px solid $base-accent-color;
+}

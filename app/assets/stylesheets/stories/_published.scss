@@ -1,0 +1,331 @@
+section.story-container {
+  background: rgb(255, 255, 255);
+  position: relative;
+
+  .story-wrapper {
+    padding-bottom: 10em;
+  }
+}
+
+section.story-cover {
+  display: table;
+  position: relative;
+  width: 100%;
+  margin-bottom: 40px;
+
+  a#scroll-to-story {
+    @include position(absolute, null null 6% 50%);
+    @include size(60px);
+    transition: opacity 0.15s linear;
+    background: #fff;
+    border: 1px solid $base-border-color;
+    border-radius: 50%;
+    color: $medium-font-color;
+    display: none;
+    font-size: 2em;
+    line-height: 63px;
+    margin-left: -30px;
+    text-align: center;
+    z-index: 10;
+
+    @media (max-width: $medium-screen) {
+      display: none;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .cover-bg {
+    @include position(absolute, 0px 0px 0px 0px);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 1;
+
+    &:before {
+      @include position(absolute, 0px 0px 0px 0px);
+      background-image: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,1));
+      content: '';
+      display: block;
+    }
+  }
+
+  article.story-title {
+    @include size(100%);
+    position: relative;
+    vertical-align: middle;
+    z-index: 2;
+
+    .title-wrapper {
+      @include clearfix;
+      @include outer-container;
+      display: table;
+      padding: 0em 4em;
+      width: 100%;
+
+      @media (max-width: $medium-screen) {
+        display: block;
+        padding: 3em 1em 0;
+        text-align: center;
+      }
+    }
+
+    .cover-image-wrapper {
+      display: table-cell;
+      height: 100%;
+      padding-right: 3em;
+      width: 200px;
+
+      @media (max-width: $medium-screen) {
+        display: inline-block;
+        width: auto;
+        margin-bottom: 2em;
+        padding: 0;
+      }
+
+      .style-wrapper {
+        background: #fff;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.15), 0 1px 10px 0 rgba(0,0,0,0.1);
+        padding: 0.4em;
+
+        @media (max-width: $medium-screen) {
+          transform: rotate(0deg);
+        }
+      }
+
+      .cover-image {
+        @include size(200px);
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+
+        @media (max-width: $large-screen) {
+          @include size(200px);
+        }
+      }
+    }
+
+    .title-body {
+      display: table-cell;
+      height: 100%;
+      padding-bottom: 1em;
+      text-align: left;
+      vertical-align: middle;
+
+      @media (max-width: $large-screen) {
+        padding: 0;
+      }
+
+      @media (max-width: $medium-screen) {
+        display: block;
+        text-align: center;
+      }
+
+      h1 {
+        font-weight: 300;
+        font-size: 4em;
+        margin-bottom: 0;
+        outline: none;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+
+        @media (max-width: $large-screen) {
+          font-size: 3.6em;
+       }
+
+        @media (max-width: $medium-screen) {
+          font-size: 2.6em;
+          margin-bottom: 0.6em;
+          text-align: center;
+        }
+      }
+      .dates {
+
+        &:before {
+          float: left;
+        }
+
+        .datesHolder {
+          float: left;
+          display: block;
+
+          .fromDate #story-startYear, .toDate .story-endYear {
+            height: 26px;
+            vertical-align: middle;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+            &::placeholder {
+              color: #647184;
+            }
+          }
+
+          .fromDate, .toDate, .isRange {
+            font-size: 16px;
+
+            .story-label, #story-startYear, #story-endYear {
+              padding: 1px;
+              display: inline-block;
+            }
+
+            &.isRange span {
+              font-size: 14px;
+              display: inline-block;
+            }
+
+            input[type="text"] {
+              max-width: 60px;
+              text-align: center;
+            }
+
+            .story-label {
+              width: 40px;
+              font-size: 14px;
+              font-style: italic;
+              line-height: 1.7em;
+              margin: 0 0.5em 0.1em 0;
+            }
+
+            .story-startYear, .story-endYear {
+              border-radius: 5px;
+              border: 1px solid #BBBBBB;
+            }
+
+            .select2-container {
+              span {
+                margin: 0;
+              }
+
+              &.story-startMonth, &.story-endMonth {
+                width: 130px;
+                margin: 0 0.5em;
+              }
+
+              &.story-startDay, &.story-endDay {
+                width: 65px;
+              }
+            }
+          }
+          .isRange {
+            font-size: 0.8em;
+            font-style: italic;
+
+            input {
+              margin-top: 0.8em;
+            }
+          }
+        }
+      }
+    }
+
+    .meta {
+      color: $medium-font-color;
+      margin-top: 0.4em;
+      text-align: left;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+      vertical-align: middle;
+
+      &.editing {
+        span {
+          display: block;
+        }
+
+        span ~ span {
+          margin: 1em 0 0 0;
+        }
+      }
+
+      .author {
+        display: inline-block;
+        margin-right: 1.4em;
+        vertical-align: middle;
+
+        .face {
+          @include avatar(30px);
+          margin-right: 0.6em;
+        }
+      }
+
+      .download {
+        display: inline-block;
+        margin-right: 1.4em;
+        vertical-align: middle;
+
+        .archive {
+          @include descriptive-icon(30px);
+          background-image: image-url("archive.svg");
+          margin-right: 0.6em;
+        }
+      }
+
+      > span,
+      .author,
+      .download,
+      div.dates,
+      .tags {
+        color: $medium-font-color;
+        display: inline-block;
+        font-size: 1.2em;
+        font-weight: 300;
+        line-height: 1.4em;
+        margin-bottom: 0.8em;
+        margin-right: 1.4em;
+        vertical-align: middle;
+
+        @media (max-width: $medium-screen) {
+          display: block;
+        }
+
+        &:before {
+          @include size(30px);
+          background: rgba(white, 0.9);
+          border: 1px solid $base-border-color;
+          border-radius: 50%;
+          display: inline-block;
+          font-family: $icon-font;
+          font-size: 0.8em;
+          line-height: 30px;
+          margin-right: 0.6em;
+          text-align: center;
+        }
+
+        &.dates:before {
+          content: '\f073';
+        }
+
+        &.description:before {
+          content: '\f040';
+          font-size: 0.9em;
+        }
+
+        &.tags:before {
+          content: '\f02c';
+          font-size: 0.9em;
+        }
+      }
+    }
+  }
+}
+
+.people {
+  color: $medium-font-color;
+  display: none;
+  font-size: 1.2em;
+  font-weight: 300;
+  margin-top: 0.6em;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+
+    & + span {
+      margin-left: 1em;
+    }
+  }
+
+  .person {
+    @include avatar(30px);
+    margin-right: 0.4em;
+  }
+}

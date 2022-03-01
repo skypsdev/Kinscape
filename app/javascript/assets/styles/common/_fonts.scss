@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Enriqueta:wght@400;500;600;700&family=Lato:wght@100;300;400;700;900&display=swap');
+
+h1, h2, h3, h4, .title-text {
+  font-family: Enriqueta, serif;
+  font-style: normal;
+  font-weight: bold;
+  color: $primary-black;
+}
+
+h4 {
+  font-size: 20px;
+  line-height: 27px;
+}
+
+p, .body-text {
+  font-family: Lato, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: $primary-black;
+  font-size: 18px;
+  line-height: 27px;
+}
+
+.f {
+  &--black {
+    color: $primary-black;
+  }
+  &--tertiary {
+    color: $tertiary;
+  }
+  &--primary {
+    color: $primary;
+  }
+  &--grey {
+    color: $primary-grey;
+  }
+  &--tertiary {
+    color: $tertiary;
+  }
+  &--x-small {
+    font-size: rem-calc(12);
+  }
+  &--small {
+    font-size: rem-calc(14);
+  }
+  &--base {
+    font-size: rem-calc(16);
+  }
+  &--large {
+    font-size: rem-calc(18);
+  }
+  &--bold {
+    font-weight: 700;
+  }
+  &--normal {
+    font-weight: 400;
+  }
+}

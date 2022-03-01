@@ -1,0 +1,1142 @@
+en:
+  formtastic:
+    :yes: 'Yes'
+    :no: 'No'
+    :create: 'Create'
+    :update: 'Update'
+    :submit: 'Submit'
+    :cancel: 'Cancel'
+    :reset: 'Reset'
+
+  activerecord:
+    errors:
+      models:
+        publication:
+          attributes:
+            base:
+              must_be_in_future: Time Capsule release date must be in future
+    attributes:
+      user:
+        email: Email
+        first_name: First Name
+        last_name: Last Name
+        password: Password
+
+  errors:
+    attributes:
+      publish_on:
+        invalid_date: Invalid Time Capsule release date
+      must_be_in_future: must be in future
+      must_be_after_start: End date needs to be after start date
+      family_name:
+        blank: "A community needs a name. Please be sure to enter one."
+      media_files:
+        blank: Minimum of 1 file is required
+        too_long: Maximum of %{maximum} file(s) is allowed
+    story:
+      date:
+        in_the_past: This date is in the past!
+
+  date:
+    formats:
+      default: '%d %b %Y'
+      with_weekday: '%a %m/%d/%y'
+
+  time:
+    formats:
+      default: '%a, %b %-d, %Y at %r'
+      date: '%b %-d, %Y'
+      short: '%B %d'
+
+  simple_form:
+    include_blanks:
+      search:
+        family_id: All Families
+        user_id: Everyone
+        tag: Any category
+    labels:
+      family:
+        name: Community name
+      request:
+        message: 'Message:'
+
+  header:
+    vault: Vault
+    vault_title: Secure Keepsake Sharing & Storage
+    family: My Community
+    families: Communities
+    families_title: Connect Community & Friends
+    stories: Stories
+    stories_title: Create Stories & Edit
+    message: Conversations
+    message_title: Send a Message
+    mylife: My Life
+    mylife_title: Personal Profile & Private Stories
+    trial: Trial %{day} Days
+    trial_tooltip: Account Info
+    trial_past_due: Guest
+
+  application:
+    intercom_widget:
+      help: Help
+
+  helpers:
+    submit:
+      user:
+        new: Create Your Account
+        update: Update account information
+      family:
+        create: Create Community
+        update: Update Settings
+      invitation:
+        create: Send invitations
+        update: Accept invitation
+      request:
+        create: Send message
+
+  placeholders:
+    search: Search
+    user:
+      email: Email
+    story:
+      title: Story Title
+      categories: Categories
+      cover_image: The cover image will be shown in the Stories
+      date: Story Date(s)
+      date_example: e.g. March 24, 2014
+      description: Story Description
+      description_example: e.g. In San Francisco, CA
+      year: Year
+      month: Month
+      day: Day
+      range: This Story spans a range of dates
+      in_future: Share Story on Date in Future
+    section:
+      title: Type a heading here
+      description: Type a description here
+      body: Type a caption here (optional)
+      narrative: Type Here
+      remove: Are you sure you want to remove this entire content area?  This action cannot be undone!
+      remove_approve: Remove
+      remove_deny: Cancel
+    family:
+      name: Community Name
+      motto: Motto
+      description: Description
+    member:
+      name: "Profile Name for %{communityName} %{communityType}"
+      email: Email
+      address: Address
+      phone: Phone Number
+      phone_placeholder: Type here your telephone number
+      placeBirth: Place of Birth
+
+  persistence_status:
+    started: Saving...
+    finished: Saved
+    failed: Failed
+    loading: loading...
+
+  user_menu:
+    help_center: Help
+    edit_profile: Edit Profile
+    message: Send a Message
+    sign_out: Sign Out
+    account: Account
+
+  account:
+    title: '%{user_name} Account Info'
+    families:
+      header: 'Your Families'
+      title: '%{family_name} Community Member'
+      you_are_connector: 'You are Administrator (Account Owner)'
+      connector: '%{connector_name} is Administrator (Community Owner)'
+    actions:
+      title: What would you like to do?
+      change_payment_method: Set Payment Method
+      transfer_ownership: Change Administrator
+      download_all: Download My Content
+      cancel_subscription: Cancel Subscription
+      resume_subscription: Resume Subscription
+      renew_subscription: Renew Subscription
+      subscribe: Subscribe to Kinscape Plan
+      subscription_status: Subscription Status
+      last_payment_on: Last payment on
+      renews: Renews
+      trial_days_left: 'Only <strong>%{day} days left</strong> in Free Trial'
+      past_due: Past due in Free Trial
+      upgrade_now: Upgrade Now!
+    storage:
+      header: Storage Space Used by %{user}
+    confirmations:
+      cancel_subscription: Your Subscription will be discontinued at the end of the billing period
+    upgrade_account_confirm:
+      title: Feature Unavailable In Current Plan!
+      content: This feature requires an active subscription!
+      ok: View Plans
+    plans:
+      title: Current Plan
+      trial: Free Trial
+      guest: Guest
+      individual: Individual Plan
+      group: Group Plan
+    tab:
+      account_info: "Account Info"
+      family_info: "Community Info"
+
+  billing:
+    payment_method:
+      select_plan_title: Select Plan
+      amount: '$%{amount}/%{interval}'
+      includes: 'Includes %{desc}'
+      basic_includes: 1 individual
+      group_includes: All Community Members
+      storage: '%{size} GB Storage'
+      feature: All-Feature Access
+      title: Set Payment Method
+      plan_title: '%{name} Plan'
+      desc_content: Credit Card will be charged upon Free Trial expiration
+      last_digits: Current card last 4 digits
+      form:
+        label: Credit or debit card
+        submit: Continue
+        back: Return to the Account page
+      flashes:
+        success: Payment method successfully set
+        error: Something went wrong, please try again!
+
+  vaults:
+    breadcrumb:
+      vault: vault
+    items:
+      child_boxes: Some of the selected boxes contain child boxes, please deselect them first.
+    tooltip:
+      title: Details
+      created_by: Created by
+      size: Size
+      date_created: Date Created
+      denied: You don't have permission to move or delete this file
+    private:
+      label: My Vault
+      title: Open Your Private Vault
+    family:
+      label: '%{community} Vault'
+      title: Open This Shared Community Vault
+    current:
+      title: You are Here
+    nav:
+      buttons:
+        selected: "%{count} selected"
+        no_move_permissions: You don’t have permission to move these files.
+        no_delete_permissions: You don’t have permission to delete these files.
+        cancel: Cancel
+        delete: Delete
+        delete_title: Permanently Delete File(s)
+        share: Share
+        share_title: Share File(s) with Another Vault
+        move: Move
+        move_title: Move File(s) to Another Vault
+        copy: Copy
+        create: Create
+        add_box: Add Box
+        add_box_title: Add Box and Label to Organize Vault Keepsakes
+        upload_to_vault: Upload
+        upload_to_vault_title: Upload File(s) to Vault
+        download_from_vault: Download
+        download_from_vault_title: Download File(s) from Vault
+    notices:
+      delete: Select files to delete
+      share: Select files to share
+      move: Select files to move
+      no_selection: You must select file(s) to complete this action.
+      download: Select files to download
+    empty:
+      heading: Upload content to your Vault!
+      description: Upload your pictures and files to your Vault, categorize them, fill this storage with memories!
+      upload_content: Upload Content
+      add_box: Add Box
+    attachments:
+      empty:
+        nothing_to_do: Nothing to see here.
+      share:
+        nothing_to_do: Nothing to share.
+      move:
+        nothing_to_do: You have no attachments that you can move.
+      delete:
+        title: Delete File
+        description: "Are you sure you want to delete %{name}?<br>This action can't be undone."
+      download:
+        nothing_to_do: You have no attachments that you can download.
+      group_name_title: Upload date
+    box:
+      name_your_box: Name your Box
+      required: required
+      untitled_box: Untitled Box
+      delete:
+        title: Remove Box and its Content from Vault
+        confirmation: '"%{name}" box and all files it contains will be permanently deleted'
+      default_name: Untitled box
+    attachment_modal:
+      close: Close
+    insert_from_vault_modal:
+      close: Close
+      title: Upload files from Vault
+      empty_vault_or_box: No files uploaded to selected Box
+      select_vault: Please select Vault
+      insert: Insert
+    share_between_vaults_modal:
+      close: Close
+      title: Select Vault or Box
+      share: Share
+      share_title: 'Click "Share" to Complete this Action'
+    copy_files_to_box_modal:
+      title1: Select a Box to copy
+      title2: Copy to other Communities' Vault
+      select: Select Communities
+      search: Search
+      back: Back
+      copy: Copy here
+      select_box: Select a Box to copy these files.
+      within_community: You can copy your files to one Community’s Vault at a time or to your Vault. 
+    move_files_to_box_modal:
+      close: Close
+      within_vault: Move within this Vault
+      within_box: Move within this Box
+      title_one: Select a Box to move this files to.
+      sub_title: Looking to move files to a different Vault? Use the Copy button instead.
+      move: Move here
+    download_files_to_box_modal:
+      close: Close
+      title: Select Box to download
+      download: Download
+    errors:
+      sharing: Could not perform action
+      moving: Could not perform action
+    list: List of Vaults
+    messages:
+      shared: File(s) shared successfully
+      moved: File(s) moved successfully
+      copied: File(s) copied successfully
+      removed: File(s) deleted successfully
+      box_removed: Box deleted successfully
+    sorting:
+      date_uploaded_newest: Date Uploaded (Newest)
+      date_uploaded_oldest: Date Uploaded (Oldest)
+      name_a_z: Name (A - Z)
+      file_type: File Type
+
+  subscriptions:
+    statuses:
+      titles:
+        trialing: Free Trial is Active! Trial ends on %{trial_end}
+        active: Accout is Active!
+        past_due: Account is suspended, please set payment method and renew subscription!
+        canceled: Service discontinued!
+        unpaid: Account suspended due to unpaid invoice!
+    title: Subscriptions
+    expiration_message:
+      zero: Expires today.
+      one: Expires tomorrow.
+      other: Expires in %{count} days.
+    trial:
+      heading: Free Trial is Active!
+      pros:
+        - Edit to Combine Community Stories, Profiles & Keepsakes
+        - Build Lasting Community History - Together!
+        - 100% Private - You Own All Content
+        - Closed Group - Invited Community Members Only
+        - Enjoy Full Access to All Features
+        - No Advertising
+    basic:
+      heading: Account is Active!
+    messages:
+      canceled: Your service successfully discontinued and will not be automatically renewed!
+      resumed: Your service successfully re-activated and will automatically renew at end of subscripion year.
+      renewed: Your service successfully re-activated and will automatically renew at end of subscripion year.
+    errors:
+      standard: Something went wrong, please try again
+      no_payment_method: Please set your payment method and try again
+    upgrade: Guest
+    upgrade_with_trial_days: 'Trial ends: %{day} days…'
+    upgrade_title: Upgrade to the basic plan
+
+  comments:
+    new: Add your comment here
+    add_comment: Add a Comment
+    post_comment: Post
+    remove: Remove
+    save: Save
+    reply: Reply
+    see_replies: See replies
+    hide_replies: Hide replies
+    type_your_reply: Type your reply here
+
+  categories:
+    instruction: Pick Category or Start New
+    title_attribute: Categorize Your Story
+
+  home:
+    brand_text: where <b>Community Stories</b> Live
+    top_block:
+      title: Tell the Stories and Share the History
+      text: Build a Lasting Community History
+      features:
+        text:
+          - Create Any Kind of Community Group
+          - Build a Legacy of Stories, Profiles, Photos & More
+          - Capture and Keep Key Moments
+          - Private, Secure Content
+    create_stories_block:
+      title:
+        main_text: Create Stories Together
+      tour-block:
+        text:
+          - Keep your Community History alive
+          - Combine words, media & documents <br>to Share Stories & Profiles
+          - Share cherished Keepsakes
+      signup-block:
+        text:
+          - You own all information
+          - 100% private – no advertising
+          - Free trial for new members
+    experience_block:
+      title: Experience <b>Kinscape</b>
+      carousel:
+        -
+          url: homepage/slides/slide-1
+          title: Private Gathering of Community & Friends
+          text: Hear familiar voices and see rich visuals in Community Profiles and Stories
+        -
+          url: homepage/slides/slide-2
+          title: Storytelling
+          text: Remember, create and Share Stories of precious moments and people
+        -
+          url: homepage/slides/slide-3
+          title: Keepsake Sharing
+          text: Upload treasured mementos to repository<br>Shared across the Community to spark Story creation
+    sign_up_button: Start Free Trial
+    take_tour_button: Watch video
+
+  shared:
+    users:
+      birth_date: "Born: %{birth_date}"
+      send_message: Send a Message
+
+  families:
+    community: Community
+    name: '%{family_name} Community'
+    flash:
+      alert:
+        invalide_FM: You are not able to access page, as you are not member of this family or family is not exists anymore
+        decline: Successfully decline to join community
+        accepte: Successfully accept invitation to join community
+        accept_message: You are already in this community
+        error: Something went wrong, please try again later.
+    user_role:
+      connector: Administrator
+    title: "%{family_name} Community"
+    edit: Edit
+    edit_title: Edit Community
+    remove: Delete Community
+    removed: Community has been successfully removed.
+    created: Community has been successfully created.
+    intro: A Community is a group of people with whom you want to privately communicate and share stories and other material. You can create different Communities to share different aspects of your life. Create a New Community Here. You will then be able to invite members to join it.
+    invite: Add Community Members
+    member: 'Member of %{name}.'
+    you_are_connector: 'Member of %{name}, where you are Administrator.'
+    remove_member: 'Remove from Community'
+    remove_member_confirm: 'Are you sure you want to remove <strong>%{member}</strong> from <strong>%{family}</strong>?'
+    remove_family_confirm: Are you sure you want to remove this community?
+    remove_member_tooltip: 'Remove %{member} from %{family}'
+    member_options_change_role: 'Change Role'
+    member_options_remove: 'Remove Member'
+    member_options_set_offline: 'Change to Offline Member'
+    member_roles:
+      member: 'Member'
+      guest: 'Guest'
+      admin: 'Admin'
+      co_admin: 'Co-Admin'
+      'offline member': 'Offline Member'
+    dialog_change_role:
+      title: 'Change Role'
+      content_title: 'Set a new role'
+      content_text: 'You can set a new role for %{name}.'
+      content_learn_more_label: 'Learn more'
+      content_learn_more_title: 'Learn more about member roles'
+      dropdown_label: 'Choose Role'
+      actions:
+        confirm: 'Change Role'
+    dialog_remove_member:
+      title: 'Do you really want to remove %{name}'
+      content_text: 'They will lose access to this Community, its Conversations, and all their Stories, Chapters and Comments will be removed. Are you sure this is what you want? If you want to remove the person but retain their Content, consider making them an Offline Member.'
+      actions:
+        confirm: 'Confirm'
+        cancel: 'Cancel'
+    dialog_set_offline_member:
+      title: 'Change to Offline Member'
+      content_text: 'This will make <strong>%{name}</strong> an <strong>Offline Member</strong>. Their profile and all their content will remain in the community but this person will lose access. The Admin and co-admins will be able to edit their profile.'
+      actions:
+        confirm: 'Confirm'
+        cancel: 'Cancel'
+
+    new: Create Community
+    new_title: Start a New Community
+    is_used: Community cannot be removed since it is in use.
+    show_title: See Community Profile and Members
+    search: Search for families
+    empty_search: "It looks like there aren't any communities for that search."
+    empty_index: Looks like no one has shared any stories yet. Be the first to
+                 publish a story of a trip, event, moment or memory with your community.
+    motto_placeholder: Change community motto
+    name_title: Name of Community You Are Viewing
+    editable_motto_title: Type Community Motto or Saying
+    creation:
+      back_button: Return to Communities
+    update:
+      change_cover_image: Change cover image
+      change_cover_image_title: Upload an Image to represent your Community
+    kinships:
+      connect_with_title: 'Send a Message to %{name}'
+      more_about_title: 'Learn more about %{name}'
+      connector_title: Community Account Administrator
+      removed: Member has been successfully removed.
+      user:
+        email_error: This email is already exists
+    submenu:
+      profile: Profile
+      profile_title: View Community Profile
+      members: Members
+      members_title: View Community Members
+      invited_members: Invitations
+      invited_members_title: View Invitations
+      vault: Vault
+      vault_title: View Community Vault
+    direct-upload-path: "/rails/active_storage/direct_uploads"
+    blob-path: "/rails/active_storage/blobs/signed_id/filename"
+
+  offline_member:
+    admin_error: You are the admin for this community, please pass admin rights over to another user.
+    add_member: Add Member
+    new:
+      title: New Profile
+      label:
+        nickname: Name
+        birth_date: Birth date
+      action:
+        create: Create Profile
+        back: Return to Community
+    flash:
+      created: Community Member successfully created!
+
+  email_confirmation:
+    title: Email confirmation instructions
+
+  invitations:
+    flash:
+      success:
+        already_accepted: You are already in this community
+        accepted: You successfully accepted the invitation to join the community
+      error:
+        unauthorized: You are not authorized to open this invitation.
+        owner: You can not open invitation that you sent.
+    missing_current_user: Please sign in or sign up before accepting invitation.
+    offline_member:
+      title: Add Community Member
+      instructions: You can add those who do not have email addresses, such as ancestors, children,  or pets! This will allow you to build a Community Member Profile on their behalf.
+      add: Add Community Member
+      cancel: Cancel
+    family_member:
+      title: Invite Members
+      instructions: Members are invited via email. Enter the email addresses separated by a comma (‘,’) of people you wish to invite to join the %{family} Community.
+      message_placeholder: Please join me in the Community to privately and securely (1) create and share Community and personal Profiles, (2) create and share Stories, and (3) store and share pictures, video, audio and documents, and 4) privately Message other Members!
+      send_invitations: Send invitations
+      cancel: Cancel
+      label:
+        email_addresses: Email Addresses
+        message: Your message
+      resend:
+        title: Resend Invitation
+        instructions: "Community Members are invited via email. %{email} person invited to join %{family} community"
+    message: "%{sender} has invited you to join their community named %{family}.
+             Finish creating your profile to accept the invitation."
+    subject: "%{sender} has invited you to join a community"
+    success:
+      one:   "%{count} person invited to Community"
+      other: "%{count} persons invited to Community"
+    invited: Invited
+    cancel: Cancel invitation
+    canceled: 'Invitation to %{email} successfully canceled.'
+    resend: Resend invitation
+    accept: Accept Invitation
+    decline: Decline Invitation
+
+  media_files:
+    processing: Your %{type} is processing. Try refreshing the page in a few minutes.
+
+  sessions:
+    form:
+      resend_instructions: Resend Activation Email
+    new:
+      title: Sign in
+      sign_up: Sign up
+
+  showcase:
+    leave_showcase: Exit Showcase
+
+  stories:
+    filters:
+      title: Filters
+      family: Community
+      family_title: See Stories by Community
+      member: Member
+      member_title: See Stories by Community Member
+      category: Category
+      category_title: See Stories by Category
+      stories_by: "Stories by:"
+      tabs_title: Toggle to See All, Shared, or Private Stories
+      clear_all_filters: Clear all Filters
+      all_stories: All Stories
+      private_stories: Private Stories
+      my_stories: My Stories
+      shared_stories: Shared Stories
+      all_communities: All Communities
+    sorting:
+      sort_by: 'Sort by:'
+      most_recently_updated: Most Recently Updated
+      date_created_newest: Date Created (Newest)
+      date_created_oldest: Date Created (Oldest)
+      name_a_z: Name (A - Z)
+    table_of_sections:
+      title: Table of Contents
+    all: All
+    private_stories: Private Stories
+    show_all: Show all
+    show_less: Show less
+    contribute: Edit
+    copied: Your Story has been copied to My Life.
+    delete: Delete
+    delete_confirmation: Delete this story forever?
+    deleted: Your Story has been deleted.
+    drafts: Private
+    edit: Edit
+    cancel: Cancel
+    empty_drafts_html: "You don't have any private stories. How about starting a new one? <br/> %{link}"
+    empty_index:
+      Looks like you have not authored any Stories yet in this
+      Community. let's start one now!
+    empty_search: It looks like there aren't any stories for that search.
+    empty_published:
+      It looks like you haven't shared any stories yet! After writing a story
+      you can share it by clicking the "Share Story" button in the header.
+    empty_for_family_member:
+      This Community Member has no shared Stories. Click "Send a Message" button to request a Story.
+    files:
+      download: Download
+      download_has_no_images: This story has no media attached. Try uploading images, audio, or video first.
+    no_stories_html: "It looks like %{name} hasn't shared any stories yet."
+    new: New Story
+    new_title: Tell a New Story
+    title_placeholder: Click to Add Story Title
+    preview: Save
+    preview_title: Click "Save" to Preview Story
+    private: Private
+    publish: Share
+    published: Shared
+    unpublished: Unshared story
+    publish_success: Your Story has been shared.
+    publish_error: Please select a community
+    request: Send a message
+    read: Read the Story
+    search: Search for stories
+    select_cover: Upload Cover Image
+    change_cover: Change Cover Image
+    select_cover_title: Create Your Story Cover
+    shared_with: Shared with
+    title_hint: Author, Title, Description
+    time_capsule_created: Time Capsule Activated Successfully!
+    time_capsule_disabled: Time Capsule disabled.
+    time_capsule:
+      label: Time Capsule
+      title: Time Capsule Activated
+      release_on: "Time Capsule release on %{date}"
+      message: "This Story will automatically Share with %{family_name} Community on %{date}."
+      confirmation:
+        disable: Time Capsule will be disabled
+      button:
+        disable: Disable Time Capsule
+        cancel: Back
+    unshare:
+      confirmation: This story will be made private again
+    shared_in:
+      title: Communities shared in
+      search: Search
+      title_share_again: Share in another Community
+      share_button: Share again
+      unshare: Unshare
+    write: Start your Story
+    write_story_tip: Begin writing a story now
+    notification: Email notification successfully sent to your Community Members!
+    notifications:
+      title: Editing Complete!
+      text: "You've made changes to this Story. Do you want to notify others about your recent changes?"
+      button:
+        send: "Yes"
+        go_to_story: "No"
+    upload-in-progress:
+      title: Attachment Upload in Progress!
+      text: "You've added attachments to this story and they're still uploading. Keep this notification open to be redirected after the upload finishes."
+      button:
+        wait: "Close Notification"
+    unread: Unread
+    chapters:
+      title: Jump to any Chapter Selected
+      one: "%{count} Chapter"
+      other: "%{count} Chapters"
+      new: Add Chapter
+      delete: Delete Chapter
+    contributors:
+      one: "%{count} Collaborator"
+      other: "%{count} Collaborators"
+    comments:
+      story_comments: Story Comments
+      one: "%{count} Comment"
+      other: "%{count} Comments"
+    created_at: "Created: %{time}"
+    last_updated_at: "Last Updated: %{time}"
+    other_stories: other stories
+    create_category: CREATE
+    action_button:
+      comment:
+        one: '1 Comment'
+        other: "%{count} Comments"
+      like:
+        one: '1 Like'
+        other: "%{count} Likes"
+      comment_title: Respond to Story
+      contribute: Edit
+      contribute_title: Add Your Voice to Story
+      copy: Copy
+      copy_title: Copy Your Story to My Life
+      delete: Delete
+      download: Download
+      edit: Edit
+      edit_title: Update Your Story
+      open: Open
+      print: Print
+      share: Share
+      unshare: Unshare
+      shared_in: Shared in
+      time_capsule: Time Capsule
+      appreciate: Like
+      unnappreciate: Dislike
+      appreciate_label: Like for this story
+      plural_appreciate_label: Likes for this story
+    submenu:
+      private_story_notice: Saved as Private Story in My Life until shared
+      chapter:
+        select_label: Chapter
+        top: Top
+        title: See / Jump to Chapters while Reading Story
+      story:
+        title: See / Jump to another Story
+      family:
+        title: See / Jump to stories shared with another community
+    newStoryDialog:
+      button: Start Story
+      title: Start a Story
+      storyTitleLabel: Story Title
+      required: required
+      storyDescriptionLabel: Description
+      storyTitlePlaceholder: Type the Story Title here
+      storyDescriptionPlaceholder: 'E.g. Let’s share together a common story, with our different perspectives
+      and point of views. Together, we can build strong emotional connections and discover, day by day, each small
+      piece of our lives.'
+      storyDateLabel: When did this happen?
+      storyDateEndLabel: When did this end?
+      storyRangeLabel: This Story spans a range of dates
+    share_modal:
+      with_family:
+        title: Share Your Story
+        share_type_title: Almost done...
+        ownership_option: ...just choose ownership option
+        label: Select Communities
+        hint: You can share your Story with one or more Communities
+        inputLabel: Search
+        orAddToLifeStories: 'or, add to your Life Stories'
+        shared_title: Let the Community contribute to your Story
+        shared_description: Each member of your community can add chapter to your Story. You’ll retain a copy of the
+          original here in your Private Story.
+        private_title: Remain the sole contributor
+        private_description: You are the sole contributor and no other member can add Chapters. Instead, they can like
+          or comment.
+      no_family:
+        subtitle: Create a Community to Share your Story with
+        description: >
+          In order to share a Story, you must first create a community and invite
+          Community Members to join. Members will be sent an email invitation. Once
+          they accept the invitation, they will be able to view and comment on
+          your Stories, as well as create and share their own.
+        family_members_list_label: Community Member email addresses
+        note: You can manage your community and members within My Families.
+      button:
+        share: Share Story
+        cancel: Cancel
+      enable_time_capsule: Enable Time Capsule
+      enable_time_capsule_title: Share Story on Date in Future
+      share_on_date: Share story on certain date
+    media_files:
+      confirmation_message: This file will be removed. Are you sure?
+    meta:
+      author_title: Author
+      story_title: Story Title
+      description_title: Description
+      date_title: Story Time Frame
+
+  vault:
+    my_vault: My Vault
+    search_in_vault: Search in Vault
+    
+  communities:
+    list_view:
+      title: Title
+      type: Type
+      date_created: Date Created
+      members: Members
+      admin: Admin
+    newCommunityDialog:
+      nameTitle: Community Name
+      required: '*required'
+      namePlaceholder: Type here your Community name
+      typeTitle: What sort of Community is this?
+      typeOtherPlaceholder: Enter a Community Type, eg. Church
+      mottoTitle: Motto
+      mottoPlaceholder: E.g. Whoopsidaisies!
+      descriptionTitle: Description
+      descriptionPlaceholder: E.g. Let’s share together a common story, with our different perspectives and point
+        of views. Together, we can build strong emotional connections and discover, day by day, each small piece
+        of our lifes.
+    empty_state:
+      heading: Create Community
+      description: A Community is a group of people with whom you want to privately communicate and share Stories.
+        You can create different Communities to share different aspects of your life. You will then be able to invite
+        members to join it.
+    recent_stories:
+      title: Recent Stories
+      alternative_title: 'Stories from “%{communityName}”'
+    table_of_contents:
+      link_title: Move Content Up / Down
+    description:
+      less: Show less
+      more: Show more
+    edit:
+      save: Save
+      cancel: Cancel
+    members:
+      heading: "%{community} Members"
+      total: "Total · %{count}"
+      invite: Invite Member
+      add_offline: Add Offline Member
+      send_message: Send a Message
+      list_view:
+        name: Name
+        role: Role
+        date_joined: Date Joined
+        date_invited: Date Invited
+        invited_by: Invited By
+        actions: Actions
+    member:
+      header:
+        changeRole: Change Role
+        removeMember: Remove Member
+        downloadContent: Download Content
+        leaveCommunity: Leave Community
+      edit:
+        change_avatar: Change Profile Image
+        select_avatar: Upload Profile Image
+        no_member_found: "You're not a member of any Community. My Life profiles are meant to be shared with
+         Communities. Click Add Community to create your first Community or ask another Community member on Kinscape
+         to invite you."
+        create_new_community: Add Community
+        dialog:
+          set_details: Set Contact Details
+          emails: Email
+          emails_add: Add Email
+          emails_placeholder: Enter Email
+          addresses: Address
+          addresses_add: Add Address
+          addresses_placeholder: Enter Address
+          phoneNumbers: Phone Number
+          phoneNumbers_add: Add Phone
+          phoneNumbers_placeholder: Type here your telephone number
+          locations: Location
+          locations_add: Add Location
+          locations_placeholder: Your current location
+          birthPlace: Place Birth
+          birthPlace_placeholder: E.g. London
+          birthDate: Birth Date
+          birthDate_placeholder: E.g. 1 January 1990
+          facebook: Facebook
+          facebook_placeholder: E.g. https://www.facebook.com/your-profile
+          instagram: Instagram
+          instagram_placeholder: E.g. https://www.instagram.com/your-profile
+          website: Website
+          website_placeholder: E.g. https://www.your-website.com
+          set_type: '(Set type)'
+    invitations:
+      heading: "%{community} Invitations"
+      cancel_invitation: Cancel Invitation
+      resend: Resend
+      resend_all: Resend All Invitations
+      cancel_all: Cancel All Invitations
+    chapter_empty_state:
+      label: I wasn’t designed to be so lonely.
+      call_to_action: Fill me now!
+    inviteDialog:
+      next: Next
+      cancel: Cancel
+      back: Back
+      send: Send
+      title: "Invite Members to this %{communityType}"
+      emailInvitationHeading: Invite via Email Adress
+      emailInvitationDescription: "Enter the email addresses separated by a comma (‘,’) of people you wish to invite to
+        join %{communityName}."
+      memberInvitationHeading: Invite from Kinscape
+      memberInvitationDescription: You can only invite people you know on Kinscape
+      searchPlaceholder: Search Members
+      roleHeading: Set a Role for Members
+      roleDescription:  "Each new Member needs a role in your %{communityType}. These can be changed later if you change
+        your mind."
+      roleSubheading: Invited Members
+      messageHeading: Send a Message to invited members
+      messageDescription: You can send a customised message about this Community, why you want them to be here, what
+        is so good about this Community, etc.
+      messageSubheading: Your Message
+      messagePlaceholder: Please join me in the Community to privately and securely (1) create and share Community and
+        personal Profiles, (2) create and share Stories, and (3) store and share pictures, video, audio and documents,
+        and 4) privately Message other Members! Pease write a better default message here!
+      sponsoredSubscriptions: Sponsored Subscriptions
+      sponsoredSubscriptionPrice: "%{price}/year"
+      sponsoredSubscriptionDescription: Pay for an individual subscription for someone you know at a reduced rate.
+    add_offline_member:
+      heading: Create a New Profile
+      explainer: You can add those who do not have email addresses, such as ancestors, children, or pets! This will allow you to build a Community Member Profile on their behalf.
+      name_placeholder: Type here the name
+      description: Description
+      description_placeholder: eg “Pet” or “Ancestor”
+      birth_place_label: Place of Birth
+      birth_place_placeholder: E.g. London
+      birth_date_label: Birth Date
+      create_profile: Create Profile
+
+  document:
+    converting: Your document is being converted. It will take a few minutes to
+                process. When it is completed, it will appear in your stories.
+    upload_failed: Your document failed to upload
+
+  sections:
+    add: Insert New Content
+    new:
+      audio: Audio (8 max)
+      audio_title: Upload Audio from External Resource
+      document: Documents (8 max)
+      document_title: Upload Document from External Resource
+      image: Images (8 max)
+      image_title: Upload Image(s) from External Resource
+      text: Text
+      text_title: Add Text
+      video: Videos (8 max)
+      video_title: Upload Video from External Resource
+      vault: Vault
+      vault_title: Upload from Vault
+    remove: Remove Content Area
+    remove_title: Remove Content Area
+    remove_image: Remove Image
+    sort: Drag Up/Down
+    sort_title: Move Content Up / Down
+    upload_file: Add images to this set
+    title_placeholder: Untitled Chapter
+    body_placeholder: Type Story Here or Upload Files.
+
+  requests:
+    failure: There was a problem sending your message.
+    message:
+      general: Use this form to quickly send an email to Community Members
+      custom: Send %{user_name} a message.
+    success: Message has been sent.
+    title: Send a message to members
+    select_user: 'Select a person:'
+
+  users:
+    user:
+      email: Email
+      address: Address
+      phone_number: Phone Number
+    profile_page:
+      show_more: Show all Contact Information
+    new:
+      title: Start Free Trial
+      submit: Start %{trial_period}-month free trial
+    remove: Remove
+    invited: Invited
+    edit_profile:
+      error_in_form: There is an error in the form. Please check below.
+    stories_nav:
+      request_message: Want to hear a story from %{name}?
+    kinships:
+      profile:
+        back_link: Back
+        empty: This Community Member has no shared information
+    verify_email: "Just one more step – Please verify your email in the message we've sent you!"
+    confirmation_resend: "Just one more step - We've resent your confirmation
+     email"
+    email_verification_instructions_sent: Email verification instructions have been sent
+
+  welcome:
+    title: Welcome to Kinscape!
+    link:
+      create_family: Create a Community
+    flash:
+      upgrade_notice: Free trial successfully activated!
+    explainer1: "Welcome to the Kinscape family, we are very pleased to meet you!"
+    explainer2: "%{inviterName} invited you to join %{communityName}, they’ll be so pleased you accepted. Let’s start by creating your profile in this Community."
+    explainer3: "Remember, upgrade in your first 30 days and %{inviterName} will get a reward!"
+    create_your_profile: Create your Profile
+    profile_title: "Set your Profile for %{communityName}"
+    profile_description: Set which information you’d like to show the other members of this Community. The Community admins have helped you get started.
+    name_label: Full Name
+    name_placeholder: Enter your full name
+    info_label: More info
+    email_placeholder: Enter your email address
+    location_placeholder: Enter your location
+    birth_place_placeholder: Enter your birth place
+    birth_date_placeholder: Enter your birth date
+    address_placeholder: Enter your address
+    create_profile: Create Profile
+    existing_profile: "%{inviterName} has  invited you to join the %{communityName} %{communityType}"
+    reject: Reject
+    accept: Accept
+    existing_profile_title: Community Invite
+
+  mylives:
+    sidebar:
+      edit_profile: Edit Profile
+    submenu:
+      profile: Profile
+      profile_title: "View Community Member's Profile"
+      stories: Stories
+      stories_title: "View Community Member's Shared Stories"
+      my_vault: My Vault
+      my_vault_title: "View Community Member's Vault"
+      identity: Identity,
+    profile_without_community: "You're not a member of any Community. My Life profiles are meant
+              to be shared with Communities. Click Add Community to create
+              your first Community, or ask another Community member
+              on Kinscape to invite you."
+
+  mailer:
+    comment_created:
+      subject: '%{user_name} has commented on your %{item}'
+    story_images:
+      subject: 'Your Media Files from "%{story_title}"'
+    story_published:
+      subject: '%{user_name} has shared a story'
+    story_updated:
+      subject: '%{user_name} has made changes to "%{story_title}"'
+    send_message:
+      subject: '%{user_name} has sent you a message'
+    sender_message_send:
+      subject: 'You sent a message'
+    email_password_to_user:
+      subject: 'Your password for kinship account'
+    time_capsule_released:
+      subject: '%{user_name} set a time capsule to be released today'
+    trial_will_end:
+      subject: Your Kinscape Free Trial will end soon. Action Required.
+    plan_ending:
+      subject: Plan ending
+      trial_end_sub_days_10: Free Trial Ends in 10 Days.
+      trial_end_sub_days_3: Free trial ends soon.
+      trial_end_sub_days_1: Free Trial Ends Tomorrow!
+      active__end_sub_days_10: Active Subscription Ends in 10 Days.
+      active__end_sub_days_3: Active Subscription ends soon.
+      active__end_sub_days_1: Active Subscription Ends Tomorrow!
+      end_sub_msg_10: Take action now to continue service!
+      end_sub_msg_3: Immediate action required to continue service.
+      end_sub_msg_1: Act now to continue service.
+    storage_limit:
+      subject: '%{user_name} exceeds the storage limit'
+    active_member_to_offline:
+      subject: TODO-OFFLINE-MEMBER
+    offline_member_to_active:
+      subject: TODO-OFFLINE-MEMBER
+    thank_you_for_subscribe:
+      subject: Thank You for Subscribing
+    paid_for_subscription:
+      subject: Paid for subscription
+    notify_previous_admin:
+      accepted:
+        subject: Changed Administrator successfully
+      declined:
+        subject: Refuse to become a administrator
+    decline_family_invitation:
+      subject: '%{user_name} refuse to join %{family_name} community%'
+    welcome_to_family:
+      subject: 'Welcome to %{family_name}'
+    welcome_to_kinscape:
+      subject: Welcome to Kinscape!
+    user_joined_family:
+      subject: New user join community
+
+  confirmation_dialog:
+    title: Are you sure?
+    confirm: OK
+    cancel: Cancel
+
+  attachment:
+    action:
+      delete_title: Delete File from Profile
+    errors:
+      attachment_on_title: "Can't add attachments to the chapter title."
+      format_not_allowed: File not allowed. Only Documents, Images, Audio and Video files can be uploaded.
+      size_limit: "Attached files are limited in size to 4 GB (100 MB for images)."
+
+  copying:
+    errors:
+      different_vaults: Attachments should belong to the same vault.
+      same_vault: Sharing to the same vault is not allowed.
+      family_to_family: Sharing attachments between community vaults is not allowed.
+
+  flashes:
+    failure_when_not_signed_in: This link can only be viewed by the registered user who was invited to see it.  Please log in.  If you have no account yet, and you received this message via email, then please create a new account using the email address that received the invitation.
+    sign_in_with_other: This page does not exist. If you believe you have received this message in error, please log in to your account using the email address which received the invitation.
+    alert:
+      action_not_permitted: This action is not permitted
+      cannot_perform_action: Sorry, this action can not be performed.
+      unauthorized: Sorry that action cannot be completed. If you use multiple email addresses please log  in with the address used to send you the Message.
+      paused_subscription: Please set your payment method or renew subscription
+
+  transfer:
+    form:
+      title: Change Administrator
+      subtitle: Transfer Account Ownership from You to Different Community Member
+      choose_family: Choose Community you want to change
+      choose_transferee: Choose a Community Member you wish to be new Community Administrator
+      transferee_instructions: An email will be sent to selected Community Member asking them to accept or decline Community Administrator responsibilities and ownership of this Community Account.
+      submit: Send Transfer Request
+      cancel: Cancel
+    show:
+      title: Become Administrator
+      subtitle: Accept Transfer of Account Ownership to You
+      message: '%{old_admin} would like you to become Community Administrator for the %{family_name} Community in Kinscape. Upon acceptance, you will be the Community Administrator and enjoy all administrative rights for the Community and assume responsibility for payment and any service fees.'
+      accept: Accept
+      decline: Decline
+    create:
+      flash:
+        success: 'Administrator Transfer Request sent to %{transferee} successfully!'
+        error: 'Something went wrong, please try again later.'
+    update:
+      flash:
+        success: 'You are now Administrator in %{family_name} Community. Transfer successful!'
+        error: 'Something went wrong, please try again later.'
+    email:
+      subject: '%{sender} would like to transfer ownership, including billing, for their Kinscape Families.'

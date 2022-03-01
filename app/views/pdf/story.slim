@@ -1,0 +1,36 @@
+.title-wrapper
+  .cover-image-wrapper
+    .style-wrapper
+      .cover-image style=background_image_css(@story.cover_url)
+  .title-body
+    h1=@story.title
+    .meta
+      .author title="Author"
+        .face style=background_image_css(@story.cover_url)
+        / TODO: fix user avatar
+        / .face style=background_image_css(@story.user.avatar_url('original'))
+        =@story.user&.name
+      - if @story.description.present?
+        span title="Description"
+          span.description
+            i.fa.fa-pencil aria-hidden="true"
+          =@story.description
+.table-of-contents-wrapper
+  h4 Table of Contents
+  ul.list
+    - @story.sections.map.with_index do |section, i|
+      li= link_to "#{i + 1}. #{section.title}", "#"
+.table-of-contents-wrapper
+  - @story.sections.each do |section|
+    .cannot_edit
+      h1=section.title
+      ==section.rich_body.body
+      -if section.author.present?
+        .section-attribution
+          span.avatar--thumb style=background_image_css(@story.cover_url)
+          / TODO: fix user avatar
+          / span.avatar--thumb style=background_image_css(section.author.kinships.first.avatar_url('original'))
+          span.author-name
+            =section.author.name
+- content_for :head do
+  title=@story.title

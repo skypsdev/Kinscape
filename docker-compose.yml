@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  kinscape_db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  app:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_HOST=kinscape_db
+      - WEBPACKER_DEV_SERVER_HOST=webpack
+    volumes:
+      - .:/kinscape
+    depends_on:
+      - kinscape_db
+      - webpack
+    ports:
+      - 3000:3000
+  webpack:
+    build: .
+    command: ./bin/webpack-dev-server
+    volumes:
+      - .:/kinscape
+      - /kinscape/node_modules/
+    ports:
+      - 3035:3035
+    environment:
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+      - NODE_ENV=development
+      - RAILS_ENV=development
+volumes:
+  postgres:

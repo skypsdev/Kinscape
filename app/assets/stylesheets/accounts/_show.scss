@@ -1,0 +1,263 @@
+.account-title {
+  @include block-heading();
+}
+
+.field-icon {
+  float: right;
+  margin-top: -57px;
+  position: relative;
+  z-index: 2;
+  padding-right: 15px;
+}
+
+.account__information {
+  margin-top: 1em;
+  margin-bottom: 5em;
+}
+
+.account__family {
+  margin: 1em 0;
+}
+
+.account__families {
+  background: #eee;
+  border: 1em solid #eee;
+  margin: 1em;
+}
+
+.account__families-header {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.account__family-title {
+  font-size: 1em;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  .remove-family {
+    .fa-minus-circle {
+      color: $red;
+    }
+    &:hover {
+      color: $red;
+    }
+  }
+}
+
+.account__family-connector {
+  color: $gray;
+}
+
+.account__actions {
+  margin: 3em 0;
+}
+.storage_acttion {
+  // margin: 6em 220px !important;
+  text-align: center;
+}
+.account__actions-title {
+  font-size: 1.5em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.account__actions-item {
+  margin: 1em;
+
+  .fa-toggle-on {
+    color: $light-font-color;
+  }
+
+  p {
+    font-size: 1em !important;
+  }
+
+  &.current-plan {
+    padding-top: 20px;
+    width: 40%;
+    margin: auto;
+    text-align: center;
+  }
+
+  &.free {
+    width: 40%;
+    margin: auto;
+    text-align: center;
+
+    p {
+      color: $red;
+    }
+
+    a {
+      @include rectangular-button("small", "outline", $green, $green);
+      background: #fff;
+    }
+  }
+
+  &.paid {
+    width: 40%;
+    margin: auto;
+    text-align: center;
+
+    a.upgrade {
+      @include rectangular-button("small", "outline", $green, $green);
+      background: #fff;
+    }
+
+    a.cancel {
+      font-size: 70%;
+    }
+  }
+}
+
+
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+
+  .tooltip-inner {
+    background: black;
+    color: white;
+    border-radius: 16px;
+    padding: 5px 10px 4px;
+  }
+
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color: black;
+    z-index: 1;
+  }
+
+  &[x-placement^="top"] {
+    margin-bottom: 5px;
+
+    .tooltip-arrow {
+      border-width: 5px 5px 0 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      bottom: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="bottom"] {
+    margin-top: 5px;
+
+    .tooltip-arrow {
+      border-width: 0 5px 5px 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-top-color: transparent !important;
+      top: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="right"] {
+    margin-left: 5px;
+
+    .tooltip-arrow {
+      border-width: 5px 5px 5px 0;
+      border-left-color: transparent !important;
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+      left: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[x-placement^="left"] {
+    margin-right: 5px;
+
+    .tooltip-arrow {
+      border-width: 5px 0 5px 5px;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      right: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &.popover {
+    $color: #f9f9f9;
+
+    .popover-inner {
+      background: $color;
+      color: black;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(black, .1);
+    }
+
+    .popover-arrow {
+      border-color: $color;
+    }
+  }
+
+  &[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .15s, visibility .15s;
+  }
+
+  &[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .15s;
+  }
+}
+
+#progress-bar {
+  background-color: #ccc;
+  border-radius: 13px;
+  padding: 3px;
+  display: none;
+}
+
+#progress-bar>div {
+  background-color: green;
+  width: 0;
+  height: 15px;
+  border-radius: 10px;
+}
+
+.ml20{
+  margin-left: 20px;
+}
+
+.close_account{
+  padding: 0.7em;
+  background: tomato;
+  color: white;
+  text-align: center;
+  margin-left: 12px;
+  display: block;
+}
+
+.w50{
+  width: 50% !important;
+  float: left;
+}
+
+.w100{
+  width: 100% !important;
+}
+
+.for-header{
+  margin-top: -80px;
+}

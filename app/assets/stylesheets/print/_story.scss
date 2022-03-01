@@ -1,0 +1,46 @@
+@media print {
+  section.story-container {
+    padding-top: 0;
+
+    section.text {
+      font-size: 16px;
+    }
+
+    section h3 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .story-wrapper {
+      padding-bottom: 0px;
+    }
+  }
+
+  .story-container section.story-cover {
+    margin-bottom: 10px;
+  }
+
+  .story-container section.story-cover article.story-title {
+    padding-top: 3em;
+
+    .title-body h1 {
+      font-size: 2em;
+    }
+
+    .meta .download {
+      display: none;
+    }
+
+    .meta .author .face {
+      display: none;
+    }
+
+    .cover-image-wrapper {
+      display: none;
+    }
+  }
+
+  .story-container .story-comments {
+    display: none;
+  }
+}

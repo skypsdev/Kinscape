@@ -1,0 +1,14 @@
+// jsconfig.json
+{
+  "include": [
+    "./app/javascript"
+  ],
+  "compilerOptions": {
+    "baseUrl": "./app/javascript",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  }
+}

@@ -1,0 +1,246 @@
+.story-comments {
+  @include outer-container;
+  margin-top: 5em;
+  padding: 0 4em;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
+  &.active {
+    .story-comments-container {
+      visibility: visible;
+      z-index: 101; // must be bigger than header and help z-index
+
+      .inner {
+        height: 100%;
+        opacity: 1;
+      }
+    }
+  }
+
+  .story-comments-button, .story-appreciation-button {
+    width: 49%;
+
+    @media (max-width: $medium-screen) {
+      width: 100%;
+      margin: 5px 0;
+    }
+  }
+
+  .story-comments-container {
+    @include position(fixed, 20% null 10% 50%);
+    margin-left: -230px;
+    visibility: hidden;
+    width: 460px;
+    z-index: 3;
+
+    @media (max-width: $medium-screen) {
+      margin-left: -150px;
+      width: 300px;
+    }
+    .inner {
+      @include position(absolute, 0 0 0px 0px);
+      @include size(100%, 70px);
+      transition: all 0.2s ease-out;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.2), 0 1px 40px 0 rgba(0,0,0,0.1);
+      opacity: 0;
+    }
+  }
+
+  a.toggle-story-comments {
+    @include rectangular-button("large", "outline", $base-accent-color, $base-accent-color);
+    display: block;
+    z-index: 2;
+  }
+
+  a.appreciate-action {
+    @include rectangular-button("large", "outline", $semi-transparent-white, $semi-transparent-white);
+    display: block;
+    z-index: 2;
+  }
+
+  a.toggle-story-comments, a.appreciate-action {
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .counter {
+      display: inline-block;
+      margin-right: 1em;
+      position: relative;
+      top: 1px;
+      vertical-align: middle;
+
+      i.fa {
+        color: #fff;
+        font-size: 2.2em;
+        margin: 0;
+        text-shadow: 1px 1px $base-accent-color, -1px -1px $base-accent-color;
+      }
+
+      span.count {
+        @include position(absolute, 4px null null 0px);
+        color: $base-accent-color;
+        font-size: 1.2em;
+        width: 100%;
+      }
+    }
+  }
+
+  &:after {
+    content: none;
+  }
+}
+
+.comments-header {
+  @include clearfix;
+  background: white;
+  border-bottom: 1px solid $base-border-color;
+  display: inline-block;
+  height: 36px;
+  padding: 0.4em 1em;
+  width: 100%;
+
+  a.close {
+    float: right;
+    opacity: 0.5;
+
+    &:hover {
+      color: $base-font-color;
+    }
+  }
+
+  span.comments-meta {
+    color: $light-font-color;
+    font-size: 0.9em;
+    float: left;
+    max-width: 92%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    i {
+      margin-right: 0.3em;
+    }
+  }
+}
+
+.comments-wrapper {
+  @include position(absolute, 90px null 10px 0px);
+  overflow: hidden;
+  width: 100%;
+}
+
+ul.comments {
+  height: 100%;
+  overflow-y: scroll;
+
+  &:before, &:after {
+    @include position(absolute, null null null 0px);
+    @include size(100%, 26px);
+    content: '';
+    display: block;
+    z-index: 2;
+  }
+
+  &:before {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0));
+    top: 0;
+  }
+
+  &:after {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    bottom: 0;
+  }
+
+  li.comment {
+    @include clearfix;
+    border-bottom: 1px dotted rgb(225,225,225);
+    margin: 0 1em;
+    padding: 10px;
+    text-align: left;
+
+    &:last-child {
+      border: none;
+    }
+  }
+}
+
+.commenter {
+  float: left;
+  margin-right: 0.8em;
+
+  .avatar {
+    @include avatar(38px);
+  }
+}
+
+.comment-body {
+  font-size: 0.8em;
+  overflow: hidden;
+
+  span.name {
+    font-weight: bold;
+    display: inline-block;
+  }
+
+  p {
+    font-size: 0.9em;
+    margin: 0;
+  }
+
+  .meta {
+    color: $light-font-color;
+    font-size: 0.9em;
+    vertical-align: middle;
+
+    span.date {
+      display: inline-block;
+    }
+
+    a.remove-comment {
+      display: inline-block;
+      margin-left: 1em;
+
+      &:hover {
+        color: $red;
+      }
+    }
+  }
+}
+
+.new-comment {
+  @include position(absolute, 30px null null 0px);
+  width: 100%;
+  min-height: 70px;
+  background: rgb(255,255,255);
+  border-top: 1px solid $base-border-color;
+  border-bottom: 1px solid $base-border-color;
+  padding: 10px;
+  z-index: 9999;
+
+  textarea {
+    font-style: italic;
+    font-weight: 300;
+    margin: 0;
+    min-height: 44px;
+    max-height: 96px;
+  }
+
+  .send-comment-btn {
+    display: block;
+    margin-left: 10px;
+    width: 38px;
+    cursor: pointer;
+  }
+
+  .comment-body {
+    form {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

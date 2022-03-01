@@ -1,0 +1,18 @@
+.comment
+  .commenter
+    .avatar style="background-image: url({{ comment.userAvatarUrl }})"
+
+  .comment-body
+    span.name
+      | {{ comment.userName }}
+    p
+      | {{ comment.body }}
+    .meta
+      span.date
+        | {{ comment.createdAt | moment: 'MMMM Do, YYYY' }}
+      a.remove-comment(
+        href
+        ng-if="comment.isCurrentUserCommenter()"
+        ng-click="remove()"
+      )
+        = t('comments.remove')

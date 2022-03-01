@@ -1,0 +1,58 @@
+.home-wrapper
+  .homepage-top-block
+    .content-block
+      .text-wrapper
+        h1.title = t("home.top_block.title").html_safe
+        / .subtitle = t("home.top_block.text")
+        ul.features-list
+          - t("home.top_block.features.text").each do |text|
+            li = text
+
+        .buttons-wrapper
+          = render partial: 'home/sign_up_button', locals: { btn_text: 'home.sign_up_button' }
+          = render 'home/take_tour_button'
+
+  .homepage-create-stories
+    h2.title
+      = t("home.create_stories_block.title.main_text")
+    .text-container
+      .tour-column
+        .text
+          - t("home.create_stories_block.tour-block.text").each do |text|
+            p = text.html_safe
+        .button-wrapper
+          = render 'home/take_tour_button'
+      .signup-column
+        .text
+          - t("home.create_stories_block.signup-block.text").each do |text|
+            p = text.html_safe
+        .button-wrapper
+          = render partial: 'home/sign_up_button', locals: { btn_text: 'home.sign_up_button' }
+    .stories-image
+
+  .homepage-experience
+    .text-wrapper
+      h2#tour.title = t("home.experience_block.title").html_safe
+
+    .glide#glide.glide--inactive
+      .glide-content#glide-content
+        - t("home.experience_block.carousel").each do |slide|
+          .glide-content__item
+            h3.glide-content__title #{slide[:title]}
+            p.glide-content__text #{slide[:text].html_safe}
+
+      .button-wrapper
+        = render partial: 'home/sign_up_button', locals: { btn_text: 'home.sign_up_button' }
+
+      .glide-wrapper
+        ul.glide__track
+          - t("home.experience_block.carousel").each do |slide|
+            li.glide__slide
+              .slide-box
+                = image_tag "#{slide[:url]}.jpg", srcset: "#{image_path("#{slide[:url]}@2x.jpg")} 2x"
+
+        .glide__arrows
+          a.glide__arrow.prev data-glide-dir="<" prev
+          a.glide__arrow.next data-glide-dir=">" next
+
+      .glide__bullets

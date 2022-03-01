@@ -1,0 +1,4 @@
+// this hack is necessary because ng-animate togather with ng-hide makes flickering 
+.ng-hide.ng-hide-animate {
+  display: none !important;
+}

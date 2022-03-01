@@ -1,0 +1,42 @@
+
+
+.profile-wrapper {
+  padding-bottom: 60px;
+  max-width: 1195px;
+  margin: auto;
+}
+
+.no-profile-information {
+  padding: 15px;
+}
+
+.edit-mode-wrapper {
+  margin-bottom: 15px;
+  text-align: center;
+
+  a {
+    max-width: 300px;
+    margin: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .my-life {
+    display: block;
+  }
+}
+
+.setUserFamily {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.add-content-wrapper{
+  margin-top: 85px !important;
+}
+.chapter-table-design{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

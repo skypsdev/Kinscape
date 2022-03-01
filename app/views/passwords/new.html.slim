@@ -1,0 +1,14 @@
+.content-wrapper
+  #clearance.password-reset
+    h2 = t(".title")
+    p = t(".description")
+    = form_for :password, url: passwords_path do |form|
+      .text-field
+        = form.label :email
+        div class=('field_with_errors' if @email_empty)
+          = form.text_field :email, type: 'email'
+          - if @email_empty
+            span.error
+              = t(".email")
+      .submit-field
+        = form.submit

@@ -1,0 +1,350 @@
+.family-title {
+  margin-bottom: 4em;
+  position: relative;
+
+  h1 {
+    font-size: 3em;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin-bottom: 0.1em;
+
+    @media (max-width: $small-screen) {
+      font-size: 2.4em;
+    }
+  }
+
+  .meta {
+    span, a {
+      color: $light-font-color;
+      display: inline-block;
+      font-weight: 300;
+
+      &:before {
+        display: inline;
+        font-family: $icon-font;
+        margin-right: 0.4em;
+      }
+
+      @media (max-width: $small-screen) {
+        display: block;
+      }
+
+      &.open-invite-modal:before {
+        content: "\f067";
+      }
+
+      &.settings:before {
+        content: "\f013";
+      }
+
+      & + span,
+      & + a {
+        border-left: 1px solid $base-border-color;
+        margin-left: 1em;
+        padding-left: 1em;
+
+        @media (max-width: $small-screen) {
+          border: none;
+          margin: 0.4em 0 0 0;
+          padding: 0;
+        }
+      }
+    }
+
+    a:hover {
+      color: $base-accent-color;
+    }
+  }
+}
+
+ul.family-members {
+  @include clearfix;
+}
+
+li.family-member {
+  float: left;
+  margin-bottom: 2%;
+  position: relative;
+  width: 25%;
+
+  @media (max-width: $extra-large-screen) {
+    margin-bottom: 8%;
+    width: 33.33%;
+
+    .member-mail {
+      right: 8%;
+    }
+  }
+
+  @media (max-width: $large-screen) {
+    margin-bottom: 8%;
+    width: 50%;
+  }
+
+  @media (max-width: $medium-screen) {
+    width: 50%;
+  }
+
+  @media (max-width: $small-screen) {
+    margin-bottom: 8%;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  &.active,
+  &.invited {
+    transition: all 0.15s linear;
+
+    .member-avatar {
+      background-image: image-url('avatar.svg');
+      position: relative;
+
+      .invitation-actions {
+        @include position(absolute, 0px 0px 0px 0px);
+        transition: all 0.2s linear;
+        background: rgba(black, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1;
+
+        form {
+          text-align: center;
+
+          & ~ form {
+            margin-top: 1em;
+          }
+
+          input[type="submit"], input[type="button"] {
+            &.cancel {
+              @include rectangular-button("small", "outline", #fff, $red);
+            }
+
+            &.resend {
+              @include rectangular-button("small", "outline", #fff, $base-accent-color);
+            }
+
+            display: inline-block;
+            width: auto;
+          }
+        }
+      }
+
+      .member-actions {
+        @include position(absolute, 0px 0px 0px 0px);
+        transition: all 0.2s linear;
+        background: rgba(black, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1;
+
+        .btn {
+          text-align: center;
+
+          & ~ .btn {
+            margin-top: 1em;
+          }
+
+          a {
+            &.remove {
+              @include rectangular-button("small", "outline", #fff, $red);
+            }
+
+            display: inline-block;
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+
+  &.active:hover {
+    border-color: $base-accent-color;
+
+    h2.name {
+      color: $base-accent-color;
+    }
+
+    .member-actions {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &.invited:hover {
+    .invitation-actions {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  span.flag {
+    @include flag;
+  }
+
+  .member-mail {
+    color: $light-gray;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 3em;
+    @include position(absolute, 215px 250px);
+    top: unset;
+    right: 2%;
+    bottom: 26%;
+    left: unset;
+  }
+
+  .member-title {
+    transform: rotate(320deg);
+    background-color: $semi-light-gray;
+    color: $white;
+    cursor: default;
+    font-size: 14px;
+    left: -48px;
+    margin-top: 0;
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    top: 38px;
+    width: 228px;
+  }
+
+  .member-avatar {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    overflow: hidden;
+    background-image: asset-url("avatar.svg");
+    background-position: 50% 50%;
+    background-size: cover;
+    border-radius: 50%;
+    border: 4px solid #c5c5c5;
+  }
+
+  &.default {
+    .member-avatar {
+      border: 4px solid #c5c5c5;
+    }
+  }
+
+  &.connector {
+    .member-title {
+      background-color: $dark-purple;
+    }
+
+    .member-avatar {
+      border: 4px solid $dark-purple;
+    }
+  }
+
+  &.offline-member {
+    .member-avatar {
+      border: 4px solid $semi-light-gray;
+    }
+  }
+
+  a.open-invite-modal {
+    @include position(absolute, 0px 0px 0px 0px);
+    border: 2px dashed $base-border-color;
+    display: block;
+    text-align: center;
+
+    .wrapper {
+      @include position(absolute, 50% null null 0px);
+      display: inline-block;
+      height: 100px;
+      margin-top: -50px;
+      width: 100%;
+    }
+
+    i.fa.fa-plus {
+      transition: all 0.15s linear;
+      color: $light-font-color;
+      opacity: 0.8;
+      font-size: 4.4em;
+    }
+
+    .message {
+      transition: all 0.15s linear;
+      @include position(absolute, null null 20% 0px);
+      color: $light-font-color;
+      display: inline-block;
+      font-style: italic;
+      width: 100%;
+    }
+
+    &:hover {
+      i.fa {
+        transform: scale(1.25);
+        opacity: 1;
+      }
+
+      .message {
+        color: $base-accent-color;
+      }
+    }
+  }
+
+  .spacer-top {
+    margin: 0.4em;
+    padding-bottom: 80%;
+  }
+
+  .spacer-bottom {
+    height: 100px;
+  }
+
+  .member-info {
+    height: 96px;
+    padding: 0 1em 1em;
+    text-align: center;
+
+    h2.name,
+    span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    h2.name {
+      transition: all 0.15s linear;
+      color: $base-font-color;
+      font-size: 1.6em;
+      font-weight: 300;
+      margin-bottom: 0.2em;
+    }
+
+    i.fa {
+      margin-right: 0.4em;
+    }
+
+    span {
+      color: $light-font-color;
+      font-weight: 300;
+    }
+  }
+}
+
+.avatar {
+  background-image: asset-url("avatar.svg");
+  background-position: 50% 50%;
+  background-size: cover;
+}
+
+.submenu {
+  .remove-family-btn {
+    width: auto;
+    margin-left: 5px;
+
+    @media (max-width: $medium-screen) {
+      display: none;
+    }
+
+    &:hover {
+      background: #ff6a6a;
+      border-color: #ff1818;
+      color: #fff;
+    }
+  }
+}

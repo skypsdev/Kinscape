@@ -1,0 +1,79 @@
+// Typography
+///////////////////////////////////////////////////////////////////////////////
+$icon-font: 'FontAwesome';
+
+$audio-icon: "\f027";
+$video-icon: "\f008";
+$image-icon: "\f03e";
+$doc-icon: "\f0f6";
+
+// Sizes
+///////////////////////////////////////////////////////////////////////////////
+$base-font-size: 1em;
+$base-line-height: $base-font-size * 1.5;
+$base-border-radius: 3px;
+
+// Colors
+///////////////////////////////////////////////////////////////////////////////
+
+$text-color: rgb(248, 97, 97);
+$audio-color: rgb(42, 211, 126);
+$video-color: rgb(237, 154, 73);
+$image-color: rgb(91, 193, 255);
+$doc-color: rgb(174, 102, 227);
+$shadow-color: rgba(0, 0, 0, 0.2);
+$vault-color: #eb7b67;
+$warning-color: #ff773b;
+
+///////////////////////////////////////////////////////////////////////////////
+
+$blue: rgb(88, 151, 251);
+
+$white: white;
+$purple: #8B78FE;
+$dark-purple: #ae43ff;
+$light-gray: #DDD;
+$semi-light-gray: #c5c5c5;
+$blue-gray: rgb(243, 245, 246);
+$gray: #999;
+$dark-gray: rgb(60,60,60);
+$light-red: rgb(255, 217, 217);
+$red: rgb(255, 106, 106);
+$red-font-color: rgb(226, 47, 47);
+$light-yellow: rgb(255, 250, 170);
+$light-green: rgb(141, 232, 141);
+$green: rgb(108, 215, 108);
+$green-font-color: rgb(73, 122, 73);
+$black: #000;
+$semi-transparent-white: rgba(0, 0, 0, 0.4);
+$semi-dark-gray: #909caa;
+
+$loading-color: rgb(224, 204, 156);
+
+//  Font Colors
+$base-font-color: rgb(41, 52, 57);
+$base-accent-color: $purple;
+$light-font-color: rgb(140, 152, 168);
+$medium-font-color: darken($light-font-color, 15%);
+$disabled-font-color: rgb(170,176,186);
+
+
+//  Text Link Colors
+$base-link-color: $light-font-color;
+$hover-link-color: $base-accent-color;
+
+// Border color
+$base-border-color: rgb(219, 224, 231);
+
+// Flash Colors
+$error-color: $red;
+$notice-color: $light-yellow;
+// $success-color: rgb(48, 113, 48);
+$success-color: $green;
+
+// Brand colors
+$brand-violet-color: #7f47dc;
+$brand-orange-color: #f75209;
+$brand-gray-color: #b9cde4;
+
+$global-nav-width: 280px;

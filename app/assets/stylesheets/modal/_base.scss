@@ -1,0 +1,162 @@
+.modal-v2 {
+  z-index: 100;
+}
+
+.modal {
+  @include position(fixed, 0px 0px 0px 0px);
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  overflow-y: scroll;
+  visibility: hidden;
+  z-index: 9999;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+
+    .modal-container {
+      transform: scale(1);
+    }
+  }
+
+  .overlay {
+    @include position(fixed, 0px 0px 0px 0px);
+    background: rgba(0,0,0,0.4);
+    content: '';
+    display: block;
+    z-index: 1;
+  }
+
+  .vertical-center {
+    @include size(100%);
+    display: table;
+    pointer-events: none;
+
+    .vc-cell {
+      @include clearfix();
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  .modal-container {
+    transform: scale(0.96);
+    transition: all 0.3s ease-in-out;
+    padding: 4%;
+    position: relative;
+    z-index: 2;
+
+    @media (max-width: $medium-screen) {
+      padding: 4% 2%;
+    }
+  }
+
+  .modal-content {
+    @include clearfix;
+    margin: 0 auto;
+    position: relative;
+    width: auto;
+
+    .modal-inner-wrapper {
+      background: rgb(255,255,255);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 3px 60px 0 rgba(0, 0, 0, 0.2);
+      height: auto;
+      pointer-events: all;
+      position: relative;
+      width: 100%;
+
+      .close {
+        @include position(absolute, 0.4em 0.6em null null);
+        display: block;
+        z-index: 2;
+
+        &:before {
+          display: block;
+          content: '\f00d';
+          font-family: $icon-font;
+        }
+
+        &:hover  {
+          &:before {
+            color: $base-font-color;
+          }
+        }
+      }
+    }
+  }
+
+  .modal-header {
+    position: relative;
+    min-height: 56px;
+    padding: 1em 2em 1em 1em;
+    background-color: $header-bg-color;
+
+    @media (max-width: $small-screen) {
+      min-height: 48px;
+      padding: 10px 15px;
+    }
+  }
+
+  .modal-comments-container {
+    background: #fff;
+    min-height: 600px;
+    width: 100%;
+
+    .new-comment {
+      background: rgb(250,250,250);
+      border-top: 1px solid $base-border-color;
+    }
+  }
+}
+
+.modal.attachment-preview-modal,
+.modal.story-update-modal,
+.modal.share-your-story,
+.modal.invite-member-modal,
+.modal.confirmation-dialog,
+.modal.request-story-modal{
+  .modal-content {
+    @include outer-container;
+  }
+
+  .modal-inner-wrapper {
+
+    padding: 3em;
+
+    @media (max-width: $large-screen) {
+
+    }
+
+    @media (max-width: $medium-screen) {
+      width: 100%;
+      padding: 2em;
+    }
+  }
+
+  .form-wrapper {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+}
+
+.modal.confirmation-dialog {
+  .form-message strong {
+    font-weight: 600;
+  }
+
+  .controls-block {
+    @include clearfix;
+
+    .control {
+
+    }
+
+    &.single-button {
+      .control {
+        float: none;
+        margin: 0 auto;
+      }
+    }
+  }
+}

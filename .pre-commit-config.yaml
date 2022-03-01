@@ -1,0 +1,17 @@
+exclude: "^(vendor/.|db/schema.rb)*"
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude_types: ['svg']
+  - repo: https://github.com/mattlqx/pre-commit-ruby
+    rev: v1.3.3
+    hooks:
+      - id: rubocop
+    verbose: true
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v7.29.0
+    hooks:
+      - id: eslint

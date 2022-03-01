@@ -1,0 +1,215 @@
+.characteristics {
+
+  &.edit-mode {
+
+    .my-life & {
+      padding-left: 0;
+    }
+
+    .characteristics-list {
+      padding-left: 65px;
+      padding-right: 65px;
+
+      .my-life & {
+        margin-left: 20px;
+        padding-right: 0;
+      }
+
+      @media (max-width: $medium-screen) {
+        margin-left: 0;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      &:first-of-type .move-up,
+      &:last-of-type .move-down {
+        display: none;
+      }
+
+      &:first-of-type .move-down,
+      &:last-of-type .move-up {
+        border-radius: 3px;
+      }
+
+      li.disabled {
+        pointer-events: none;
+        cursor: default;
+      }
+    }
+  }
+
+  .characteristics-empty {
+    margin-top: 30px;
+    margin-left: 30px;
+    text-align: center;
+
+    @media (max-width: $medium-screen) {
+      margin-top: 0;
+      margin-left: 0;
+    }
+
+    p {
+      margin-bottom: 40px;
+    }
+  }
+
+  .medium-editor {
+    font-size: inherit;
+    padding-right: 0;
+
+    @media (max-width: $medium-screen) {
+      margin-bottom: 20px;
+    }
+  }
+
+  textarea {
+    min-height: 200px;
+    border: none;
+    margin-bottom: 0;
+    padding: 0;
+    box-shadow: none;
+    color: inherit;
+    resize: none;
+
+    @media (max-width: $medium-screen) {
+      min-height: auto;
+    }
+  }
+
+  .edit-actions,
+  .delete-action {
+    left: -65px;
+  }
+
+  .delete-action {
+    @include position(absolute, 0px null null null);
+    z-index: 10;
+
+    @media (max-width: $medium-screen) {
+      position: static;
+      margin-bottom: 5px;
+    }
+  }
+
+  .edit-actions {
+    top: 70px;
+
+    @media (max-width: $medium-screen) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .btn-remove {
+    @media (max-width: $medium-screen) {
+      width: 100%;
+      height: 38px;
+      width: 100%;
+      transform: rotate(0);
+      border-radius: 3px;
+
+      &::before,
+      &::after {
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  md-autocomplete {
+    height: auto;
+    margin-bottom: 20px;
+
+    md-autocomplete-wrap,
+    input[type="search"] {
+    height: auto;
+    }
+
+    input[type="search"] {
+      margin-bottom: 0;
+      padding: 12px 1em;
+      font-size: 20px;
+      line-height: 1;
+
+      &::-webkit-input-placeholder {
+        opacity: 1;
+      }
+
+      &:focus {
+        color: $purple;
+      }
+    }
+  }
+
+  .edit-content-wrapper {
+    margin-bottom: 30px;
+  }
+
+  .attachments {
+    border-top: 1px solid $base-border-color
+  }
+
+  .attachment-blocks {
+    padding-top: 20px;
+    padding-bottom: 25px;
+  }
+
+  .attachment-item {
+    margin-bottom: 0;
+  }
+
+  .btn-secondary {
+    &:not(:last-child) {
+      margin-right: 15px;
+
+      @media (max-width: $small-screen) {
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+    }
+
+    @media (max-width: $small-screen) {
+      width: 100%
+    }
+  }
+}
+
+
+.md-whiteframe-z1 {
+  box-shadow: none;
+}
+
+.md-autocomplete-suggestions {
+  li {
+    height: auto;
+    padding: 0.8em 1.5em 1em;
+    color: $light-font-color;
+
+    &:hover,
+    &.selected {
+      background-color: #f5f4f9;
+
+      .item-title {
+        color: $purple;
+      }
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $base-border-color;
+    }
+  }
+
+  .item-title {
+    margin-botton: 3px;
+    font-size: 20px;
+    line-height: 1.45;
+
+    .highlight {
+      color: inherit;
+    }
+  }
+
+  .item-text {
+    font-style: italic;
+    line-height: 1.45;
+  }
+}

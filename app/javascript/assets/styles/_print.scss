@@ -1,0 +1,10 @@
+@media print{
+  .v-app-bar,
+  .v-footer,
+  .intercom-widget {
+    display: none;
+  }
+  .v-main {
+    padding: 0 !important;
+  }
+}

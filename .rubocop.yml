@@ -1,0 +1,206 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.7.0
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - db/**/*
+    - bin/*
+    - lib/generators/**/*
+    - config/boot.rb
+    - vendor/bundle/**/*
+    - node_modules/**/*
+    - feature_specs/**/*
+    - encrypted_action_text/**/*
+
+Rails/DynamicFindBy:
+  AllowedMethods:
+    - find_by_uid
+    - find_by_uid!
+
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - staging
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: key
+  EnforcedColonStyle: key
+
+Lint/Debugger:
+  Exclude:
+    - 'spec/support/features.rb'
+
+Lint/MissingSuper:
+  Exclude:
+    - 'app/services/**/*'
+    - 'app/queries/**/*'
+
+Naming/VariableNumber:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 57
+
+Metrics/BlockLength:
+  Max: 25
+  Exclude:
+    - config/**/*
+    - spec/**/*
+    - lib/tasks/*.rake
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/ModuleLength:
+  Max: 150
+
+# Offense count: 1
+Metrics/CyclomaticComplexity:
+  Max: 9
+
+# Offense count: 41
+# Configuration parameters: CountComments.
+Metrics/MethodLength:
+  Max: 48
+
+Layout/LineLength:
+  Max: 120
+  IgnoredPatterns:
+    - '^\s*#'
+    - '^\s*(raise|warn) '
+
+# Offense count: 1
+Metrics/PerceivedComplexity:
+  Max: 12
+
+Naming/PredicateName:
+  Exclude:
+    - 'app/serializers/**/*'
+    - 'spec/**/*'
+
+# Offense count: 3
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+# Offense count: 4
+Naming/MethodParameterName:
+  Enabled: false
+
+# Deprecated
+# Performance/StartWith:
+#   Enabled: false
+
+# Offense count: 141
+Style/Documentation:
+  Enabled: false
+
+Style/EachWithObject:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/PercentLiteralDelimiters:
+  Enabled: false
+
+# Offense count: 2
+Style/RescueStandardError:
+  Enabled: false
+
+Style/SymbolArray:
+  MinSize: 4
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/DocumentDynamicEvalDefinition:
+  Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Rails/ApplicationMailer:
+  Enabled: false
+
+Rails/Output:
+  Enabled: false
+
+Rails/WhereNot:
+  Enabled: false
+
+Rails/HttpStatus:
+  EnforcedStyle: numeric
+
+Style/SlicingWithRange:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+Rails/EnvironmentVariableAccess:
+  Enabled: false # TODO-RUBOCOP
+
+Style/OptionalBooleanParameter:
+  Enabled: false # TODO-RUBOCOP
+
+Rails/UniqueValidationWithoutIndex:
+  Enabled: false # TODO-RUBOCOP
+
+Rails/HelperInstanceVariable:
+  Enabled: false # TODO-RUBOCOP
+
+Rails/SkipsModelValidations:
+  Enabled: false # TODO-RUBOCOP
+
+RSpec/MultipleExpectations:
+  Enabled: false # TODO-RUBOCOP
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false # TODO-RUBOCOP
+
+RSpec/AnyInstance:
+  Enabled: false # TODO-RUBOCOP
+
+RSpec/ContextWording:
+  Enabled: false # TODO-RUBOCOP
+
+RSpec/DescribeClass:
+  Exclude: # TODO-RUBOCOP
+    - spec/abilities/**/*
+
+RSpec/FilePath:
+  Exclude: # TODO-RUBOCOP
+    - spec/requests/**/*
+
+RSpec/NestedGroups:
+  Max: 4 # TODO-RUBOCOP
+
+RSpec/ExpectInHook:
+  Exclude:
+    - spec/requests/**/*
+    -
+RSpec/ScatteredSetup:
+  Exclude:
+    - spec/requests/**/*
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - spec/requests/**/*
+
+Naming/InclusiveLanguage:
+  Enabled: false # Due to WhiteListSanitizer gem
