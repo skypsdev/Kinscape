@@ -6,12 +6,7 @@ module Stories
     end
 
     def call
-      story = current_user.stories.create(
-        **sanitized_params,
-        publications_attributes: [
-          { share_type: :private }
-        ]
-      )
+      story = current_user.stories.create(**sanitized_params)
       story.mark_as_read!(for: current_user)
       story
     end
@@ -26,7 +21,12 @@ module Stories
 
         params[key] = ::SanitizerService.call(params[key])
       end
-      params[:categories].each { |category| ::SanitizerService.call(category) } if params[:categories].present?
+
+      if params[:categories].present?
+        params[:categories] = params[:categories].uniq
+        params[:categories].each { |category| ::SanitizerService.call(category.strip) }
+        params[:category_list] = params.delete(:categories)
+      end
       params
     end
   end

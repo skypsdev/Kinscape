@@ -7,7 +7,7 @@ describe 'Vault abilities' do
   let(:admin) { create(:user) }
   let(:user) { create(:user) }
   let!(:family) { create(:family, users: [admin, user]) }
-  let(:vault) { create :vault, owner: family }
+  let(:vault) { family.vault }
   let(:current_user) { user }
   let(:subscription) do
     create :subscription,

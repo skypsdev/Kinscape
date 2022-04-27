@@ -1,20 +1,3 @@
-# == Schema Information
-#
-# Table name: invitations
-#
-#  id           :uuid             not null, primary key
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  family_id    :integer          not null
-#  sender_id    :integer          not null
-#  recipient_id :integer
-#  email        :string           not null
-#  accepted_at  :datetime
-#  message      :text             default(""), not null
-#  first_name   :string
-#  last_name    :string
-#
-
 class InvitationSerializer < BaseSerializer
   set_type :invitation
   set_id :id
@@ -26,28 +9,37 @@ class InvitationSerializer < BaseSerializer
     :email,
     :accepted_at,
     :message,
-    :role
+    :role,
+    :family_id
   )
 
-  attribute :newcomer do |object|
-    object.recipient&.kinships.blank?
-  end
+  belongs_to :family
 
-  attribute :family_id do |object|
-    object.family.uid
+  attribute :personal do |object|
+    object.family.personal_access?
   end
 
   attribute :family_name do |object|
     object.family.name
   end
 
+  attribute :family_type do |object|
+    object.family.family_type
+  end
+
   attribute :family_cover_url do |object|
-    object.family.cover_image_url(size: :medium)
+    if object.family.personal_access?
+      object.family.admin_kinship.avatar_url(size: :medium)
+    else
+      object.family.cover_image_url(size: :medium)
+    end
   end
 
   attribute :sender_name do |object|
     object.family.kinship_for(object.sender).nickname
   end
 
-  belongs_to_encoded :family
+  attribute :sender_kinship_id do |object|
+    object.family.kinship_for(object.sender).id
+  end
 end

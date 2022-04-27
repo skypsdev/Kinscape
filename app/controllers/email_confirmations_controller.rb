@@ -9,7 +9,7 @@ class EmailConfirmationsController < ApplicationController
       :email_confirmation,
       params: {
         recipient: user,
-        invitation_id: params[:invitation_id]
+        invitation_id: cookies[:invitation_id]
       }
     )
 
@@ -21,18 +21,14 @@ class EmailConfirmationsController < ApplicationController
   def update
     user = User.find_by!(confirmation_token: params[:token])
     user.confirm_email
-
-    # Temp. remove payment feature
-    # Billing::SubscriptionService.subscribe(user)
-    ::MailerService.call(
-      :welcome_to_kinscape,
-      params: { user: user }
-    )
-
     sign_in user
 
-    return redirect_to invitation_url(params[:invitation_id]) if params[:invitation_id].present?
+    if cookies[:invitation_id].present?
+      redirect_to invitation_url(cookies[:invitation_id])
+      cookies.delete :invitation_id
+      return
+    end
 
-    redirect_to welcome_path, notice: t('welcome.flash.upgrade_notice')
+    redirect_to stories_path, notice: t('welcome.flash.upgrade_notice')
   end
 end

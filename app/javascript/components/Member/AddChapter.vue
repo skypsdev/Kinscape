@@ -52,17 +52,18 @@ export default {
   methods: {
     ...mapActions({
       createNewChapter: 'members/createNewChapter',
+      setStoryChangeChapterStatus: 'stories/setStoryChangeChapterStatus',
     }),
     handleCreateNewChapter () {
       const params = {
         object_id: this.member.id,
         object_type: 'Kinship',
-        media_type: 'text',
         position: this.position,
         title: this.$i18n.t('sections.title_placeholder'),
         rich_body: '<p>' + this.$i18n.t('sections.body_placeholder') + '</p>'
       }
       this.createNewChapter(params)
+      this.setStoryChangeChapterStatus()
     }
   }
 }

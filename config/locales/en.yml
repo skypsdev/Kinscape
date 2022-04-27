@@ -143,6 +143,7 @@ en:
     message: Send a Message
     sign_out: Sign Out
     account: Account
+    manage_subscription: Subscriptions
 
   account:
     title: '%{user_name} Account Info'
@@ -168,12 +169,6 @@ en:
       upgrade_now: Upgrade Now!
     storage:
       header: Storage Space Used by %{user}
-    confirmations:
-      cancel_subscription: Your Subscription will be discontinued at the end of the billing period
-    upgrade_account_confirm:
-      title: Feature Unavailable In Current Plan!
-      content: This feature requires an active subscription!
-      ok: View Plans
     plans:
       title: Current Plan
       trial: Free Trial
@@ -183,6 +178,52 @@ en:
     tab:
       account_info: "Account Info"
       family_info: "Community Info"
+    onboarding_dialog:
+      title: Welcome to Kinscape!
+      welcome_member: '<strong>%{inviterName}</strong> has invited you to join the <strong>%{communityName}</strong> <strong>%{communityType}</strong> and share in the Kinscape experience.'
+      welcome_follower: '<strong>%{inviterName}</strong> has invited you to connect and share in the Kinscape experience.'
+      welcome_offline: '<strong>%{inviterName}</strong> has invited you to take over a Profile in Kinscape.'
+      welcome_direct: Share your stories, build your communities and connect with loved ones.
+      welcome_message: See some of the amazing ways Kinscape lets you connect and share you previous memories.
+      action_next: Next
+      action_back: Back
+      action_skip: Skip and go to Profile
+      action_setup: Setup profile
+      step2:
+        title: Enjoy life in your Communities
+        subtitle: Create, manage, and share in Community groups, whether they're for family, common interests, teams, schools, or more. Kinscape lets you connect and share.
+        create: Create a Community
+        create_text: Choose from types to help you get started
+        invite: Invite
+        invite_text: Select the people you'd like to join you
+        share: Share
+        share_text: Post your photos, videos, and comments and let others do the same
+      step3:
+        title: Share the stories that matter
+        subtitle: Long or short, fact or fiction, Kinscape lets you tell your stories for others to savor and you to cherish
+        share: Share
+        share_text: Post for a community to read, edit and enjoy
+        control: Control
+        control_text: Remain the sole contributer, and chapters, and invite others just to comment.
+      step4:
+        title: My Life
+        subtitle: Customize your community profiles, share your news and updates, and connect with friends and family.
+        stories: Life Stories
+        stories_text: Share your news, thoughts and more with the friends and family you trust.
+        profile: Profiles
+        profile_text: Customize profile for each of the Communities you manage and join.
+        invite: Invite
+        invite_text: For each story, post, or Community, share your content with just your people
+    submit_profile:
+      title: Set up your Private Profile
+      title_my_people: Set up your profile for My People
+      title_community: 'Setup your profile for %{communityName}'
+      description_member: You can set a different profile for each community you're a part of.
+      description_follower: Set which information you'd like to show the other members who will follow you after inviting them to your Life Stories.
+      placeholder_email: Type here your email address
+      placeholder_location: Your current location
+      placeholder_phone: Type here your telephone number
+      apply_to_private: Apply contact details to my private profile
 
   billing:
     payment_method:
@@ -264,7 +305,7 @@ en:
         nothing_to_do: You have no attachments that you can move.
       delete:
         title: Delete File
-        description: "Are you sure you want to delete %{name}?<br>This action can't be undone."
+        description: "Are you sure you want to delete %{name}?<br>This file will be permanently deleted."
       download:
         nothing_to_do: You have no attachments that you can download.
       group_name_title: Upload date
@@ -290,20 +331,20 @@ en:
       share: Share
       share_title: 'Click "Share" to Complete this Action'
     copy_files_to_box_modal:
-      title1: Select a Box to copy
-      title2: Copy to other Communities' Vault
-      select: Select Communities
+      title1: Select a Box
+      title2: Copy to another Vault
+      select: Select Community
       search: Search
       back: Back
       copy: Copy here
-      select_box: Select a Box to copy these files.
-      within_community: You can copy your files to one Community’s Vault at a time or to your Vault. 
+      select_box: Select the Box to receive a copy of your files.
+      within_community: Copy your files to another Community or to your Vault.
     move_files_to_box_modal:
       close: Close
-      within_vault: Move within this Vault
+      within_vault: Move Files Within Vault
       within_box: Move within this Box
-      title_one: Select a Box to move this files to.
-      sub_title: Looking to move files to a different Vault? Use the Copy button instead.
+      title_one: Select a Box to receive these files.
+      sub_title: Use the Copy button to move to a different Vault.
       move: Move here
     download_files_to_box_modal:
       close: Close
@@ -377,45 +418,24 @@ en:
 
   home:
     brand_text: where <b>Community Stories</b> Live
-    top_block:
-      title: Tell the Stories and Share the History
-      text: Build a Lasting Community History
-      features:
-        text:
-          - Create Any Kind of Community Group
-          - Build a Legacy of Stories, Profiles, Photos & More
-          - Capture and Keep Key Moments
-          - Private, Secure Content
-    create_stories_block:
-      title:
-        main_text: Create Stories Together
-      tour-block:
-        text:
-          - Keep your Community History alive
-          - Combine words, media & documents <br>to Share Stories & Profiles
-          - Share cherished Keepsakes
-      signup-block:
-        text:
-          - You own all information
-          - 100% private – no advertising
-          - Free trial for new members
-    experience_block:
-      title: Experience <b>Kinscape</b>
-      carousel:
-        -
-          url: homepage/slides/slide-1
-          title: Private Gathering of Community & Friends
-          text: Hear familiar voices and see rich visuals in Community Profiles and Stories
-        -
-          url: homepage/slides/slide-2
-          title: Storytelling
-          text: Remember, create and Share Stories of precious moments and people
-        -
-          url: homepage/slides/slide-3
-          title: Keepsake Sharing
-          text: Upload treasured mementos to repository<br>Shared across the Community to spark Story creation
-    sign_up_button: Start Free Trial
-    take_tour_button: Watch video
+
+    invitation_box:
+      title: Something big is coming!<br/>Stay tuned!
+      block: Kinscape, a brand new private social space, is launching soon.<br/>Sign up for the waiting list and be one of the first to try it!
+      enter_email: Enter your Email
+      subscribe: Subscribe
+      already_registered: "Already have an account? "
+      login: Log in
+
+    code_box:
+      title: Received an Invite?
+      block: Enter the code to Sign Up!
+      invalid: Invalid code provided
+      join: Join Kinscape
+
+    success:
+      title: Thanks for signing up for updates!
+      block: We'll be in touch.
 
   shared:
     users:
@@ -446,37 +466,45 @@ en:
     you_are_connector: 'Member of %{name}, where you are Administrator.'
     remove_member: 'Remove from Community'
     remove_member_confirm: 'Are you sure you want to remove <strong>%{member}</strong> from <strong>%{family}</strong>?'
-    remove_family_confirm: Are you sure you want to remove this community?
     remove_member_tooltip: 'Remove %{member} from %{family}'
     member_options_change_role: 'Change Role'
     member_options_remove: 'Remove Member'
     member_options_set_offline: 'Change to Offline Member'
+    members_empty_title: No shared details on this Profile yet.
+    members_empty_message: Send an encouraging Message to "%{name}" to fill in the details for their Profile.
     member_roles:
       member: 'Member'
       guest: 'Guest'
       admin: 'Admin'
       co_admin: 'Co-Admin'
-      'offline member': 'Offline Member'
+      offline_member: 'Offline Member'
+      invited_as: 'Invited as %{role}'
     dialog_change_role:
       title: 'Change Role'
-      content_title: 'Set a new role'
-      content_text: 'You can set a new role for %{name}.'
+      content_title: 'Change Member Role'
+      content_text: 'Select a new role for %{name}.'
       content_learn_more_label: 'Learn more'
       content_learn_more_title: 'Learn more about member roles'
       dropdown_label: 'Choose Role'
       actions:
         confirm: 'Change Role'
     dialog_remove_member:
-      title: 'Do you really want to remove %{name}'
-      content_text: 'They will lose access to this Community, its Conversations, and all their Stories, Chapters and Comments will be removed. Are you sure this is what you want? If you want to remove the person but retain their Content, consider making them an Offline Member.'
+      title: 'Are you sure you want to remove %{name}?'
+      content_text: 'Removing this Member takes away their access to this Community and all their contributions, including comments, will be removed. If you’d rather remove this Member but retain their content, you can make them an Offline Member.'
       actions:
         confirm: 'Confirm'
         cancel: 'Cancel'
     dialog_set_offline_member:
       title: 'Change to Offline Member'
-      content_text: 'This will make <strong>%{name}</strong> an <strong>Offline Member</strong>. Their profile and all their content will remain in the community but this person will lose access. The Admin and co-admins will be able to edit their profile.'
+      content_text: 'Making <strong>%{name}</strong> an <strong>Offline Member</strong> keeps their profile and content in the Community but they will lose access. The Admin and Co-Admins can still edit their profile.'
       actions:
         confirm: 'Confirm'
+        cancel: 'Cancel'
+    dialog_delete_community:
+      title: 'Are you sure you want to delete %{name}?'
+      content_text: 'This Community and all its content and data will be deleted so Members will no longer be able to access its content.'
+      actions:
+        confirm: 'Delete Community'
         cancel: 'Cancel'
 
     new: Create Community
@@ -511,8 +539,6 @@ en:
       invited_members_title: View Invitations
       vault: Vault
       vault_title: View Community Vault
-    direct-upload-path: "/rails/active_storage/direct_uploads"
-    blob-path: "/rails/active_storage/blobs/signed_id/filename"
 
   offline_member:
     admin_error: You are the admin for this community, please pass admin rights over to another user.
@@ -529,7 +555,7 @@ en:
       created: Community Member successfully created!
 
   email_confirmation:
-    title: Email confirmation instructions
+    title: Confirm your Email
 
   invitations:
     flash:
@@ -557,9 +583,7 @@ en:
       resend:
         title: Resend Invitation
         instructions: "Community Members are invited via email. %{email} person invited to join %{family} community"
-    message: "%{sender} has invited you to join their community named %{family}.
-             Finish creating your profile to accept the invitation."
-    subject: "%{sender} has invited you to join a community"
+
     success:
       one:   "%{count} person invited to Community"
       other: "%{count} persons invited to Community"
@@ -580,9 +604,6 @@ en:
       title: Sign in
       sign_up: Sign up
 
-  showcase:
-    leave_showcase: Exit Showcase
-
   stories:
     filters:
       title: Filters
@@ -595,11 +616,13 @@ en:
       stories_by: "Stories by:"
       tabs_title: Toggle to See All, Shared, or Private Stories
       clear_all_filters: Clear all Filters
-      all_stories: All Stories
+      all_stories: Stories
       private_stories: Private Stories
       my_stories: My Stories
+      my_life_stories: My Life Stories
       shared_stories: Shared Stories
-      all_communities: All Communities
+      all_communities: Communities
+      all_my_people: My People
     sorting:
       sort_by: 'Sort by:'
       most_recently_updated: Most Recently Updated
@@ -613,9 +636,12 @@ en:
     show_all: Show all
     show_less: Show less
     contribute: Edit
-    copied: Your Story has been copied to My Life.
+    copied: Your Story is being shared.
     delete: Delete
-    delete_confirmation: Delete this story forever?
+    unshare_title: Unshare Story
+    delete_title: Delete Story
+    delete_confirmation_delete: This Story will be removed from all Communities, permanently.
+    delete_confirmation_unshare: This Story will be removed from this Community. All Comments will be deleted.
     deleted: Your Story has been deleted.
     drafts: Private
     edit: Edit
@@ -706,6 +732,7 @@ en:
     other_stories: other stories
     create_category: CREATE
     action_button:
+      share_title: 'Share in another Community'
       comment:
         one: '1 Comment'
         other: "%{count} Comments"
@@ -747,10 +774,9 @@ en:
       storyTitleLabel: Story Title
       required: required
       storyDescriptionLabel: Description
-      storyTitlePlaceholder: Type the Story Title here
-      storyDescriptionPlaceholder: 'E.g. Let’s share together a common story, with our different perspectives
-      and point of views. Together, we can build strong emotional connections and discover, day by day, each small
-      piece of our lives.'
+      storyTitlePlaceholder: Type your title here ...
+      storyDescriptionPlaceholder: 'Enter a sentence or two to let others know what your Story is about and other
+      points of interest ...'
       storyDateLabel: When did this happen?
       storyDateEndLabel: When did this end?
       storyRangeLabel: This Story spans a range of dates
@@ -758,17 +784,16 @@ en:
       with_family:
         title: Share Your Story
         share_type_title: Almost done...
-        ownership_option: ...just choose ownership option
+        ownership_option: Now select ownership.
         label: Select Communities
-        hint: You can share your Story with one or more Communities
+        hint: You can share your Story with one or more Communities.
         inputLabel: Search
         orAddToLifeStories: 'or, add to your Life Stories'
         shared_title: Let the Community contribute to your Story
-        shared_description: Each member of your community can add chapter to your Story. You’ll retain a copy of the
-          original here in your Private Story.
+        shared_description: Each Member of the Community can add Chapters and only Admins can delete it. A copy of your
+          original Story will remain in your Private Stories.
         private_title: Remain the sole contributor
-        private_description: You are the sole contributor and no other member can add Chapters. Instead, they can like
-          or comment.
+        private_description: No other Members can add Chapters or contribute, however they can like or comment on your Story.
       no_family:
         subtitle: Create a Community to Share your Story with
         description: >
@@ -779,10 +804,10 @@ en:
         family_members_list_label: Community Member email addresses
         note: You can manage your community and members within My Families.
       button:
-        share: Share Story
+        share: Next
         cancel: Cancel
       enable_time_capsule: Enable Time Capsule
-      enable_time_capsule_title: Share Story on Date in Future
+      enable_time_capsule_title: Share Story on future date
       share_on_date: Share story on certain date
     media_files:
       confirmation_message: This file will be removed. Are you sure?
@@ -795,7 +820,7 @@ en:
   vault:
     my_vault: My Vault
     search_in_vault: Search in Vault
-    
+
   communities:
     list_view:
       title: Title
@@ -806,20 +831,18 @@ en:
     newCommunityDialog:
       nameTitle: Community Name
       required: '*required'
-      namePlaceholder: Type here your Community name
-      typeTitle: What sort of Community is this?
+      namePlaceholder: Give your Community a name.
+      typeTitle: Community Type
       typeOtherPlaceholder: Enter a Community Type, eg. Church
       mottoTitle: Motto
-      mottoPlaceholder: E.g. Whoopsidaisies!
+      mottoPlaceholder: Add a motto or slogan.
       descriptionTitle: Description
-      descriptionPlaceholder: E.g. Let’s share together a common story, with our different perspectives and point
-        of views. Together, we can build strong emotional connections and discover, day by day, each small piece
-        of our lifes.
+      descriptionPlaceholder: Write a short description about your Community, its purpose, goals or a brief introduction
+        so people will know why they should join.
     empty_state:
       heading: Create Community
-      description: A Community is a group of people with whom you want to privately communicate and share Stories.
-        You can create different Communities to share different aspects of your life. You will then be able to invite
-        members to join it.
+      description: Starting a community of friends, family, or colleagues is a great way to chat and share stories.
+        There are several Community types to choose from and it’s easy to invite people to join.
     recent_stories:
       title: Recent Stories
       alternative_title: 'Stories from “%{communityName}”'
@@ -844,12 +867,26 @@ en:
         date_invited: Date Invited
         invited_by: Invited By
         actions: Actions
+      invitations:
+        title: Invite Members
+        description: Invite people to your Community or add an offline member.
     member:
       header:
         changeRole: Change Role
         removeMember: Remove Member
         downloadContent: Download Content
         leaveCommunity: Leave Community
+        leaveDialog:
+          title: Consider the Offline Profile Option
+          description: "Wait, you can still change to an <strong>Offline Profile</strong> that lets you leave the
+            Community but keep your profile and content visible to other Members? You'll still leave the community,
+            but your profile and Content will stay for the other Members."
+          keepOffline: Keep Offline Profile
+          contentTitle: Last Warning!
+          contentDescription: Hit the button below to confirm leaving this Community while keeping your Offline Profile and content.
+          removeContent: Remove my Content
+          keepProfileDescription: Hit the button below to confirm leaving this Community and removing all your content. Once you leave, only an Admin or Co-Admin can invite you to join again.
+          keepProfile: Keep my Profile
       edit:
         change_avatar: Change Profile Image
         select_avatar: Upload Profile Image
@@ -889,38 +926,36 @@ en:
       resend_all: Resend All Invitations
       cancel_all: Cancel All Invitations
     chapter_empty_state:
-      label: I wasn’t designed to be so lonely.
-      call_to_action: Fill me now!
+      label: You’re almost done building your Community. Simply add to your Story and build out your Chapters.
+    invitation_empty_state:
+      heading: Invite More Members
+      label: Growing your Community is easy and you control what they see and do.
     inviteDialog:
       next: Next
       cancel: Cancel
       back: Back
       send: Send
-      title: "Invite Members to this %{communityType}"
-      emailInvitationHeading: Invite via Email Adress
-      emailInvitationDescription: "Enter the email addresses separated by a comma (‘,’) of people you wish to invite to
-        join %{communityName}."
-      memberInvitationHeading: Invite from Kinscape
-      memberInvitationDescription: You can only invite people you know on Kinscape
+      title: "Invite Members to Your %{communityType}"
+      emailInvitationHeading: Invite using Email Address
+      emailInvitationDescription: "Enter email addresses separated by a comma."
+      memberInvitationHeading: Invite Other Kinscape Members
+      memberInvitationDescription: Invite your contacts from Kinscape.
       searchPlaceholder: Search Members
-      roleHeading: Set a Role for Members
-      roleDescription:  "Each new Member needs a role in your %{communityType}. These can be changed later if you change
-        your mind."
+      roleHeading: Set Member Roles
+      roleDescription:  "Give each new Member a role. These can be changed later."
       roleSubheading: Invited Members
-      messageHeading: Send a Message to invited members
-      messageDescription: You can send a customised message about this Community, why you want them to be here, what
-        is so good about this Community, etc.
-      messageSubheading: Your Message
-      messagePlaceholder: Please join me in the Community to privately and securely (1) create and share Community and
-        personal Profiles, (2) create and share Stories, and (3) store and share pictures, video, audio and documents,
-        and 4) privately Message other Members! Pease write a better default message here!
+      messageHeading: Include a Personalized Message
+      messageDescription: Invite Members to this Community with a customized note letting them know why they should join.
+      messageSubheading: Add Message
+      messagePlaceholder: Enter your personal note here ...
       sponsoredSubscriptions: Sponsored Subscriptions
       sponsoredSubscriptionPrice: "%{price}/year"
       sponsoredSubscriptionDescription: Pay for an individual subscription for someone you know at a reduced rate.
     add_offline_member:
-      heading: Create a New Profile
-      explainer: You can add those who do not have email addresses, such as ancestors, children, or pets! This will allow you to build a Community Member Profile on their behalf.
-      name_placeholder: Type here the name
+      heading: Create an Offline Member Profile
+      explainer: Add Community Members who do not have an email address, such as ancestors, pets, or children
+        and build a profile for them.
+      name_placeholder: Type name here
       description: Description
       description_placeholder: eg “Pet” or “Ancestor”
       birth_place_label: Place of Birth
@@ -967,12 +1002,48 @@ en:
     select_user: 'Select a person:'
 
   users:
+    sign_up:
+      create_account: 'Create your Account'
+      back: 'Back'
+      field_first_name: 'First Name'
+      field_first_name_placeholder: 'Add First Name'
+      field_last_name: 'Last Name'
+      field_last_name_placeholder: 'Add Last Name'
+      field_email: 'Email'
+      field_email_placeholder: 'Add Email'
+      field_password: 'Password'
+      field_password_placeholder: 'Add Password'
+      field_password_confirmation: 'Confirm Password'
+      terns: 'By signing up you agree to Kinscape’s
+        <a href="%{terns_link}">Terms and Conditions</a> and <a href="%{privacy_link}">Privacy Policy</a>'
+      submit: 'Submit'
+    sign_up_alternative:
+      create_account: Join Kinscape Beta
+      back: Learn More About Kinscape
+      content_title: Your Private Social Network
+      content_1: Build Communities.
+      content_2: Share Memories.
+      content_3: Celebrate Stories.
+    sign_in:
+      description: A Private Social Network and Online Community for Family and Friends.
+      email: Email
+      email_placeholder: Email Address
+      password: Password
+      password_placeholder: Add Password
+      log_in: Log In
+      forgot_password: Forgot Password?
+      sign_up: Sign Up
+    forgot_password:
+      title: Reset Your Password
+      description: To be emailed a link to reset your password, please enter your email address.
+      send: Send me reset password instructions
     user:
       email: Email
       address: Address
       phone_number: Phone Number
     profile_page:
       show_more: Show all Contact Information
+      edit_member_title: People From %{communityName} -
     new:
       title: Start Free Trial
       submit: Start %{trial_period}-month free trial
@@ -980,6 +1051,9 @@ en:
     invited: Invited
     edit_profile:
       error_in_form: There is an error in the form. Please check below.
+    destroy:
+      notice: Your Account is deleting in a while, please wait.
+
     stories_nav:
       request_message: Want to hear a story from %{name}?
     kinships:
@@ -997,10 +1071,6 @@ en:
       create_family: Create a Community
     flash:
       upgrade_notice: Free trial successfully activated!
-    explainer1: "Welcome to the Kinscape family, we are very pleased to meet you!"
-    explainer2: "%{inviterName} invited you to join %{communityName}, they’ll be so pleased you accepted. Let’s start by creating your profile in this Community."
-    explainer3: "Remember, upgrade in your first 30 days and %{inviterName} will get a reward!"
-    create_your_profile: Create your Profile
     profile_title: "Set your Profile for %{communityName}"
     profile_description: Set which information you’d like to show the other members of this Community. The Community admins have helped you get started.
     name_label: Full Name
@@ -1016,6 +1086,7 @@ en:
     reject: Reject
     accept: Accept
     existing_profile_title: Community Invite
+    existing_profile_life_stories_title: Life Stories Invite
 
   mylives:
     sidebar:
@@ -1027,21 +1098,139 @@ en:
       stories_title: "View Community Member's Shared Stories"
       my_vault: My Vault
       my_vault_title: "View Community Member's Vault"
+      invitations: "Invitations"
+      invitation_title: "View Community Member's Invitations"
+      my_store: Vault
+      my_store_title: "View Community Member's Vault"
+      my_people: My People
+      my_people_title: "View Community Member's People"
       identity: Identity,
     profile_without_community: "You're not a member of any Community. My Life profiles are meant
               to be shared with Communities. Click Add Community to create
               your first Community, or ask another Community member
               on Kinscape to invite you."
+    invitations:
+      my_people: "My People"
+      title: "Pending Invitations"
+      total: "Total"
+      show_all: "Show All"
+      received_invitations: "Received"
+      received_invitations_tooltip:
+        title: "Received Invitations"
+        content_text: "This is where you can view your received My Life and Community invitations."
+      sent_invitations: "Sent"
+      invite_people: "Invite More People"
+      invite_people_desc: "Take advantage of your personal space in Kinscape and add more people to your inner circle, where they can see your profile and My Life Stories."
+      invite_empty_state: "No open Invitations"
+      received_empty_state: "No received Invitations"
+      resend_invitation: "Resend"
+      cancel_invitation: "Cancel Invitation"
+      resend_all_invitation: "Resend All Invitations"
+      cancel_all_invitation: "Cancel All Invitations"
+      name: "<strong>Name</strong>"
+      date: "<strong>Date Added</strong>"
+      actions: '<strong>Actions</strong>'
+      join_invite: "You have been invited to join the"
+      invited_by: "You have been invited by"
+      view_invitations: "View Invitation"
+      invite_dialog:
+        title: Invite People to My Life
+        via_email: Invite using Email Address
+        email_subheader: Enter email addresses separated by a comma.
+        via_kinscape: Invite Other Kinscape Members
+        kinscape_subheader: Invite your contacts from Kinscape.
+      invite_message_dialog:
+        header: Include a Personalized Message
+        subheader: Invite Members to My Life with a customized note letting them know why they should follow you.
+        label: Add Message
+        placeholder: Enter your personal note here …
+      accept_dialog:
+        community_title: 'Community Invitation'
+        personal_title: 'My Life Invitation'
+        community_subtitle: '<strong>%{senderName}</strong> has invited you to join the <strong>%{familyName}</strong> <strong>%{familyType}</strong>'
+        personal_subtitle: '%{member} has invited you to follow their <strong>Personal space</strong> in <strong>My Life</strong>.'
+
+    my_people:
+      empty_btn: "Invite People"
+      empty_title: "Invite People to follow Your Life Stories!"
+      empty_text: "In Kinscape, everyone has their own personal space.
+        Inviting someone to your People adds them to your inner circle,
+        letting them view your Personal Profile and Personal Stories.
+        Why not add your closest friends and family to get started?"
+      less_btn: Show less
+      all_btn: Show all
+      unfollow_btn: Unfollow
+      remove_from: Remove from My People
+      table_th_name: Name
+      table_th_date: Date Added
+      table_th_actions: Actions
+      invite: Invite People
 
   mailer:
+    invitation:
+      with_account:
+        subject: Community Invitation
+        family:
+          pre_message: "%{sender} invited you to join the %{community_name} %{community_type}."
+        my_people:
+          pre_message: "%{sender} invited you to follow their Life Stories."
+        offline:
+          pre_message: "%{sender} invited you to join the %{community_name} %{community_type}! They have already created a profile for you to take over."
+      without_account:
+        subject: '%{user} invited you to join Kinscape'
+        family:
+          pre_message: "%{sender} invited you to join the %{community_name} %{community_type} in Kinscape."
+        my_people:
+          pre_message: "%{sender} invited you to follow their Life Stories in Kinscape."
+        offline:
+          pre_message: "%{sender} invited you to join the %{community_name} %{community_type} in Kinscape! They have already created a profile for you to take over."
+    change_active_to_offline_member:
+      subject: '%{user_name} Membership Status Changed'
+    community_deleted:
+      subject: '%{family_name} Deleted'
+    removed_from_community:
+      subject: Removed from Community
+    shared_story_deleted:
+      subject: Story Deleted
+    community_story_deleted:
+      subject: Story Deleted
+    admin_transfer:
+      subject: You've Been Asked to Become an Admin
+    admin_transfer_accepted:
+      subject: Admin Transfer Request Accepted
+    admin_transfer_rejected:
+      subject: Admin Transfer Request Rejected
+    role_change:
+      subject: Your Role Changed in %{family_name}
     comment_created:
       subject: '%{user_name} has commented on your %{item}'
+      story_comment: Comment on Your Story
+      story_message: '%{commenter_name} left a Comment on your %{story_title} Story.'
+      chapter_comment: Comment on Your Story Chapter
+      chapter_message: '%{commenter_name} left a Comment on the %{story_title} chapter, "%{chapter_title}."'
     story_images:
       subject: 'Your Media Files from "%{story_title}"'
     story_published:
-      subject: '%{user_name} has shared a story'
+      community_story: New Community Story
+      community_story_messsage: '%{publisher_name} shared "%{story_title}" with %{family_name}.'
+      lify_story: New Life Story
+      lify_story_message: '%{publisher_name} shared a new Life Story, "%{story_title}" and its ready for you to see.'
     story_updated:
-      subject: '%{user_name} has made changes to "%{story_title}"'
+      subject: Updated Story
+    story_updated_chapter_added:
+      subject: New Story Chapter
+    member_profile_updated_generic:
+      subject: Updated Profile
+    member_profile_updated_chapter:
+      subject: New Chapter Added to Profile Story
+    personal_profile_updated_generic:
+      subject: Personal Profile Updated
+    personal_profile_updated_chapter:
+      subject: New Chapter to Profile Story
+    offline_member_profile_updated_generic:
+      subject: Updated Profile Story
+    offline_member_profile_updated_chapter:
+      subject: Chapter Added to Profile
     send_message:
       subject: '%{user_name} has sent you a message'
     sender_message_send:
@@ -1065,32 +1254,30 @@ en:
       end_sub_msg_1: Act now to continue service.
     storage_limit:
       subject: '%{user_name} exceeds the storage limit'
-    active_member_to_offline:
-      subject: TODO-OFFLINE-MEMBER
-    offline_member_to_active:
-      subject: TODO-OFFLINE-MEMBER
+    appreciate_on_story:
+      subject: More People Liked Your Story
+    appreciate_on_chapter:
+      subject: More People Liked Your Chapter
+    appreciate_on_profile_chapter:
+      subject: More People Liked Your Chapter
     thank_you_for_subscribe:
       subject: Thank You for Subscribing
     paid_for_subscription:
       subject: Paid for subscription
-    notify_previous_admin:
-      accepted:
-        subject: Changed Administrator successfully
-      declined:
-        subject: Refuse to become a administrator
     decline_family_invitation:
-      subject: '%{user_name} refuse to join %{family_name} community%'
+      subject: Invitation Declined
     welcome_to_family:
       subject: 'Welcome to %{family_name}'
-    welcome_to_kinscape:
-      subject: Welcome to Kinscape!
     user_joined_family:
-      subject: New user join community
+      subject: New Community Member
 
   confirmation_dialog:
     title: Are you sure?
     confirm: OK
     cancel: Cancel
+
+  record_dialog:
+    click_to_record: Click the button to start recording
 
   attachment:
     action:
@@ -1107,7 +1294,8 @@ en:
       family_to_family: Sharing attachments between community vaults is not allowed.
 
   flashes:
-    failure_when_not_signed_in: This link can only be viewed by the registered user who was invited to see it.  Please log in.  If you have no account yet, and you received this message via email, then please create a new account using the email address that received the invitation.
+    failure_when_not_signed_in: You must be signed in to visit this link. Please log in. If you have no account yet,
+      click Sign Up to get started.
     sign_in_with_other: This page does not exist. If you believe you have received this message in error, please log in to your account using the email address which received the invitation.
     alert:
       action_not_permitted: This action is not permitted
@@ -1119,7 +1307,10 @@ en:
     form:
       title: Change Administrator
       subtitle: Transfer Account Ownership from You to Different Community Member
-      choose_family: Choose Community you want to change
+      choose_family_to_go: Choose Community you want to change
+      choose_family: Choose Community
+      choose_member: Choose Member
+      end_date: End Date
       choose_transferee: Choose a Community Member you wish to be new Community Administrator
       transferee_instructions: An email will be sent to selected Community Member asking them to accept or decline Community Administrator responsibilities and ownership of this Community Account.
       submit: Send Transfer Request
@@ -1140,3 +1331,166 @@ en:
         error: 'Something went wrong, please try again later.'
     email:
       subject: '%{sender} would like to transfer ownership, including billing, for their Kinscape Families.'
+  social_types:
+    facebook: 'Facebook'
+    instagram: 'Instagram'
+    twitter: 'Twitter'
+    linkedin: 'LinkedIn'
+    skype: 'Skype'
+    hangouts: 'Hangouts'
+    sina_weibo: 'Sina Weibo'
+  relationships:
+    mother: 'Mother'
+    father: 'Father'
+    son: 'Son'
+    daughter: 'Daughter'
+    spouse: 'Spouse'
+  location_types:
+    current_location: 'Current'
+    home: 'Home'
+    work: 'Work'
+    school: 'School'
+  phone_types:
+    mobile: 'Mobile'
+    home_fax: 'Home fax'
+    work_fax: 'Work fax'
+    pager: 'Pager'
+  address_types:
+    childhood_home: 'Childhood Home'
+    previous_address: 'Previous Address'
+  website_types:
+    personal: 'Personal'
+    work: 'Work'
+  date_types:
+    birth_date: 'Birth Date'
+    death_date: 'Death Date'
+  profile_card_types:
+    date: 'Date'
+    emails: 'Email'
+    addresses: 'Address'
+    websites: 'Website'
+    socials: 'Social'
+    phone_numbers: 'Phone Number'
+    phones: 'Phone'
+    locations: 'Location'
+    relationships: 'Relationship'
+    birth_date: 'Birth Date'
+    death_date: 'Death Date'
+    place_of_birth: 'Place of Birth'
+    custom: 'Custom text'
+    custom_date: 'Custom date'
+  profile:
+    edit:
+      add: 'Add'
+      dialog_title: 'Edit contact details'
+      add_custom_attribute_title: 'Add custom attributes'
+      add_custom_text: 'Type title'
+      add_custom_date: 'Add date'
+      dialog:
+        controls:
+          save: 'Save'
+          cancel: 'Cancel'
+      fields:
+        placeholders:
+          email: 'Enter email'
+          website: 'Paste link here'
+          phoneNumber: 'Type your phone number'
+          addressLine1: 'Address line 1'
+          addressLine2: 'Address line 2'
+          county: 'County'
+          postcode: 'Postcode'
+          country: 'Country'
+          social: 'Paste your link here'
+          location: 'e.g London'
+          day: 'Day'
+          month: 'Month'
+          year: 'Year'
+          place_of_birth: 'Your place of birth'
+          create_custom_type: 'Your custom type'
+          relationships: 'Your relationship'
+          birth_date: 'Your birth date'
+          Customtext: 'Custom text'
+      options:
+        create_custom_type: 'Create custom type'
+        option_save: 'Save'
+        option_cancel: 'Cancel'
+    cards:
+      title: 'Contact Details'
+      edit_button: 'Edit contact details'
+      show_less: 'Show Less'
+      show_more: 'Show More'
+  uploader_modal:
+    insert_btn: 'Insert'
+    title: 'Upload'
+    my_device: 'My Device'
+    rename_btn: 'Rename'
+    kb: 'KB'
+    drop_area_title: 'Select Files to Upload'
+    drop_area_subtitle: 'or Drag and Drop, Copy and Paste'
+    not_allowed: 'File not allowed!'
+  showcase:
+    control:
+      doneBtnText: 'Go to Stories'
+      nextBtnText: 'Next'
+      prevBtnText: 'Back'
+    communities:
+      listOfCommunitiesTitle: 'List of communities'
+      listOfCommunitiesDescription: 'See all the Communities you’ve created and joined.'
+      newCommunityTitle: 'New Community'
+      newCommunityDescription: 'Start a Community here.'
+      communityProfile1Title: 'Community Profile'
+      communityProfile1Description: 'Read about the Community and its Stories.'
+      communityMembersTitle: 'Community Members'
+      communityMembersDescription: 'Edit  your Profile for this Community and view other Members.'
+      communityInvitationsTitle: 'List of active invitations'
+      communityInvitationsDescription: 'View active invitations and send reminders.'
+      communityVaultTitle: 'List of content in the vault'
+      communityVaultDescription: 'See all the Community files.'
+    stories:
+      doneBtnText: 'Go to My Life'
+      listOfStoriesTitle: 'List of stories'
+      listOfStoriesDescription: 'See all your Stories.'
+      filterStoriesTitle: 'Filter option for Stories'
+      filterStoriesDescription: 'Filter your stories.'
+      startNewStoriesTitle: 'Start new story'
+      startNewStoriesDescription: 'Create a new Story here.'
+      viewStoryTitle: 'View a story'
+      viewStoryDescription: 'This is what a Story might look like.'
+    my_life:
+      doneBtnText: 'Finish Tour'
+      listOfMyLifeTitle: 'Edit Profile'
+      listOfMyLifeDescription: 'View and edit your profiles.'
+      switchProfileTitle: 'Switch Profiles'
+      switchProfileDescription: 'Switch to view your other Profiles.'
+      myPeopleTitle: 'My People - Your inner circle'
+      myPeopleDescription: 'See who you follow and click on their Profiles to see their Stories or send them a message.'
+      myInvitationsTitle: 'List of active Invitations'
+      myInvitationsDescription: 'View all your invitations.'
+      myVaultTitle: 'Your Vault'
+      myVaultDescription: 'Manage everything you’ve uploaded and organize by boxes.'
+
+  tooltips:
+    burger_title: Tour Kinscape here.
+    burger_description: You can also take a Tour from the main dropdown menu at any time.
+    burger_tour: Go to Kinscape's Tour
+    add_chapter_title: Add Chapter
+    add_chapter_description: Add a chapter to this Community's Profile here.
+    new_community_title: New Community
+    new_community_description: Create a new community here.
+    new_story_title: New Story
+    new_story_description: Create a new Story here.
+    community_members_title: Members in the Community
+    community_members_description: You can manage and invite Members to your Community here.
+    life_stories_title: My People - Life Stories
+    life_stories_description: Read the Stories written by the people you follow.
+    profiles_title: Profiles
+    profiles_description: Edit and view your Profiles here.
+    story_filters_title: Story Filter
+    story_filters_description: You can filter the type of Stories you view here.
+    start_conversation_title: Start a Conversation
+    start_conversation_description: Start a conversation with your Community here.
+    comment_like_title: Comment / Like
+    comment_like_description: You can like or add a comment to the Story here.
+    sole_contributor_only: It is not possible for others to edit My Life Stories.
+
+

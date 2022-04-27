@@ -15,8 +15,6 @@ module IntercomDataHelper
       created_at: user.created_at,
       custom_data: {
         # stories: user.stories.published.size,
-        # drafts: user.stories.draft.size,
-        # media_uploads: user.media_uploads_count,
         # campaign: user.lpage,
         # invitations: Invitation.joins(:sender).where(sender: user).size
       }

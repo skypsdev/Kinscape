@@ -1,8 +1,8 @@
 <template>
   <v-row>
     <template v-if="!isEditMode" >
-      <v-col cols="4">
-        <CommunityBreadcrumbs v-if="!isMobile"/>
+      <v-col cols="4" class="d-flex align-center">
+        <CommunityBreadcrumbs :community="community" v-if="!isMobile"/>
         <BackButton v-else/>
       </v-col>
       <v-col cols="4" class="d-flex flex-row align-center justify-center fill-height">

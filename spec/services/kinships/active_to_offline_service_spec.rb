@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe Kinships::ActiveToOfflineService do
-  subject(:result) { described_class.call(kinship) }
+  subject(:result) { described_class.call(kinship, admin) }
 
   let(:user) { create :user }
   let(:admin) { create :user }
   let(:story) { create :story, user: user }
   let!(:publications) do
     stub_mandrill
-    ::Publications::CreationService.call(story, user, { share_type: :shared, families_ids: [family.uid] })
+    ::Publications::CreationService.call(story, user, { share_type: :community, families_ids: [family.id] })
   end
   let(:copied_story) { publications.first.story }
   let(:family) { create :family, users: [admin, user] }
@@ -19,6 +19,6 @@ describe Kinships::ActiveToOfflineService do
       .from(user.id)
       .to(admin.id)
     expect(kinship.reload.user_id).to eq(nil)
-    expect(kinship.role).to eq('member')
+    expect(kinship.role).to eq('offline_member')
   end
 end

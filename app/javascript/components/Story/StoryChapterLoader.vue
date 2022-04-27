@@ -132,7 +132,7 @@ export default {
     }),
     async getMoreChapters ($state) {
       try {
-        await this.getChapters(this.story.id)
+        await this.getChapters({id: this.story.publication.id})
         $state.loaded()
         if (!this.hasMorePages) $state.complete()
       } catch (e) {

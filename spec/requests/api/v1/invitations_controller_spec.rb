@@ -17,7 +17,6 @@ RSpec.describe Api::V1::InvitationsController, type: :request do
       response(200, 'successful') do
         run_test! do
           expect(response.parsed_body['data']['id']).to eq(id)
-          expect(response.parsed_body['data']['attributes']['newcomer']).to eq(true)
         end
       end
 
@@ -69,11 +68,11 @@ RSpec.describe Api::V1::InvitationsController, type: :request do
 
       response(200, 'successful', save_request_example: :payload) do
         before do
-          expect(Kinship.count).to eq(1)
+          expect(Kinship.default_access.count).to eq(1)
         end
 
         run_test! do
-          expect(Kinship.count).to eq(2)
+          expect(Kinship.default_access.count).to eq(2)
           kinship = family.kinship_for(user)
           expect(kinship.nickname).to eq('some nickname')
           expect(kinship.avatar.attached?).to eq(true)
@@ -107,6 +106,7 @@ RSpec.describe Api::V1::InvitationsController, type: :request do
 
         response(204, 'successful', save_request_example: :payload) do
           before do
+            stub_mandrill
             expect(Invitation.count).to eq(1)
           end
 

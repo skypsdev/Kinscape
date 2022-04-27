@@ -8,7 +8,7 @@ module Api
 
           return response_service.render_error(I18n.t('offline_member.admin_error')) if kinship.role_admin?
 
-          kinship = ::Kinships::ActiveToOfflineService.call(kinship)
+          kinship = ::Kinships::ActiveToOfflineService.call(kinship, current_user)
           response_service.render(KinshipSerializer, kinship)
         end
       end

@@ -1,11 +1,29 @@
 <template>
   <div v-if="storiesSimpleList.length" class="stories-carousel">
-    <h2 v-if="!community" class="stories-carousel__title" @click="goToStories">
-      {{ $i18n.t('communities.recent_stories.title') }}
-    </h2>
-    <h2 v-else class="stories-carousel__title" @click="goToStories">
-      {{ $i18n.t('communities.recent_stories.alternative_title', { communityName: community.name }) }}
-    </h2>
+    <slot>
+      <router-link
+        :to="{
+          name: 'stories',
+          query: {
+            familyId: communityId,
+            authorId,
+          },
+        }"
+        tag="h2"
+        class="stories-carousel__title"
+      >
+        <template v-if="!community">
+          {{ $i18n.t("communities.recent_stories.title") }}
+        </template>
+
+        <template v-else>{{
+          $i18n.t("communities.recent_stories.alternative_title", {
+            communityName: community.name,
+          })
+        }}</template>
+
+      </router-link>
+    </slot>
     <div
         v-if="stories.length"
         class="stories-carousel__carousel-wrapper"
@@ -72,7 +90,7 @@ export default {
       default: () => {}
     },
     authorId: {
-      type: Number,
+      type: String,
       default: null
     },
   },
@@ -128,7 +146,7 @@ export default {
     }
   },
   mounted() {
-    this.getStoriesSimpleList({ familyId: this.communityId, authorId: this.authorId })
+    this.getStoriesSimpleList({ familyId: this.communityId, authorId: this.authorId, ...this.getShowcaseOptions() })
   },
   methods: {
     ...mapActions({
@@ -140,13 +158,13 @@ export default {
     slidePrev () {
       this.$refs.slider.$emit('slidePre')
     },
-    goToStories() {
-      const query = {
-        familyId: this.communityId,
-        authorId: this.authorId,
+    getShowcaseOptions() {
+      const result = {}
+      if (localStorage.getItem('tour')) {
+        result.showcase = true
       }
-      // Done to make sure author is selected because otherwise it's not
-      location.href = `/stories?familyId=${query.familyId}&authorId=${query.authorId}`
+
+      return result
     },
   }
 }
@@ -158,9 +176,12 @@ export default {
 
   &__title {
     font-family: Enriqueta;
+    font-style: normal;
     font-weight: bold;
-    font-size: 23px;
-    line-height: 31px;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+    text-decoration-line: underline;
     position: relative;
     bottom: -10px;
     color: $color-primary;

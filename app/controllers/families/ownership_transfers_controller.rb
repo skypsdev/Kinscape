@@ -22,7 +22,7 @@ module Families
 
     def decline_invitation
       @ownership_transfer.update!(status: 'declined')
-      ::MailerService.call(:notify_previous_admin, params: { ownership_transfer: @ownership_transfer })
+      ::MailerService.call(:admin_transfer_rejected, params: { ownership_transfer: @ownership_transfer })
       redirect_to families_path
     end
 

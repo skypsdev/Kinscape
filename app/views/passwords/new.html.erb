@@ -1,0 +1,43 @@
+<section class="content">
+  <div class="content__left">
+    <div class="content-left__wrapper">
+      <%= image_tag('kinscape_logo_orange.svg', alt: "logo", class: 'logo') %>
+      <%= link_to sign_in_path, class: 'content-left__link' do %>
+        <%= image_tag('new-account/arrow-left.svg', alt: "arrow-left") %>
+        <%= I18n.t('users.sign_up.back') %>
+      <% end %>
+      <h4 class="content-left__title">
+        <%= I18n.t('users.sign_in.description') %>
+      </h4>
+    </div>
+  </div>
+  <div class="content__right">
+    <%= form_for :password, url: passwords_path, html: { class: "content-right" } do |form| %>
+      <% if flash.alert %>
+        <div class="">
+          <%= render 'users/error', message: flash.alert %>
+        </div>
+      <% end %>
+      <% if flash.notice %>
+        <div class="">
+          <%= render 'users/notice', message: flash.notice %>
+        </div>
+      <% end %>
+      <h2 class="content-right__title"><%= t('users.forgot_password.title') %></h2>
+      <p class="content-right__description"><%= t('users.forgot_password.description') %></p>
+      <div class="text-field">
+        <!-- ----------------------------- Email ------------------------------ -->
+        <%= form.label :email, I18n.t('users.sign_in.email'), class: "text-field__label" %>
+        <%= form.text_field :email,
+                            placeholder: I18n.t('users.sign_in.email_placeholder'),
+                            class: "text-field__input" %>
+      </div>
+      <div class="submit-field">
+        <%= form.submit I18n.t('users.forgot_password.send'), class: "content__submit new-member-cvr-btn" %>
+      </div>
+    <% end %>
+
+  </div>
+</section>
+
+<% content_for :body_class, "sessions-new" %>

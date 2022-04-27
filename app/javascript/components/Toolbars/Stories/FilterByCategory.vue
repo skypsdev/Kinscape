@@ -64,7 +64,6 @@
     </v-menu>
   </div>
 </template>
-
 <script>
 import {mapActions, mapState} from 'vuex'
 import Search from '../../Elements/Forms/Search'
@@ -89,8 +88,10 @@ export default {
         name: item.text,
         selected: this.filterHasValue ? this.filters.categories.includes(item.text) : false
       }))
-      if (!this.search) return filteredCategories
-      return filteredCategories.filter((item) => item.name.toLowerCase().includes(this.search.toLowerCase()))
+      if (!this.search) return filteredCategories.slice(0,8)
+      return filteredCategories
+          .filter((item) => item.name.toLowerCase().includes(this.search.toLowerCase()))
+          .slice(0,8)
     },
     filterHasValue() {
       return !!this.filters.categories?.length
@@ -100,8 +101,8 @@ export default {
     ...mapActions({
       setStoryFilters: 'stories/setStoryFilters'
     }),
-    searchCategory({query}) {
-      this.search = query
+    searchCategory(searchQuery) {
+      this.search = searchQuery.query
     },
     selectCategory(name = '') {
       let categories = []
@@ -123,7 +124,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .category-switcher {
   border-radius: 5px;

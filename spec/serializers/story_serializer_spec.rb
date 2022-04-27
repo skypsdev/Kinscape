@@ -8,7 +8,7 @@ describe StorySerializer do
     let(:user) { create(:user) }
     let(:contributor) { create(:user) }
     let(:family) { create(:family, users: [user, contributor]) }
-    let!(:story) { create :story, families: [family], user: user }
+    let!(:story) { create :story, user: user }
 
     before do
       create :section, story: story, author: contributor

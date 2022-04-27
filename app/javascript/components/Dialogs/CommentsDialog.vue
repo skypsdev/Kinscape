@@ -5,6 +5,7 @@
         commentable-type="Publication"
         :commentable-id="dialog.commentableId"
         :parent-id="dialog.parentId"
+        parent-type="Publication"
       />
     </template>
   </DialogContent>

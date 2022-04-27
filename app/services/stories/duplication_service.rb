@@ -2,44 +2,60 @@ module Stories
   class DuplicationService < ApplicationService
     PREFIX = 'Copy'.freeze
 
-    def initialize(story, community_type: false)
+    def initialize(story, community_type: false, user: nil, publication: nil)
       @story = story
       @community_type = community_type
+      @dup_story = story.dup
+      @user = user
+      @publication = publication
     end
 
     def call
-      story.dup.tap do |dup_story|
-        dup_story.assign_attributes(
-          title: title,
-          appreciations_count: 0,
-          comments_count: 0,
-          uuid: UuidService.generate
-        )
-        dup_story.original_story = story if community_type
-        dup_story.cover.attach(story.cover.blob)
-        dup_story.sections = sections
-
-        dup_story.save
-      end
+      dup_story.assign_attributes(
+        title: title,
+        appreciations_count: 0,
+        comments_count: 0,
+        original_story_id: (community_type || check_for_community ? story.id : nil),
+        category_list: story.category_list,
+        user_id: (user&.id || story.user_id)
+      )
+      dup_story.save
+      dup_story.cover.attach(story.cover.blob)
+      dup_story.publications.create(story_params) if check_for_community
+      update_story_title
+      CopySectionsJob.new(dup_story, story).enqueue(priority: 0)
+      dup_story
     end
 
     private
 
-    attr_reader :story, :community_type
+    attr_reader :story, :community_type, :dup_story, :user, :publication
 
-    def sections
-      story.sections.map do |section|
-        section.dup.tap do |dup_section|
-          dup_section.media_files = section.media_files.map(&:dup)
-          dup_section.rich_body = section.rich_body.dup
-        end
-      end
+    def update_story_title
+      return unless community_type
+      return if story.reload.not_private_publications.any?
+      return if story.title.start_with?('Copy ')
+
+      story.update(title: "#{PREFIX} #{story.title}")
     end
 
     def title
-      return story.title if community_type
+      return "#{PREFIX} #{story.title}" unless community_type
+      return story.title unless story.title.start_with?('Copy ')
 
-      "#{PREFIX} #{story.title}"
+      story.title.split[1..-1].join(' ')
+    end
+
+    def check_for_community
+      return false unless publication
+
+      admin_ids = publication.family.co_admins.ids.push(publication.family.admin_id)
+      publication.family.default_access? && admin_ids.include?(user.id)
+    end
+
+    def story_params
+      kinship = Kinship.find_by(user_id: dup_story.user_id, family_id: publication.family_id)
+      { share_type: :community, family_id: publication.family_id, kinship_id: kinship.id }
     end
   end
 end

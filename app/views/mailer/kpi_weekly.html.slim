@@ -16,9 +16,6 @@ table.mc-table cellpadding='6' border='1' width='40%'
   th Value
   tbody
     tr
-      td Draft Stories
-      td = Story.draft.count
-    tr
       td Published Stories
       td = Story.published.count
     tr
@@ -29,7 +26,7 @@ table.mc-table cellpadding='6' border='1' width='40%'
       td = Family.select(:connector_id).distinct.count.to_s
     tr
       td Vaults w/Uploads
-      td = Vault.joins(:attachments).distinct.count
+      / td =
     / tr
     /   td Trial Users
     /   td = Subscription.where(status: "trialing").count

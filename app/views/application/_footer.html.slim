@@ -6,12 +6,12 @@ footer.footer
 
   ul.links
     li
-      = link_to "Terms of Use", page_path('terms_of_use')
+      = link_to "Terms of Use", '/terms-of-use/'
     li
-      = link_to "Privacy Policy", page_path('privacy')
+      = link_to "Privacy Policy", '/privacy-policy/'
     li
       / = link_to "Help Center", 'https://help.kinscape.com', target: "_blank"
       = link_to "Help Center", 'https://intercom.help/kinscape', target: "_blank"
 
   .copyright
-    = "&copy;ELife ".html_safe + Time.now.year.to_s + ". All Rights Reserved."
+    = "&copy;Kinscape, LLC ".html_safe + Time.now.year.to_s + ". All Rights Reserved."

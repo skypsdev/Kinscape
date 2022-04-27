@@ -61,7 +61,6 @@ RSpec.configure do |config|
   config.include VueRoutesHelper
 
   config.include ActionView::Helpers::TranslationHelper, type: :feature
-  config.include Features, type: :feature
   config.include Requests, type: :request
   config.include ActiveJob::TestHelper, type: :job
 

@@ -56,7 +56,8 @@ RSpec.configure do |config|
   config.after do |example|
     condition = example.metadata[:type] == :request &&
                 response.body.present? &&
-                response.headers['Content-Disposition']&.exclude?('attachment')
+                (response.headers['Content-Disposition'].blank? ||
+                  response.headers['Content-Disposition'].exclude?('attachment'))
     if condition
       # save example response
       example.metadata[:response][:content] = { 'application/json' => { example: response.parsed_body } }

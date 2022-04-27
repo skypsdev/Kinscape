@@ -19,11 +19,11 @@
         height="208px"
       >
         <template v-slot:placeholder>
-            <v-progress-circular
+          <v-progress-circular
               class="story-avatar__loader"
               indeterminate
               color="medium_grey"
-            />
+          />
         </template>
       </v-img>
     </div>

@@ -13,7 +13,7 @@
         <v-btn
           plain
           target="_blank"
-          href="/pages/terms_of_use"
+          href="/terms-of-use"
         >
           Terms of Use
           <v-icon color="primary">mdi-chevron-right</v-icon>
@@ -21,7 +21,7 @@
         <v-btn
           plain
           target="_blank"
-          href="/pages/privacy"
+          href="/privacy-policy"
         >
           Privacy Policy
           <v-icon color="primary">mdi-chevron-right</v-icon>
@@ -37,7 +37,7 @@
       </v-col>
       <v-col class="d-flex justify-md-end">
         <div class="pt-1">
-          ©ELife {{ new Date().getFullYear() }}. All Rights Reserved.
+          ©Kinscape, LLC {{ new Date().getFullYear() }}. All Rights Reserved.
         </div>
       </v-col>
     </v-row>

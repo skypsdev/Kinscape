@@ -1,37 +1,70 @@
 <template>
   <section>
-    <v-btn
-        v-if="isCommunities"
-        text
-        class="app-bar-button app-bar-button--new-story"
-        title="Start a New Community"
-        @click="openAddCommunityDialog"
+    <Tooltip
+      v-if="isCommunities"
+      position="bottom left"
+      name="newCommunity"
+      :icons="['mdi-plus-circle-outline']"
+      :title="$i18n.t('tooltips.new_community_title')"
+      :description="$i18n.t('tooltips.new_community_description')"
     >
-      <v-icon>mdi-plus-circle-outline</v-icon>
-      <div>
-        {{ $i18n.t('families.new') }}
-      </div>
-    </v-btn>
-    <v-btn
-        v-else
-        text
-        class="app-bar-button app-bar-button--new-story"
-        :title="$i18n.t('stories.new')"
-        @click="openNewStoryDialog"
+      <template #activator="{ attrs }">
+        <v-btn
+          v-bind="attrs"
+          text
+          class="app-bar-button app-bar-button--new-story"
+          id="intro-communities-new-community"
+          title="Start a New Community"
+          @click="openAddCommunityDialog"
+        >
+          <v-icon>mdi-plus-circle-outline</v-icon>
+          <div>
+            {{ $i18n.t('families.new') }}
+          </div>
+        </v-btn>
+      </template>
+    </Tooltip>
+    <Tooltip
+      v-else
+      position="bottom left"
+      name="newStory"
+      :icons="['mdi-plus-circle-outline']"
+      :title="$i18n.t('tooltips.new_story_title')"
+      :description="$i18n.t('tooltips.new_story_description')"
     >
-      <v-icon>mdi-plus-circle-outline</v-icon>
-      <div>{{ $i18n.t('stories.new') }}</div>
-    </v-btn>
+      <template #activator="{ attrs }">
+        <v-btn
+          v-bind="attrs"
+          text
+          id="intro-stories-new-story"
+          class="app-bar-button app-bar-button--new-story"
+          :title="$i18n.t('stories.new')"
+          @click="openNewStoryDialog"
+        >
+          <v-icon>mdi-plus-circle-outline</v-icon>
+          <div>{{ $i18n.t('stories.new') }}</div>
+        </v-btn>
+      </template>
+    </Tooltip>
   </section>
 </template>
 <script>
 import { mapActions } from 'vuex'
+import Tooltip from '@/components/Elements/Tooltip.vue'
 
 export default {
+  components: {
+    Tooltip
+  },
   computed: {
     isCommunities() {
       return this.$route.name === 'communities';
     },
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.tip = true
+    })
   },
   methods: {
     ...mapActions({

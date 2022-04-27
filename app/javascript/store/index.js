@@ -10,6 +10,9 @@ import kinships from './modules/kinships'
 import members from './modules/members'
 import layout from './modules/layout'
 import conversations from './modules/conversations'
+import myPeople from './modules/my-people'
+import invitations from './modules/invitations'
+import myPeoplePerson from './modules/myLife/myPeoplePerson'
 
 Vue.use(Vuex)
 
@@ -28,7 +31,10 @@ export const store = new Vuex.Store({
     kinships,
     members,
     layout,
-    conversations
+    conversations,
+    invitations,
+    myPeoplePerson,
+    myPeople
   },
   state: {
     showUploadInProgressBeforeUnload: true,

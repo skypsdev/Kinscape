@@ -79,7 +79,7 @@ export default {
   computed: {
     ...mapState('vaults', ['selectedVaultItems']),
     visiblePermissionNote() {
-      return this.selectedVaultItems.every(item => this.isAsset(item) && this.canManage(item)) === false
+      return this.selectedVaultItems.every(item => this.isAsset(item) && !this.canManageAsset(item))
     }
   },
   methods: {

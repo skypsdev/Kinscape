@@ -2,11 +2,13 @@
   <DialogContent>
     <template v-slot:content>
       <div class="mt-2">
-        <div class="subtitle-2">
-          {{ $i18n.t('stories.delete_confirmation') }}
+        <div v-if="publicationId" class="subtitle-2">
+          {{ $i18n.t('stories.delete_confirmation_unshare') }}
+        </div>
+        <div v-else class="subtitle-2">
+          {{ $i18n.t('stories.delete_confirmation_delete') }}
         </div>
       </div>
-      
     </template>
     <template v-slot:actions>
       <div>
@@ -28,7 +30,7 @@
           elevation="0"
           class="ma-1"
           :disabled="isLoading"
-          @click="deleteStory()"
+          @click="publicationId ? unShareItem() : deleteStory()"
         >
           {{ $i18n.t('confirmation_dialog.confirm') }}
         </v-btn>
@@ -36,11 +38,10 @@
     </template>
   </DialogContent>
 </template>
-
 <script>
 import DialogContent from '../../components/Layout/Dialog/DialogContent'
 import {mapActions, mapState} from 'vuex'
-import {StoriesRepository} from "../../repositories";
+import { PublicationsRepository, StoriesRepository } from "../../repositories";
 export default {
   components: {
     DialogContent
@@ -50,8 +51,16 @@ export default {
   }),
   computed: {
     ...mapState({
-      story: state => state.stories.story
-    })
+      story: state => state.stories.story,
+      currentUser: state => state.core.user,
+      dialogParams: state => state.layout.dialog.data
+    }),
+    isAuthor () {
+      return this.currentUser.id.toString() === this.story.userId?.toString()
+    },
+    publicationId () {
+      return this.dialogParams.publicationId
+    },
   },
   methods: {
     ...mapActions({
@@ -61,13 +70,13 @@ export default {
     async deleteStory () {
       this.isLoading = true
       try {
-        await StoriesRepository.deleteStory(this.story.id)
+        await StoriesRepository.deleteStory(this.story.publication.id)
         this.closeDialog()
         this.setSnackbar(this.$i18n.t(
           'stories.deleted',
           { title: this.story.title }
         ))
-        this.$router.push({ name: 'stories' })
+        await this.$router.push({ name: 'stories' })
       } catch (error) {
         console.error(error)
         this.setSnackbar({
@@ -76,6 +85,16 @@ export default {
         })
       } finally {
         this.isLoading = false
+      }
+    },
+    async unShareItem () {
+      try {
+        await PublicationsRepository.deletePublication(this.publicationId)
+        this.closeDialog()
+        this.setSnackbar(this.$i18n.t('stories.unpublished'))
+        await this.$router.push({ name: 'stories' })
+      } catch (error) {
+        this.setError(error)
       }
     },
   }

@@ -1,18 +1,12 @@
 import Repository from './repository'
 
-const parent = '/publications/'
 const resource = '/comments'
 
 export default {
-  createComment (publicationId, payload) {
-    return Repository.post(this.resourceUrl(publicationId), payload)
+  createComment (payload) {
+    return Repository.post(`${resource}`, payload)
   },
-  deleteComment (publicationId, commentId) {
-    return Repository.delete(this.resourceUrl(publicationId, commentId))
-  },
-  resourceUrl (parentId, resourceId) {
-    let resourceUrl = `${parent}${parentId}${resource}`
-    if (resourceId) resourceUrl += `/${resourceId}`
-    return resourceUrl
+  deleteComment (commentId) {
+    return Repository.delete(`${resource}/${commentId}`)
   }
 }

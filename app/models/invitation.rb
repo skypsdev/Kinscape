@@ -1,27 +1,8 @@
-# == Schema Information
-#
-# Table name: invitations
-#
-#  id           :uuid             not null, primary key
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  family_id    :integer          not null
-#  sender_id    :integer          not null
-#  recipient_id :integer
-#  email        :string           not null
-#  accepted_at  :datetime
-#  message      :text             default(""), not null
-#  first_name   :string
-#  last_name    :string
-#  role         :string           default("member"), not null
-#
-
 class Invitation < ApplicationRecord
-  self.implicit_order_column = :created_at
-
   include RoleEnum
+  include Showcase
 
-  before_create :downcase_email
+  before_validation :downcase_email
 
   belongs_to :family
   belongs_to :sender, class_name: 'User'
@@ -31,17 +12,12 @@ class Invitation < ApplicationRecord
   validates :email, presence: true, email: true, uniqueness: { scope: :family_id }
 
   delegate :name, to: :family, prefix: true
-  delegate :name, to: :sender, prefix: true
 
   accepts_nested_attributes_for :recipient
 
   scope :pending, -> { where(accepted_at: nil) }
 
-  def accepted?
-    accepted_at.present?
-  end
-
   def downcase_email
-    email.downcase! if email.present?
+    self.email = email.strip.downcase if email.present?
   end
 end

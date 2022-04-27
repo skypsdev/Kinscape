@@ -1,0 +1,35 @@
+<%= form_for :session, url: session_path, html: { class: "content-right" } do |form| %>
+  <% if flash.alert %>
+    <div class="">
+      <%= render 'users/error', message: flash.alert %>
+    </div>
+  <% end %>
+  <div class="text-field">
+    <!-- ----------------------------- Email ------------------------------ -->
+    <%= form.label :email, I18n.t('users.sign_in.email'), class: "text-field__label" %>
+    <%= form.text_field :email,
+                        placeholder: I18n.t('users.sign_in.email_placeholder'),
+                        class: "text-field__input" %>
+  </div>
+  <div class="text-field">
+    <!-- ----------------------------- Password ------------------------------ -->
+    <%= form.label :password, I18n.t('users.sign_in.password'), class: "text-field__label" %>
+    <%= form.password_field :password,
+                            placeholder: I18n.t('users.sign_in.password_placeholder'),
+                            class: "text-field__input" %>
+  </div>
+  <div class="submit-field">
+    <%= form.submit I18n.t('users.sign_in.log_in'), class: "content__submit new-member-cvr-btn" %>
+  </div>
+  <div class="other-links">
+    <% if Clearance.configuration.allow_sign_up? %>
+      <%= link_to t('.forgot_password'), new_password_path, :class => "other-links__forgot-password" %>
+      <hr class="solid">
+      <%= link_to t('.sign_up'), sign_up_path, :class => "other-links__sign-up" %>
+    <% end %>
+    <% if @user && @user.confirmed_at.nil? %>
+      <%= link_to t('.resend_instructions')
+                  resend_verification_instructions_path(email: @user.email) %>
+    <% end %>
+  </div>
+<% end %>

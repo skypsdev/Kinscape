@@ -5,12 +5,7 @@ RSpec.describe Api::V1::FamiliesController, type: :request do
   let!(:family) { create(:family, users: [user], name: 'Z-last') }
   let!(:family_1) { create :family, name: 'Purrkins', users: [user] }
   let!(:family_2) { create :family, name: 'Barkins', users: [user] }
-  let(:id) { family.uid }
-
-  before do
-    create :vault, owner: family_1
-    create :vault, owner: family_2
-  end
+  let(:id) { family.id }
 
   path '/api/v1/families/quick_list' do
     before do
@@ -27,7 +22,7 @@ RSpec.describe Api::V1::FamiliesController, type: :request do
           expect(response.parsed_body['data'][1]['attributes']['name']).to eq family_1.name
           expect(response.parsed_body['data'][2]['attributes']['name']).to eq 'Z-last'
           expect(response.body).to include('some nick')
-          expect(response.body).to include(family.uid)
+          expect(response.body).to include(family.id)
         end
       end
     end
@@ -139,13 +134,15 @@ RSpec.describe Api::V1::FamiliesController, type: :request do
 
       response(204, 'successful') do
         before do
+          stub_mandrill
           # allow to destroy family with members
           create :kinship, family: family, user: create(:user)
-          expect(Family.count).to eq(3)
+          expect(Family.default_access.count).to eq(3)
         end
 
         run_test! do
-          expect(Family.count).to eq(2)
+          expect(Family.default_access.count).to eq(2)
+          expect(all_emails.map(&:subject)).to contain_exactly("#{family.name} Deleted")
         end
       end
     end

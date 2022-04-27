@@ -1,5 +1,8 @@
 class RemoveConversions < ActiveRecord::Migration[6.1]
-  def change
-    drop_table :conversions
+  def up
+    drop_table :conversions, if_exists: true
+  end
+  def down
+
   end
 end

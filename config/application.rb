@@ -44,11 +44,24 @@ module Kinscape
     config.eager_load_paths << Rails.root.join('lib')
 
     config.assets.paths << Rails.root.join('node_modules')
+
+    # https://github.com/sass/sassc-ruby/issues/207#issuecomment-675571476
+    config.assets.configure do |env|
+      env.export_concurrent = false
+    end
+
     config.active_job.queue_adapter = :delayed_job
     config.generators.javascript_engine = :js
+
+    overrides = Rails.root.join('app/overrides')
+    Rails.autoloaders.main.ignore(overrides)
+
+    config.to_prepare do
+      Dir.glob("#{overrides}/**/*_override.rb").each do |override|
+        load override
+      end
+    end
   end
 end
 
 Rails.autoloaders.main.ignore(Rails.root.join('lib/generators'))
-
-ENV['JS_PERSIST_DELAY_IN_MILLIS'] ||= '500'

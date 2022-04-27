@@ -18,7 +18,10 @@ module Vaults
 
     def documents
       files.map do |file|
-        { url: file.url, filename: file.title || file.filename.to_s }
+        {
+          url: Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true),
+          filename: file.title || file.filename.to_s
+        }
       end
     end
 

@@ -1,30 +1,3 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer          not null, primary key
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  email              :string           not null
-#  encrypted_password :string(128)      not null
-#  confirmation_token :string(128)
-#  remember_token     :string(128)      not null
-#  old_avatar         :string           default(""), not null
-#  metadata           :hstore
-#  tour_completed     :boolean
-#  first_name         :string
-#  last_name          :string
-#  avatar_id          :integer
-#  caretaker_id       :integer
-#  title              :string
-#  confirmed_at       :datetime
-#  admin              :boolean          default(FALSE)
-#  stripe_id          :string
-#  storage_size       :bigint           default(0)
-#  uuid               :bigint
-#  ability_all        :boolean          default(TRUE), not null
-#
-
 require 'spec_helper'
 
 describe User, type: :model do
@@ -37,11 +10,24 @@ describe User, type: :model do
 
   describe 'associations' do
     it { is_expected.to have_many(:families) }
+    it { is_expected.to have_many(:owned_families) }
+    it { is_expected.to have_many(:family_vaults) }
+    it { is_expected.to have_many(:sections) }
+    it { is_expected.to have_many(:publications) }
     it { is_expected.to have_many(:stories) }
     it { is_expected.to have_many(:subscriptions) }
     it { is_expected.to have_many(:family_subscriptions) }
+    it { is_expected.to have_many(:followers) }
+    it { is_expected.to have_many(:all_kinships) }
+    it { is_expected.to have_many(:kinships) }
+    it { is_expected.to have_many(:following_kinships) }
+    it { is_expected.to have_many(:following_families) }
+    it { is_expected.to have_many(:followers_families) }
+    it { is_expected.to have_many(:followings) }
     it { is_expected.to have_one(:active_subscription) }
     it { is_expected.to have_one(:active_family_subscription) }
+    it { is_expected.to have_one(:personal_kinship) }
+    it { is_expected.to have_one(:personal_family) }
   end
 
   describe 'role' do
@@ -62,18 +48,6 @@ describe User, type: :model do
     end
   end
 
-  describe '#media_uploads_count' do
-    it 'returns count of media uploads' do
-      story = create(:story)
-      story.sections << create(:section, media_type: 'text')
-      story.sections += create_list(:section, 2, media_type: 'image')
-      user = create(:user)
-      user.stories << story
-
-      expect(user.media_uploads_count).to eq 2
-    end
-  end
-
   describe '#name' do
     it 'returns the first and last names' do
       user = build(:user, first_name: 'John', last_name: 'Doe')
@@ -86,6 +60,8 @@ describe User, type: :model do
       user = create :user
 
       expect(user.vault).to be_present
+      expect(user.personal_kinship).to be_present
+      expect(user.personal_family).to be_present
     end
   end
 
@@ -104,13 +80,12 @@ describe User, type: :model do
   end
 
   describe 'destroy user with all associations' do
-    let(:user)           { create :user }
-    let(:another_user)   { create :user }
-    let!(:family_1)       { create :family, users: [another_user, user] }
-    let!(:family_2)       { create :family, users: [another_user, user] }
+    let(:user) { create :user }
+    let(:another_user) { create :user }
+    let!(:family_1) { create :family, users: [another_user, user] }
+    let!(:family_2) { create :family, users: [another_user, user] }
 
     before do
-      create :vault, owner: family_2
       create :subscription, user: user
       create :box, vault: user.vault
       create :comment, user: user
@@ -131,7 +106,9 @@ describe User, type: :model do
         .and change(Comment, :count)
         .by(-1)
         .and change(Kinship, :count)
-        .by(-2)
+        .by(-4)
+        .and change(Family, :count)
+        .by(-1) # personal family
       # expect(family_vault_2.reload).to be_present
       expect(family_1.reload).to be_present
       expect(family_2.reload).to be_present

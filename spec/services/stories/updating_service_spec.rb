@@ -4,7 +4,16 @@ describe ::Stories::UpdatingService do
   subject(:result) { described_class.call(story, params) }
 
   let(:image_blob) { create_file_blob }
-  let(:story) { create :story, cover: image_blob.signed_id }
+  let(:story) { create :story, cover: image_blob.signed_id, category_list: %w[summer sun] }
+
+  context 'with categories' do
+    let(:params) { { categories: %w[winter sun] } }
+
+    it 'does update the story' do
+      expect(result.valid?).to eq(true)
+      expect(story.reload.category_list).to contain_exactly('winter', 'sun')
+    end
+  end
 
   context 'when a nil is passed' do
     let(:params) { { title: nil, cover: nil } }

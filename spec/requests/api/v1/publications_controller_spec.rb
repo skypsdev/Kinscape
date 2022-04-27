@@ -1,24 +1,21 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::PublicationsController, type: :request do
-  let!(:user) { create :user }
-  let!(:family) { create :family, users: [user] }
-  let!(:story) { create(:story, user: user) }
-  let!(:publication) { create :publication, story: story, family: family }
-  let(:subscription) do
-    create :subscription,
-           user: user,
-           current_period_start: Time.current - 1.day,
-           current_period_end: Time.current + 1.day
-  end
+  let(:user) { create :user }
+  let(:another_user) { create :user }
+  let(:family) { create :family, users: [user, another_user] }
+  let(:family2) { create :family, users: [user, another_user] }
+  let(:story) { create :story, user: user, category_list: ['initial_tag'] }
+  let(:timecapsule_story) { create :story, user: user }
+  let!(:publication) { create :publication, story: story, family: family, share_type: :shared }
   let(:id) { publication.id }
 
   path '/api/v1/publications' do
-    let!(:publication) { story.publications.create(family: family) }
-    let!(:comment) { create :comment, publication: publication, commentable: publication }
-    let!(:other_member_story) { create :story }
-    let!(:other_member_publication) { other_member_story.publications.create(family: family) }
-    let!(:timecapsule) { create(:publication, publish_on: Time.current + 1.month, family: family, story: story) }
+    let(:other_member_story) { create :story, user: another_user }
+    let!(:other_member_publication) { create :publication, story: other_member_story, family: family }
+    let!(:timecapsule) do
+      create(:publication, publish_on: Time.current + 1.month, family: family, story: timecapsule_story)
+    end
 
     get('list publications') do
       tags 'Publication'
@@ -45,7 +42,7 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
           expect(response.parsed_body['data'].pluck('id'))
             .to contain_exactly(publication.id.to_s, other_member_publication.id.to_s, timecapsule.id.to_s)
           expect(response.parsed_body['included'].pluck('id'))
-            .to contain_exactly(story.uid, other_member_story.uid, comment.uid, family.uid)
+            .to contain_exactly(story.id, other_member_story.id, family.id, timecapsule_story.id)
         end
       end
     end
@@ -55,9 +52,9 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
     parameter name: 'id', in: :path, type: :string
     let(:id) { publication.id }
     let(:section) { create :section, story: story }
-    let!(:publication_comment) { create :comment, publication: publication, commentable: publication }
-    let!(:section_comment) { create :comment, publication: publication, commentable: section }
-    let!(:comment_reply) { create :comment, publication: publication, commentable: section_comment }
+    let!(:publication_comment) { create :comment, top_commentable: publication, commentable: publication }
+    let!(:section_comment) { create :comment, top_commentable: publication, commentable: section }
+    let!(:comment_reply) { create :comment, top_commentable: publication, commentable: section_comment }
 
     get('show publication') do
       tags 'Publication'
@@ -67,25 +64,23 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
         run_test! do
           expect(response.parsed_body['data']['id']).to eq(publication.id.to_s)
           expect(response.parsed_body['included'].pluck('id')).to contain_exactly(
-            story.uid, family.uid, publication_comment.uid, section_comment.uid, comment_reply.uid, publication.id.to_s
+            story.id.to_s, family.id.to_s, publication_comment.id.to_s, section_comment.id.to_s,
+            user.private_family.id.to_s, comment_reply.id.to_s, publication.id.to_s
           )
         end
       end
     end
   end
 
-  path '/api/v1/stories/{story_id}/publications' do
-    parameter name: 'story_id', in: :path, type: :string
-    let(:story_id) { story.uid }
-
+  path '/api/v1/publications' do
     post('create publication') do
       include_context 'cookie'
-      it_behaves_like 'unauthorized - subscription missing'
       tags 'Publication'
 
       parameter name: :payload, in: :body, schema: {
         type: :object,
         properties: {
+          id: { type: :string, description: 'id of publication (can not be community type)' },
           families_ids: { type: :array },
           publish_on: { type: :string },
           share_type: { type: :string, enum: Publication.share_types.keys }
@@ -94,6 +89,7 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
       let(:payload) do
         {
           publication: {
+            id: story.private_publication.id,
             families_ids: families_ids,
             publish_on: publish_on,
             share_type: share_type
@@ -102,18 +98,17 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
       end
       let(:publish_on) { { year: '3030', month: 'June', day: '1' } }
       let(:share_type) { 'shared' }
-      let(:families_ids) { [family.uid] }
+      let(:families_ids) { [family.id] }
 
       context 'with share type' do
         response(200, 'successful', save_request_example: :payload) do
           before do
-            subscription
-            expect(Publication.count).to eq(1)
+            expect(Publication.count).to eq(2)
             expect(Story.count).to eq(1)
           end
 
           run_test! do
-            expect(Publication.count).to eq(2)
+            expect(Publication.count).to eq(3)
             expect(Story.count).to eq(1)
             expect(response.parsed_body['errors']).to be_nil
             expect(story.reload.publications.first).to be_present
@@ -128,13 +123,12 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
 
         response(200, 'successful', save_request_example: :payload) do
           before do
-            subscription
-            expect(Publication.count).to eq(1)
+            expect(Publication.count).to eq(2)
             expect(Story.count).to eq(1)
           end
 
           run_test! do
-            expect(Publication.count).to eq(2)
+            expect(Publication.count).to eq(3)
             expect(Story.count).to eq(2)
             expect(response.parsed_body['errors']).to be_nil
             expect(story.shared_stories).to be_present
@@ -142,7 +136,9 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
             expect(new_story.publications.first.share_type).to eq('community')
             expect(new_story.publications.first).to be_present
             expect(new_story).to have_attributes(
-              story.attributes.except('id', 'created_at', 'updated_at', 'uuid', 'cover_image_id', 'original_story_id')
+              story
+              .attributes
+              .except('id', 'created_at', 'updated_at', 'cover_image_id', 'original_story_id', 'title')
             )
           end
         end
@@ -150,10 +146,8 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
     end
   end
 
-  path '/api/v1/stories/{story_id}/publications/{id}' do
-    parameter name: :story_id, in: :path, type: :string
+  path '/api/v1/publications/{id}' do
     parameter name: :id, in: :path, type: :string
-    let(:story_id) { story.uid }
 
     delete('delete publication') do
       include_context 'cookie'
@@ -161,11 +155,14 @@ RSpec.describe Api::V1::PublicationsController, type: :request do
 
       response(204, 'successful') do
         before do
-          expect(Publication.count).to eq(1)
+          stub_mandrill
+          expect(Publication.count).to eq(2)
         end
 
         run_test! do
-          expect(Publication.count).to eq(0)
+          expect(Publication.count).to eq(1)
+          expect(all_emails.map(&:subject).uniq).to contain_exactly('Story Deleted')
+          expect(all_emails.size).to eq(2)
         end
       end
     end

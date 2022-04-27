@@ -1,11 +1,12 @@
 import Vue from 'vue'
-import { DirectUpload } from '@rails/activestorage'
-import { camelizeKeys } from 'humps'
+import {  camelizeKeys } from 'humps'
+
 import {
   AttachmentsRepository,
   BoxesRepository
-} from '../../repositories'
-import { Vault } from '../../models/vaults'
+} from '@/repositories'
+import { Vault } from '@/models/vaults'
+import { splitExtension } from '@/utils/common'
 
 const state = {
   vault: new Vault(),
@@ -42,13 +43,8 @@ const mutations = {
   SET_LOADING(state, data) {
     state.loading = data
   },
-  SET_VAULT(state, { id, items, attributes }) {
-    Vue.set(state.vault, 'attributes', attributes)
-    Vue.set(state.vault, 'id', id)
-    Vue.set(state.vault, 'items', [
-      ...state.vault.items,
-      ...items
-    ])
+  SET_VAULT(state, payload) {
+    state.vault = payload
   },
   SET_ACTION_DIALOG_BOX_ITEMS(state, { items, headers }) {
     Vue.set(state.boxes, 'items', items)
@@ -143,7 +139,7 @@ const mutations = {
 }
 
 const actions = {
-  async getVault({ commit, getters, dispatch, state }, { vaultId, params = {} }) {
+  async getVaultItems({ commit, getters, dispatch, state }, { vaultId, params = {} }) {
     const { currentPage, totalPages } = getters
     if (currentPage && (currentPage === totalPages)) return
     commit('SET_LOADING', true)
@@ -155,12 +151,22 @@ const actions = {
         ...state.sorting,
         ...params
       }
-      const res = await AttachmentsRepository.getVault(vaultId, params)
+      const itemsPromise = await AttachmentsRepository.getVaultItems(vaultId, params)
+      const vaultPromise = await AttachmentsRepository.getVault(vaultId)
+
+      const res = await Promise.all([itemsPromise, vaultPromise])
+
       commit('SET_VAULT', new Vault({
+        ...state.vault,
         id: vaultId,
-        items: camelizeKeys(res.data)
+        box: null,
+        items: [
+          ...state.vault.items,
+          ...camelizeKeys(res[0].data)
+        ],
+        attributes: camelizeKeys(res[1].data.attributes)
       }))
-      commit('SET_RESPONSE_HEADERS', res.headers)
+      commit('SET_RESPONSE_HEADERS', res[0].headers)
     } catch (error) {
       dispatch('layout/setError', error.response, { root: true })
     } finally {
@@ -182,7 +188,7 @@ const actions = {
 
       if (!params.boxId) delete params.boxId
 
-      let { data } = await AttachmentsRepository.getVault(vaultId, params)
+      let { data } = await AttachmentsRepository.getVaultItems(vaultId, params)
 
       commit('SET_ACTION_DIALOG_BOX_ITEMS', {
         items: camelizeKeys(data),
@@ -291,7 +297,8 @@ const actions = {
       commit('SET_LOADING', true);
 
       const boxInfoPromise = AttachmentsRepository.getBox(vaultId, boxId, { perPage: 40 })
-      const boxAssetsPromise = AttachmentsRepository.getVault(vaultId,
+      const vaultInfoPromise = AttachmentsRepository.getVault(vaultId)
+      const boxAssetsPromise = AttachmentsRepository.getVaultItems(vaultId,
         {
           boxId,
           perPage: 40,
@@ -299,14 +306,20 @@ const actions = {
           ...state.sorting
         })
 
-      const res = await Promise.all([boxInfoPromise, boxAssetsPromise])
-      const { attributes } = res[0].data
+      const res = await Promise.all([boxInfoPromise, boxAssetsPromise, vaultInfoPromise])
+      const [boxInfo, boxAssets, VaultInfo] = res
 
-      commit('SET_VAULT', new Vault({
-        id: boxId,
-        attributes,
-        items: camelizeKeys(res[1].data)
-      }))
+      const vault = {
+        ...state.vault,
+        id: vaultId,
+        box: camelizeKeys({ ...boxInfo.data.attributes, id: boxId }),
+        attributes: camelizeKeys(VaultInfo.data.attributes),
+        items: [
+          ...state.vault.items,
+          ...camelizeKeys(boxAssets.data)
+        ]
+      }
+      commit('SET_VAULT', new Vault(vault))
     } catch (error) {
       dispatch('layout/setError', error.response, { root: true })
     } finally {
@@ -324,24 +337,25 @@ const actions = {
       commit('SET_LOADING', false)
     }
   },
-  uploadVaultFile({ commit, dispatch }, { vaultId, boxId, file }) {
-    commit('SET_LOADING', true)
-    const upload = new DirectUpload(file, '/rails/active_storage/direct_uploads')
-    upload.create((error, blob) => {
-      if (error) {
-        commit('SET_LOADING', false)
-        dispatch('layout/setError', `Direct upload failed: ${error}`, { root: true })
-      } else {
-        AttachmentsRepository.createAttachment(vaultId, { boxId, file: blob.signed_id })
-          .then(() => {
-            dispatch('clearVault')
-            if (boxId) dispatch('getBox', { vaultId, boxId })
-            else dispatch('getVault', { vaultId, params: { page: 1 } })
-          })
-          .catch((error) => { dispatch('layout/setError', error, { root: true }) })
-          .finally(() => { commit('SET_LOADING', false) })
-      }
-    })
+  async uploadVaultFile({ commit, dispatch }, { vaultId, boxId, files }) {
+    try {
+      commit('SET_LOADING', true)
+
+      const model = files.map(({ signedId, filename }) => ({ title: splitExtension(filename)[0], signed_id: signedId }))
+      await AttachmentsRepository.createAttachment(vaultId, { boxId, files: model })
+
+      dispatch('clearVault')
+
+      if (boxId) dispatch('getBox', { vaultId, boxId })
+      else dispatch('getVaultItems', { vaultId, params: { page: 1 } })
+
+      return Promise.resolve()
+    } catch (error) {
+      dispatch('layout/setError', error, { root: true })
+      return Promise.reject()
+    } finally {
+      commit('SET_LOADING', false)
+    }
   },
   async updateAttachment({ commit, dispatch }, { vaultId, boxId, payload }) {
     try {
@@ -364,7 +378,7 @@ const actions = {
         const { parentBoxId } = params;
 
         if (parentBoxId) dispatch('getBox', { vaultId, boxId: parentBoxId })
-        else dispatch('getVault', { vaultId, params: { page: 1 } })
+        else dispatch('getVaultItems', { vaultId, params: { page: 1 } })
 
         dispatch('layout/closeDialog', null, { root: true })
       })
@@ -391,12 +405,15 @@ const actions = {
         dispatch('clearVault')
 
         if (boxId) dispatch('getBox', { vaultId, boxId })
-        else dispatch('getVault', { vaultId, params: { page: 1 } })
+        else dispatch('getVaultItems', { vaultId, params: { page: 1 } })
 
         dispatch('layout/closeDialog', null, { root: true })
       })
       .catch((error) => {
-        dispatch('layout/setError', error, { root: true })
+        dispatch('layout/setSnackbar', {
+          color: 'error',
+          messages: [error.message]
+        }, { root: true })
       }).finally(() => {
         commit('SET_LOADING', false)
       })

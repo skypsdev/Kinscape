@@ -1,7 +1,8 @@
+import Vue from 'vue'
+import {camelizeKeys, decamelizeKeys} from 'humps'
+
 import {SectionsRepository, StoriesRepository, PublicationsRepository, AppreciationsRepository} from '../../repositories'
 import {Story} from '../../models/stories'
-import {camelizeKeys, decamelizeKeys} from 'humps'
-import { DirectUpload } from '@rails/activestorage'
 
 const state = {
   loading: false,
@@ -30,11 +31,14 @@ const state = {
 }
 
 const mutations = {
+  SET_CATEGORIES (state, categories) {
+    state.allCategories = categories
+  },
   SET_LOADING (state, status) {
     state.loading = status
   },
   SET_STORY_LOADING (state, isLoading) {
-    state.story.isLoading = isLoading
+    Vue.set(state.story, 'isLoading', isLoading)
   },
   SET_STORY (state, payload) {
     state.story = payload
@@ -50,6 +54,9 @@ const mutations = {
   },
   SET_STORY_CHANGE_STATUS(state, isChanged = true) {
     state.story.isChanged = isChanged
+  },
+  SET_STORY_CHAPTER_ADDED(state, chapter) {
+    state.story.chapterAdded = chapter
   },
   SET_TABLE_OF_CONTENT (state, links) {
     state.story.content.links = links
@@ -136,17 +143,12 @@ const actions = {
     PublicationsRepository.getPublication(payload.id, payload.options)
       .then((res)=> {
         const {data, included} = camelizeKeys(res)
-        const story = {
-          ...included.find(i => i.type === 'story') || {},
-          publication: data,
-          family: included.find(i => i.type === 'family') || {},
-          publications: included.filter(i => i.type === 'publication') || {},
-          families: included.filter(i => i.type === 'family') || {}
-        }
-        commit('SET_STORY', new Story(story))
+        const story = getNewStory(included, data)
+
+        commit('SET_STORY', story)
         commit('comments/SET_COMMENTS', included.filter((include) => (include.type === 'comment')), { root: true })
-        dispatch('sections/loadNext', story.id, {root: true})
-        dispatch('setAllStoryCategories', res.headers)
+
+        dispatch('sections/loadNext', {id: story.publication.id, params: payload.options}, {root: true } )
       })
       .catch((error) => {
         dispatch('layout/setError', error, {root: true})
@@ -156,65 +158,49 @@ const actions = {
       })
   },
   setAllStoryCategories({commit}, headers) {
-    let allCategories = headers.get('All-Stories-Categories')
-    allCategories = allCategories.replaceAll('"' , '').replaceAll('{' , '').replaceAll('}' , '').replaceAll('=>' , ':')
-    allCategories = allCategories ? allCategories.split(', ') : []
-    allCategories = allCategories.map((category) => {
-      let value = category.split(':')
-      return {
-        text: value[0],
-        number: value[1]
-      }
-    })
+    let allCategories = JSON.parse(headers.get('All-Stories-Categories')) || []
     commit('SET_STORY_CATEGORIES', allCategories)
   },
-  updateStory({ commit, dispatch }, payload) {
+  updateStory({state, commit, dispatch }, payload) {
     commit('SET_STORY_LOADING', true)
     StoriesRepository.updateStory(payload.id, decamelizeKeys(payload.form))
-      .then((res)=> {
-        const {title} = res.data.attributes
-        //TODO Hack
-        if (state.story.title !== title) {
-          commit('SET_STORY', {
-            ...state.story,
-            title
-          })
-        }
-        dispatch('layout/setSnackbar', 'Saved', {root: true})
+      .then((res) => {
+
+        const { data } = camelizeKeys(res)
+        const story = getNewStory([data], state.story.publication)
+
+        commit('SET_STORY', {...story, isLoading:true})
+
         dispatch('setStoryChangeStatus')
       })
       .catch((error) => {
-        dispatch('layout/setError', error, {root: true})
+        dispatch('layout/setError', error, { root: true })
       })
       .finally(() => {
-        commit('SET_STORY_LOADING', false)
+        setTimeout(() => {
+          commit('SET_STORY_LOADING', false)
+        }, 500)
       })
   },
-  updateStoryAvatar({commit, dispatch}, image) {
-    commit('SET_STORY_LOADING', true)
-    const upload = new DirectUpload(image, '/rails/active_storage/direct_uploads')
-    upload.create((error, blob) => {
-      if (error) {
-        commit('SET_STORY_LOADING', false)
-        throw new Error(`Direct upload failed: ${error}`)
-      } else {
-        dispatch('updateStory', {
-          id: state.story.id,
-          form: {
-            story: {
-              cover: blob.signed_id
-            }
-          }
-        })
+  updateStoryAvatar({ state, dispatch }, payload) {
+    return dispatch('updateStory', {
+      id: state.story.publication.id,
+      form: {
+        story: {
+          cover: payload
+        }
       }
     })
   },
   setStoryChangeStatus({commit}, isChanged= true) {
     if (!state.story.isChanged) commit('SET_STORY_CHANGE_STATUS', isChanged)
   },
-  createStoryAppreciation({commit, dispatch, state}, {publicationId, params}) {
+  setStoryChangeChapterStatus({commit}, chapter = '') {
+    if (!state.story.chapterAdded) commit('SET_STORY_CHAPTER_ADDED', chapter.toString())
+  },
+  createStoryAppreciation({commit, dispatch, state}, params) {
     commit('SET_STORY_LOADING', true)
-    AppreciationsRepository.createAppreciation(publicationId, params)
+    AppreciationsRepository.createAppreciation(params)
       .then((res)=> {
         const story = { ...state.story }
         story.publication.attributes.appreciationId = res.data.id
@@ -224,9 +210,9 @@ const actions = {
       .catch((error)=> { dispatch('layout/setError', error, {root: true}) })
       .finally(()=> { commit('SET_STORY_LOADING', false) })
   },
-  removeStoryAppreciation({commit, dispatch, state}, {publicationId, appreciationId}) {
+  removeStoryAppreciation({commit, dispatch, state}, { appreciationId }) {
     commit('SET_STORY_LOADING', true)
-    AppreciationsRepository.deleteAppreciation(publicationId, appreciationId)
+    AppreciationsRepository.deleteAppreciation(appreciationId)
       .then(()=> {
         const story = { ...state.story }
         story.publication.attributes.appreciationId = ''
@@ -236,19 +222,19 @@ const actions = {
       .catch((error)=> { dispatch('layout/setError', error, {root: true}) })
       .finally(()=> { commit('SET_STORY_LOADING', false) })
   },
-  getTableOfContent({commit}, storyId) {
-    StoriesRepository.listTableOfContents(storyId)
+  getTableOfContent({commit}, id) {
+    StoriesRepository.listTableOfContents(id)
       .then(response => {
         commit('SET_TABLE_OF_CONTENT', response.data.attributes.links)
       })
   },
   updateChapter({commit, dispatch}, chapter) {
     commit('SET_STORY_LOADING', true)
-    SectionsRepository.updateSection(state.story.id, chapter.id, decamelizeKeys(chapter.form))
+    SectionsRepository.updateSection(state.story.publication.id, chapter.id, decamelizeKeys(chapter.form))
       .then(()=> {
-        dispatch('layout/setSnackbar', 'Saved', {root: true})
         dispatch('setStoryChangeStatus')
-        dispatch('getTableOfContent', state.story.id)
+        dispatch('setStoryActiveChapter', chapter.id)
+        dispatch('getTableOfContent', state.story.publication.id)
       })
       .catch((error) => {
         dispatch('layout/setError', error, {root: true})
@@ -259,12 +245,11 @@ const actions = {
   },
   deleteChapter({commit, dispatch}, chapter) {
     commit('SET_STORY_LOADING', true)
-    SectionsRepository.deleteSection(state.story.id, chapter.id)
+    SectionsRepository.deleteSection(state.story.publication.id, chapter.id)
       .then(()=> {
-        dispatch('layout/setSnackbar', 'The chapter has been deleted', {root: true})
         dispatch('setStoryChangeStatus')
         dispatch('sections/deleteSection', chapter, {root: true})
-        dispatch('getTableOfContent', state.story.id)
+        dispatch('getTableOfContent', state.story.publication.id)
       })
       .catch((error) => {
         dispatch('layout/setError', error, {root: true})
@@ -275,11 +260,10 @@ const actions = {
   },
   createNewChapter({commit, dispatch}, params) {
     commit('SET_STORY_LOADING', true)
-    SectionsRepository.createSection(state.story.id, params)
+    SectionsRepository.createSection(state.story.publication.id, params)
       .then((res)=> {
-        dispatch('layout/setSnackbar', 'The chapter has been created', {root: true})
-        dispatch('setStoryChangeStatus')
-        dispatch('getTableOfContent', state.story.id)
+        dispatch('setStoryChangeChapterStatus', res.data.id)
+        dispatch('getTableOfContent', state.story.publication.id)
         if (res.data.attributes.position !== state.story.content.links.length) {
           dispatch('sections/clearSections', null, {root: true})
         }
@@ -292,6 +276,26 @@ const actions = {
       .finally(()=> {
         commit('SET_STORY_LOADING', false)
       })
+  },
+  createChapterAppreciation({ commit, dispatch }, params) {
+    commit('SET_STORY_LOADING', true)
+    AppreciationsRepository.createAppreciation(params)
+        .then((res)=> {
+          dispatch('sections/loadAll', state.story.publication.id, {root: true})
+          return res
+        })
+        .catch((error)=> { dispatch('layout/setError', error, {root: true}) })
+        .finally(()=> { commit('SET_STORY_LOADING', false) })
+  },
+  removeChapterAppreciation({ commit, dispatch }, { appreciationId }) {
+    commit('SET_STORY_LOADING', true)
+    AppreciationsRepository.deleteAppreciation(appreciationId)
+        .then((res)=> {
+          dispatch('sections/loadAll', state.story.publication.id, {root: true})
+          return res
+        })
+        .catch((error)=> { dispatch('layout/setError', error, {root: true}) })
+        .finally(()=> { commit('SET_STORY_LOADING', false) })
   },
   setStoryActiveChapter ({commit}, chapter = '') {
     commit('SET_ACTIVE_CHAPTER', chapter.toString())
@@ -336,9 +340,9 @@ const actions = {
     commit('SET_STORIES_VIEW_TYPE', type)
   },
   getStoriesSimpleList({ commit }, params ) {
-    const familyId = params.familyId
+    const {authorId, familyId, ...rest} = params
     let filters = {}
-    filters = { familyId, authorId: params.authorId }
+    filters = { familyId, authorId, ...rest }
     PublicationsRepository.listPublications({
       no_pagination: true,
       ...decamelizeKeys(filters)
@@ -364,10 +368,15 @@ const actions = {
     try {
       const params = { publication: decamelizeKeys(payload.publication) }
 
-      await PublicationsRepository.createPublication(payload.storyId, params)
+      return await PublicationsRepository.createPublication(params)
     } catch (error) {
       dispatch('layout/setError', error)
     }
+  },
+  getCategories({ commit }) {
+    PublicationsRepository.getCategories().then((res) => {
+      commit('SET_CATEGORIES', camelizeKeys(res.data))
+    })
   }
 }
 
@@ -413,4 +422,14 @@ export default {
   getters,
   actions,
   mutations
+}
+
+function getNewStory(included, publication) {
+  return  new Story({
+    ...included.find(i => i.type === 'story') || {},
+    publication,
+    family: included.find(i => i.type === 'family' && i.id === publication.attributes.familyId) || {},
+    publications: included.filter(i => i.type === 'publication') || {},
+    families: included.filter(i => i.type === 'family') || {}
+  })
 }

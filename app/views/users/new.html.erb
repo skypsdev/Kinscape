@@ -1,0 +1,87 @@
+<section class="content">
+  <div class="content__left">
+    <h4 class="content-left__title">
+      <%= I18n.t('users.sign_up.create_account') %>
+    </h4>
+    <%= link_to root_path, class: 'content-left__link' do %>
+      <%= image_tag('new-account/arrow-left.svg', alt: "arrow-left") %>
+      <%= I18n.t('users.sign_up.back') %>
+    <% end %>
+  </div>
+
+  <%= form_with model: @user, class: 'content__right' do |form| %>
+    <div class="text-field" x-data="{ showError: true }">
+      <!-- ----------------------------- First Name ------------------------------ -->
+      <%= form.label :first_name, I18n.t('users.sign_up.field_first_name'), class: "text-field__label" %>
+      <%= form.text_field :first_name,
+                          placeholder: I18n.t('users.sign_up.field_first_name_placeholder'),
+                          class: "text-field__input" %>
+      <%= error_message_on(@user, :first_name) %>
+    </div>
+    <!-- ------------------------------ Last Name ------------------------------ -->
+    <div class="text-field">
+      <%= form.label :last_name, I18n.t('users.sign_up.field_last_name'), class: "text-field__label" %>
+      <%= form.text_field :last_name, placeholder: I18n.t('users.sign_up.field_last_name_placeholder'),
+          class: "text-field__input" %>
+      <%= error_message_on(@user, :last_name) %>
+    </div>
+    <!-- -------------------------------- Email -------------------------------- -->
+    <div class="text-field">
+      <%= form.label :email, I18n.t('users.sign_up.field_email'), class: "text-field__label" %>
+      <%= form.text_field :email,
+                          placeholder: I18n.t('users.sign_up.field_email_placeholder'),
+                          class: "text-field__input" %>
+      <%= error_message_on(@user, :email) %>
+    </div>
+    <!-- ------------------------------ Password ------------------------------- -->
+    <div class="text-field" x-data="{showPassword: false}">
+      <%= form.label :password, I18n.t('users.sign_up.field_password'), class: "text-field__label" %>
+      <%= form.password_field :password,
+                              placeholder: I18n.t('users.sign_up.field_password_placeholder'),
+                              class: "text-field__input" ,
+                              "x-bind:type"=> "showPassword ? 'text' : 'password'" %>
+      <a href="#" class="text-field__eye" @click.prevent="showPassword = !showPassword">
+        <%= image_tag('new-account/eye.svg', alt: "eye icon") %>
+      </a>
+      <%= error_message_on(@user, :password) %>
+    </div>
+    <!-- ------------------------ Password Confirmation ------------------------ -->
+    <div class="text-field" x-data="{showPassword: false}">
+      <%= form.label :password_confirmation, I18n.t('users.sign_up.field_password_confirmation'),
+        class: "text-field__label" %>
+      <%= form.password_field :password_confirmation,
+                              placeholder: I18n.t('users.sign_up.field_password_confirmation'),
+                              class: "text-field__input" ,
+                              "x-bind:type"=> "showPassword ? 'text' : 'password'" %>
+      <a href="#" class="text-field__eye" @click.prevent="showPassword = !showPassword">
+        <%= image_tag('new-account/eye.svg', alt: "eye icon") %>
+      </a>
+      <%= error_message_on(@user, :password_confirmation) %>
+    </div>
+    <!-- -------------------- Terns and conditions checkbox -------------------- -->
+    <label class="text-field custom-checkbox">
+      <span class="custom-checkbox__text">
+        <%= I18n.t('users.sign_up.terns', { terns_link:'/terms-of-use', privacy_link: '/privacy-policy' } ).html_safe %>
+      </span>
+      <%= form.check_box :terms_and_conditions, class: "custom-checkbox__checkbox" %>
+      <span class="custom-checkbox__checkmark \
+                  <%= 'custom-checkbox__checkmark--error' if @user.errors.include?(:terms_and_conditions) %>">
+      </span>
+      <%= error_message_on(@user, :terms_and_conditions) %>
+    </label>
+
+    <% if @show_checkbox_recaptcha %>
+      <%= recaptcha_tags %>
+    <% else %>
+      <%= recaptcha_v3(action: 'signup' , site_key: Global.recaptcha.site_key_v3) %>
+    <% end %>
+
+    <div class="text-field text-field--row text-field--center">
+      <%= form.submit I18n.t('users.sign_up.submit'), class: "content__submit new-member-cvr-btn" %>
+    </div>
+  <% end %>
+</section>
+<%= image_tag('new-account/people-image.svg', alt: "people", class: 'people') %>
+<%= image_tag('new-account/logo.svg', alt: "logo", class: 'logo') %>
+
+<% content_for :body_class, "users-new-body" %>

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getVault: 'vaults/getVault',
+      getVaultItems: 'vaults/getVaultItems',
       clearVault: 'vaults/clearVault',
       setVaultFilters: 'vaults/setVaultFilters',
       clearVaultFilters: 'vaults/clearVaultFilters',
@@ -41,14 +41,22 @@ export default {
     }),
     getItems() {
       this.clearVault()
-      this.getVault({
+      this.getVaultItems({
         vaultId: this.vaultId,
-        params: { page: 1 }
+        params: { page: 1, ...this.getShowcaseOptions() }
       })
+    },
+    getShowcaseOptions() {
+      const result = {}
+      if (localStorage.getItem('tour')) {
+        result.showcase = true
+      }
+
+      return result
     },
     async getMoreVaultItems($state) {
       try {
-        await this.getVault({ vaultId: this.vaultId })
+        await this.getVaultItems({ vaultId: this.vaultId })
         $state.loaded()
         if (!this.hasMorePages) $state.complete()
       } catch (e) {
@@ -60,6 +68,6 @@ export default {
 }
 </script>
 <style lang="scss">
-  @import '@/assets/styles/components/vaultMoveDialog';
-  @import '@/assets/styles/components/vaultDetailsBtn';
+@import "@/assets/styles/components/vaultMoveDialog";
+@import "@/assets/styles/components/vaultDetailsBtn";
 </style>

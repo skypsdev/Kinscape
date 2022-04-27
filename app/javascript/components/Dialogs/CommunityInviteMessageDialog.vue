@@ -2,56 +2,59 @@
   <DialogContent>
     <template v-slot:content>
       <h2 class="invitation__heading mt-10">
-        {{ $i18n.t('communities.inviteDialog.messageHeading') }}
+        {{ translations.messageHeading }}
       </h2>
       <p class="invitation__description">
-        {{ $i18n.t('communities.inviteDialog.messageDescription') }}
+        {{ translations.messageDescription }}
       </p>
-      <v-divider/>
+      <v-divider />
       <h2 class="invitation__heading mt-6">
-        {{ $i18n.t('communities.inviteDialog.messageSubheading') }}
+        {{ translations.messageSubheading }}
       </h2>
       <v-textarea
-          v-model="message"
-          rows="4"
-          outlined
-          class="invitation__input"
+        v-model="message"
+        rows="4"
+        outlined
+        :placeholder="translations.placeholder"
+        class="invitation__input"
       />
     </template>
     <template v-slot:actions>
       <div>
         <v-btn
-            x-large
-            rounded
-            outlined
-            color="primary"
-            elevation="0"
-            class="ma-1"
-            min-width="160px"
-            min-height="48px"
-            @click="goBack"
+          x-large
+          rounded
+          outlined
+          color="primary"
+          elevation="0"
+          class="ma-1"
+          min-width="160px"
+          min-height="48px"
+          @click="goBack"
         >
-          {{ $i18n.t('communities.inviteDialog.back') }}
+          {{ $i18n.t("communities.inviteDialog.back") }}
         </v-btn>
         <v-btn
-            x-large
-            rounded
-            color="primary"
-            elevation="0"
-            class="ma-1"
-            min-width="160px"
-            min-height="48px"
-            @click="nextStep"
+          x-large
+          rounded
+          color="primary"
+          elevation="0"
+          class="ma-1 invitation-sent-cvr-btn"
+          min-width="160px"
+          min-height="48px"
+          @click="nextStep"
         >
-          {{ $i18n.t('communities.inviteDialog.send') }}
+          {{ $i18n.t("communities.inviteDialog.send") }}
         </v-btn>
       </div>
     </template>
   </DialogContent>
 </template>
 <script>
-import DialogContent from '../../components/Layout/Dialog/DialogContent'
 import { mapActions, mapState } from 'vuex'
+import { cloneDeep as _cloneDeep } from 'lodash'
+
+import DialogContent from '@/components/Layout/Dialog/DialogContent'
 
 export default {
   components: {
@@ -60,7 +63,7 @@ export default {
   data() {
     return {
       payload: {},
-      message: this.$i18n.t('communities.inviteDialog.messagePlaceholder'),
+      message: '',
     }
   },
   computed: {
@@ -68,9 +71,19 @@ export default {
       community: state => state.families.community,
       dialog: state => state.layout.dialog
     }),
+    translations() {
+      return {
+        messageHeading: this.$i18n.t('communities.inviteDialog.messageHeading'),
+        messageDescription: this.$i18n.t('communities.inviteDialog.messageDescription'),
+        messageSubheading: this.$i18n.t('communities.inviteDialog.messageSubheading'),
+        placeholder: '',
+        message: this.$i18n.t('communities.inviteDialog.messagePlaceholder')
+      }
+    }
   },
   created() {
-    this.payload = this.dialog.data.payload
+    this.payload = _cloneDeep(this.dialog.data.payload)
+    this.message = this.translations.message
   },
   methods: {
     ...mapActions({
@@ -79,23 +92,28 @@ export default {
       setSnackbar: 'layout/setSnackbar',
       sendInvitations: 'families/sendInvitations',
     }),
-    async nextStep () {
+    updatePayload() {
+      this.$set(this.payload, 'message', this.message)
+
+      const users = this.payload.users.map(user => ({
+        ...user,
+        role: user.role.toLowerCase().replace(/-/g, "_")
+      }))
+      this.$set(this.payload, 'users', users)
+    },
+    async nextStep() {
       try {
-        this.payload.message = this.message
-        this.payload.users = this.payload.users.map(user => {
-          return {
-            ...user,
-            role: user.role.toLowerCase().replace(/-/g,"_")
-          }
-        })
+        this.updatePayload()
         await this.sendInvitations(this.payload)
         this.closeDialog()
         await this.$router.replace({ name: 'invitedMembers', params: { id: this.community.id } })
       } catch (error) {
-        this.setSnackbar(error.message, 'error')
+        if (!error.message.includes('Avoided redundant navigation to current location')) {
+          this.setSnackbar(error.message, 'error')
+        }
       }
     },
-    goBack () {
+    goBack() {
       this.setDialog({
         title: this.$i18n.t('communities.inviteDialog.title', { communityType: this.community.type }),
         component: 'CommunityInviteRoleDialog',
@@ -123,8 +141,9 @@ export default {
     &::v-deep .v-text-field__slot textarea::placeholder {
       font-size: 16px;
       line-height: 19px;
-      color: #C4C4C4;
+      color: #c4c4c4;
     }
   }
 }
+
 </style>

@@ -1,29 +1,26 @@
 <template>
-  <v-row>
-    <v-col class="d-flex flex-row align-center">
-      <FilterByCommunity/>
-    </v-col>
-    <v-col class="d-flex flex-row align-center justify-center fill-height">
-      <Search
-        :searchTerm="$route.query.query"
-        @setSearch="handleFilter"
-        class="stories__search"
-      />
-    </v-col>
-    <v-col class="d-flex flex-row align-center justify-end fill-height">
-      <SelectViewType
-        :viewType="viewType"
-        @setViewType="setViewType"
-      />
-    </v-col>
-  </v-row>
+  <div class="flex-grow-1 d-flex flex-nowrap">
+    <FilterByCommunity/>
+    <v-spacer v-if="!isMobile" />
+    <Search
+      :searchTerm="$route.query.query"
+      @setSearch="handleFilter"
+      class="stories__search"
+    />
+    <v-spacer />
+    <SelectViewType
+      :viewType="viewType"
+      @setViewType="setViewType"
+    />
+  </div>
 </template>
 
 <script>
+import {mapActions, mapState} from 'vuex'
 import FilterByCommunity from './Stories/FilterByCommunity'
 import SelectViewType from '../Elements/SelectViewType'
 import Search from '../Elements/Forms/Search'
-import {mapActions, mapState} from 'vuex'
+import breakpointsMixin from '@/mixins/breakpointsMixin'
 
 export default {
   components: {
@@ -31,6 +28,7 @@ export default {
     Search,
     SelectViewType
   },
+  mixins: [breakpointsMixin],
   computed: {
     ...mapState({
       viewType: state => state.stories.viewType
@@ -47,7 +45,7 @@ export default {
           ...this.$route.query,
           ...filter
         }
-      }).catch(()=>{})
+      })
       this.setStoryFilters(filter)
     }
   }

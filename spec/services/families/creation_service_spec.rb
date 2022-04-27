@@ -14,8 +14,6 @@ describe Families::CreationService do
           .by(1)
           .and change(Vault, :count)
           .by(1)
-          .and change(Box, :count)
-          .by(1)
         expect(family).to have_attributes(params)
         expect(user.role_for(family)).to eq('admin')
       end

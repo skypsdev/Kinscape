@@ -4,40 +4,35 @@ class SubscriptionsController < ApplicationController
                      :require_login,
                      only: [:webhook],
                      raise: false
-  def cancel
-    if Billing::SubscriptionService.cancel_for(current_user)
-      flash[:success] = t('subscriptions.messages.canceled')
-    else
-      flash[:error] = t('subscriptions.errors.standard')
+
+  def show
+    customer = Billing::SubscriptionService.find_or_create_stripe_customer_for(current_user)
+    puts customer.subscriptions.total_count.positive?
+    unless customer.subscriptions.total_count.positive?
+      # In future we will create this at join time, for now this only matters for those who care to test.
+      Stripe::Subscription.create(
+        {
+          customer: customer.id,
+          items: [
+            { price: 'basic' }
+          ],
+          payment_behavior: 'allow_incomplete',
+          trial_period_days: 30
+        }
+      )
     end
 
-    redirect_to account_path
+    session = Stripe::BillingPortal::Session.create(
+      {
+        customer: customer,
+        return_url: 'https://www.kinscape.com/stories'
+      }
+    )
+
+    redirect_to session.url
   end
 
-  def resume
-    if Billing::SubscriptionService.resume_for(current_user)
-      flash[:success] = t('subscriptions.messages.resumed')
-    else
-      flash[:error] = t('subscriptions.errors.standard')
-    end
-
-    redirect_to account_path
-  end
-
-  def renew
-    if Billing::SubscriptionService.renew_for(current_user)
-      ::MailerService.call(:thank_you_for_subscribe, params: { recipient: current_user })
-      flash[:success] = t('subscriptions.messages.renewed')
-    else
-      flash[:error] = t('subscriptions.errors.standard')
-    end
-
-    redirect_to account_path
-  rescue Billing::SubscriptionServiceError => e
-    flash[:error] = e.message
-    redirect_to account_path
-  end
-
+  # rubocop:disable Metrics/CyclomaticComplexity
   def webhook
     payload = request.body.read
     sig_header = request.env['HTTP_STRIPE_SIGNATURE']
@@ -47,7 +42,7 @@ class SubscriptionsController < ApplicationController
       event = Stripe::Webhook.construct_event(
         payload, sig_header, Global.stripe.endpoint_secret
       )
-
+      byebug
       case event.type
       when 'customer.deleted'
         User.find_by!(stripe_id: event.data.object.id)
@@ -69,6 +64,9 @@ class SubscriptionsController < ApplicationController
 
           inform_plan_renewal(customer)
         end
+      when 'invoice.payment_failed'
+        # The payment failed or the customer does not have a valid payment method.
+        # The subscription becomes past_due. In future, notify and encourage payment
       end
 
       render json: { status: 200 }
@@ -80,6 +78,7 @@ class SubscriptionsController < ApplicationController
       render json: { status: 422, error: e.message }
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   # TODO-RUBOCOP
   # rubocop:disable Metrics/PerceivedComplexity

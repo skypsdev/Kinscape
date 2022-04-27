@@ -1,32 +1,30 @@
 <template>
-  <v-row>
-    <v-col>
-    </v-col>
-    <v-col class="d-flex flex-row align-center justify-center fill-height">
-      <Search
-        :searchTerm="searchTerm"
-        @setSearch="setSearch"
-      />
-    </v-col>
-    <v-col class="d-flex flex-row align-center justify-end fill-height">
-      <SelectViewType
-        :viewType="viewType"
-        @setViewType="setViewType"
-      />
-    </v-col>
-  </v-row>
+  <div class="flex-grow-1 d-flex flex-nowrap">
+    <v-spacer />
+    <Search
+      :searchTerm="searchTerm"
+      @setSearch="setSearch"
+    />
+    <v-spacer v-if="!isMobile" />
+    <SelectViewType
+      :viewType="viewType"
+      @setViewType="setViewType"
+    />
+  </div>
 </template>
 
 <script>
-import SelectViewType from '../Elements/SelectViewType'
-import Search from '../Elements/Forms/Search'
 import {mapActions, mapState} from 'vuex'
+import Search from '../Elements/Forms/Search'
+import SelectViewType from '../Elements/SelectViewType'
+import breakpointsMixin from '@/mixins/breakpointsMixin'
 
 export default {
   components: {
     Search,
     SelectViewType,
   },
+  mixins: [breakpointsMixin],
   computed: {
     ...mapState({
       viewType: state => state.families.viewType,

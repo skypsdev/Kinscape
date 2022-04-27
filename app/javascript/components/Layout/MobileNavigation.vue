@@ -49,7 +49,13 @@
           <v-list-item-title>{{ $i18n.t('user_menu.account') }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-  
+
+      <v-list-item href="/subscriptions">
+        <v-list-item-content>
+          <v-list-item-title class="pr-2 new-paying-member-cvr-btn">{{ $i18n.t('user_menu.manage_subscription') }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
       <v-list-item link target="_blank" href="https://intercom.help/kinscape">
         <v-list-item-content>
           <v-list-item-title>{{ $i18n.t('user_menu.help_center') }}</v-list-item-title>

@@ -6,21 +6,21 @@ describe Attachments::CreationService do
   let(:user) { create :user }
   let(:family_member) { create :user }
   let(:family) { create :family, users: [user, family_member] }
-  let!(:family_vault) { create :vault, owner: family }
   let(:image_blob_1) { create_file_blob }
-  let(:params) { { box_id: box_id, file: image_blob_1.signed_id } }
+  let(:params) { { box_id: box_id, files: [{ signed_id: image_blob_1.signed_id, title: 'some title' }] } }
   let(:box_id) { nil }
   let(:current_user) { user.reload }
 
   context 'with family vault' do
-    let(:vault) { family_vault }
+    let(:vault) { family.vault }
 
     it 'creates file in family vault' do
       expect { result }.to change(ActiveStorage::Attachment, :count).by(1)
-      expect(result.user).to eq(user)
-      expect(result.family).to eq(family)
-      expect(result.record).to eq(vault)
-      expect(result.box).to eq(nil)
+      expect(result.first.user).to eq(user)
+      expect(result.first.family).to eq(family)
+      expect(result.first.record).to eq(vault)
+      expect(result.first.box).to eq(nil)
+      expect(result.first.title).to eq('some title')
     end
 
     context 'with box' do
@@ -29,10 +29,10 @@ describe Attachments::CreationService do
 
       it 'creates file in box' do
         expect { result }.to change(ActiveStorage::Attachment, :count).by(1)
-        expect(result.user).to eq(user)
-        expect(result.family).to eq(family)
-        expect(result.record).to eq(vault)
-        expect(result.box).to eq(box)
+        expect(result.first.user).to eq(user)
+        expect(result.first.family).to eq(family)
+        expect(result.first.record).to eq(vault)
+        expect(result.first.box).to eq(box)
       end
     end
   end
@@ -42,10 +42,10 @@ describe Attachments::CreationService do
 
     it 'creates file in user vault' do
       expect { result }.to change(ActiveStorage::Attachment, :count).by(1)
-      expect(result.user).to eq(user)
-      expect(result.family).to eq(nil)
-      expect(result.record).to eq(vault)
-      expect(result.box).to eq(nil)
+      expect(result.first.user).to eq(user)
+      expect(result.first.family).to eq(nil)
+      expect(result.first.record).to eq(vault)
+      expect(result.first.box).to eq(nil)
     end
 
     context 'with box' do
@@ -54,10 +54,10 @@ describe Attachments::CreationService do
 
       it 'creates file in box' do
         expect { result }.to change(ActiveStorage::Attachment, :count).by(1)
-        expect(result.user).to eq(user)
-        expect(result.family).to eq(nil)
-        expect(result.record).to eq(vault)
-        expect(result.box).to eq(box)
+        expect(result.first.user).to eq(user)
+        expect(result.first.family).to eq(nil)
+        expect(result.first.record).to eq(vault)
+        expect(result.first.box).to eq(box)
       end
     end
   end

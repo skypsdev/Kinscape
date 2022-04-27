@@ -1,26 +1,31 @@
-<% if blob.filename.extension == 'pdf' %>
-  <a class="download-doc" target="_blank" href="<%= rails_blob_path(blob) %>">
+<% blob_url = params[:controller] == 'stories/downloads' ? blob.url : rails_blob_path(blob)  %>
+<% if blob.audio? %>
+  <div class="audio-wrapper">
+    <audio controls src="<%= blob_url %>"></audio>
+  </div>
+<% elsif blob.filename.extension == 'pdf' %>
+  <a class="download-doc" target="_blank" href="<%= blob_url %>">
     <i class="fa fa-file-pdf-o"></i>
     <span class="attachment__name"><%= blob.filename %></span>
     <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
     <span class="attachment__size"><b>(To preview this file you have to download it.)</b></span>
   </a>
 <% elsif ['doc', 'docx'].include? blob.filename.extension %>
-  <a class="download-doc" target="_blank" href="<%= rails_blob_path(blob) %>">
+  <a class="download-doc" target="_blank" href="<%= blob_url %>">
     <i class="fa fa-file-word-o"></i>
     <span class="attachment__name"><%= blob.filename %></span>
     <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
     <span class="attachment__size"><b>(To preview this file you have to download it.)</b></span>
   </a>
 <% elsif ['xls', 'xlsx'].include? blob.filename.extension %>
-  <a class="download-doc" target="_blank" href="<%= rails_blob_path(blob) %>">
+  <a class="download-doc" target="_blank" href="<%= blob_url %>">
     <i class="fa fa-file-excel-o"></i>
     <span class="attachment__name"><%= blob.filename %></span>
     <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
     <span class="attachment__size"><b>(To preview this file you have to download it.)</b></span>
   </a>
 <% elsif ['ppt'].include? blob.filename.extension %>
-  <a class="download-doc" target="_blank" href="<%= rails_blob_path(blob) %>">
+  <a class="download-doc" target="_blank" href="<%= blob_url %>">
     <i class="fa fa-file-powerpoint-o"></i>
     <span class="attachment__name"><%= blob.filename %></span>
     <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
@@ -28,23 +33,21 @@
   </a>
 <% elsif blob.content_type.include? 'video' %>
   <div class="video-wrapper">
-    <video controls src="<%= Rails.application.routes.url_helpers.rails_blob_url(blob, only_path: true) %>"></video>
-  </div>
-<% elsif ['mp3', 'wav'].include? blob.filename.extension %>
-  <div class="audio-wrapper">
-    <audio controls src="<%= rails_blob_path(blob) %>"></audio>
+    <video controls src="<%= blob_url %>"></video>
   </div>
 <% elsif ['tiff'].include? blob.filename.extension %>
-  <a class="download-doc" target="_blank" href="<%= rails_blob_path(blob) %>">
+  <a class="download-doc" target="_blank" href="<%= blob_url %>">
     <i class="fa fa-file-excel-o"></i>
     <span class="attachment__name"><%= blob.filename %></span>
     <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>
     <span class="attachment__size"><b>(To preview this file you have to download it.)</b></span>
   </a>
 <% elsif blob.representable? %>
-  <img src="<%= Rails.application.routes.url_helpers.rails_blob_url(blob, only_path: true) %>"/>
+  <div class="image-wrapper">
+    <img src="<%= blob_url %>"/>
+  </div>
 <% else %>
-  <a class="download-doc" target="_blank" href="<%= rails_blob_path(blob) %>">
+  <a class="download-doc" target="_blank" href="<%= blob_url %>">
     <i class="fa fa-file-o"></i>
     <span class="attachment__name"><%= blob.filename %></span>
     <span class="attachment__size"><%= number_to_human_size blob.byte_size %></span>

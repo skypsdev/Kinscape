@@ -2,9 +2,9 @@ require 'swagger_helper'
 
 RSpec.describe Api::V1::Kinships::OfflineMembersController, type: :request do
   let(:user) { create :user }
-  let(:admin) { create :user }
-  let!(:family) { create :family, users: [admin, user] }
-  let(:kinship) { user.kinships.find_by(family: family) }
+  let(:other_user) { create :user }
+  let!(:family) { create :family, users: [user, other_user] }
+  let(:kinship) { other_user.kinships.find_by(family: family) }
   let(:kinship_id) { kinship.id }
 
   path '/api/v1/kinships/{kinship_id}/offline_member' do
@@ -16,19 +16,19 @@ RSpec.describe Api::V1::Kinships::OfflineMembersController, type: :request do
 
       response(200, 'successful') do
         before do
-          kinship.update!(role: :co_admin)
+          expect(kinship.role).to eq('member')
           stub_mandrill
         end
 
         run_test! do
-          expect(kinship.reload.role).to eq('member')
+          expect(kinship.reload.role).to eq('offline_member')
           expect(kinship.user_id).to eq(nil)
-          expect(all_emails.map(&:to).flatten).to contain_exactly(user.email)
+          expect(all_emails.map(&:to).flatten).to contain_exactly(other_user.email)
         end
       end
 
       context 'with admin' do
-        let(:family) { create :family, users: [user] }
+        let(:kinship_id) { family.admin_kinship.id }
 
         response(422, 'error') do
           run_test! do

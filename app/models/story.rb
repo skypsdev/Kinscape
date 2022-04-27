@@ -1,36 +1,7 @@
-# == Schema Information
-#
-# Table name: stories
-#
-#  id                  :integer          not null, primary key
-#  title               :string           default(""), not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  date                :string           default(""), not null
-#  description         :text             default(""), not null
-#  user_id             :integer          not null
-#  tags                :string           default([]), is an Array
-#  cover_image_id      :integer
-#  start_year          :string
-#  start_month         :string
-#  start_day           :string
-#  end_year            :string
-#  end_month           :string
-#  end_day             :string
-#  is_range            :boolean          default(FALSE)
-#  date_as_text        :string           default(""), not null
-#  comments_count      :integer          default(0), not null
-#  appreciations_count :bigint           default(0)
-#  sections_count      :integer          default(0), not null
-#  contributors_count  :integer          default(0), not null
-#  uuid                :bigint
-#  aws                 :boolean
-#  original_story_id   :integer
-#
-
 class Story < ApplicationRecord
-  include Uid
+  include Showcase
 
+  acts_as_taggable_on :categories
   acts_as_readable on: :updated_at
 
   belongs_to :user
@@ -45,9 +16,10 @@ class Story < ApplicationRecord
     has_many :sections, -> { order(:position) }, inverse_of: :story
     has_many :publications
     has_many :not_private_publications, -> { not_private_type }, class_name: 'Publication', inverse_of: :story
+    has_many :published_publications, -> { published }, class_name: 'Publication', inverse_of: :story
+    has_one :private_publication, -> { private_type }, class_name: 'Publication', inverse_of: :story
     has_many :appreciations, as: :appreciable
   end
-  has_many :media_files, through: :sections
   has_many :families, through: :publications
   has_many :family_members, through: :families, source: :users
   has_many :contributors,
@@ -68,13 +40,9 @@ class Story < ApplicationRecord
   delegate :avatar, :name, to: :user, prefix: true
 
   before_save :populate_date_as_text
-  after_commit :process_cover_variant
-
-  accepts_nested_attributes_for :sections
-  accepts_nested_attributes_for :publications
+  after_create :create_private_publication
 
   scope :with_comments, -> { includes(comments: :user).order('comments.created_at DESC') }
-  scope :draft, -> { left_outer_joins(:publications).where(publications: { id: nil }) }
   scope :published, -> {
     joins(:not_private_publications).where(publications: { publish_on: [nil, ..Time.zone.today] })
   }
@@ -116,17 +84,13 @@ class Story < ApplicationRecord
   end
 
   def cover_url(size: nil)
-    return Rails.application.routes.url_helpers.rails_blob_url(cover, only_path: true) if Rails.env.test?
+    return unless cover.attached?
+    return Rails.application.routes.url_helpers.rails_blob_url(cover, only_path: true) unless size
 
-    if cover.attached? && size
-      return Rails.application.routes.url_helpers.rails_representation_url(
-        cover.variant(resize_to_limit: IMAGE_SIZE[size]),
-        only_path: true
-      )
-    end
-    Rails.application.routes.url_helpers.rails_blob_url(cover, only_path: true) if cover.attached?
-  rescue StandardError
-    nil
+    Rails.application.routes.url_helpers.rails_representation_url(
+      cover.variant(resize_to_limit: IMAGE_SIZE[size]),
+      only_path: true
+    )
   end
 
   def story
@@ -178,9 +142,9 @@ class Story < ApplicationRecord
     Date::MONTHNAMES.index(month&.capitalize)
   end
 
-  def process_cover_variant
-    return unless cover.attached?
+  def create_private_publication
+    return if original_story_id
 
-    ProcessImageVariantJob.perform_later(self, :cover, [:medium])
+    publications.create!(share_type: :private, family_id: user.private_family.id, kinship_id: user.private_kinship.id)
   end
 end

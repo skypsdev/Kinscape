@@ -18,6 +18,14 @@ module Api
 
       def destroy
         invitations.all? { |invitation| authorize! :destroy, invitation }
+
+        invitations.each do |invitation|
+          ::MailerService.call(
+            :decline_family_invitation,
+            params: { user: current_user, family: invitation.family, admin: invitation.family.admin }
+          )
+        end
+
         invitations.destroy_all
         response_service.render_no_content
       end

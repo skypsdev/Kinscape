@@ -12,25 +12,25 @@ describe Api::V1::OwnershipTransfersController, type: :controller do
     it 'returns families' do
       expect(result).to be_successful
       expect(result.parsed_body['data'].count).to eq 1
-      expect(result.parsed_body['data'].first['id']).to eq family.uid
+      expect(result.parsed_body['data'].first['id']).to eq family.id
     end
   end
 
-  describe '#update' do
+  describe '#create' do
     subject(:result) { post :create, params: params }
 
     let(:params) do
       {
-        family_id: family.uid,
+        family_id: family.id,
         new_admin_id: new_admin.id,
-        endDate: Time.current.tomorrow,
-        timeZone: 'Europe/Warsaw'
+        end_date: Time.current.tomorrow,
+        time_zone: 'Europe/Warsaw'
       }
     end
     let(:new_admin) { create :user }
     let!(:family) { create(:family, users: [user, new_admin]) }
 
-    it 'updates an user' do
+    it 'creates an ownership transfer' do
       stub_mandrill
       expect { result }.to change(OwnershipTransfer, :count).by(1)
       expect(result).to be_successful
@@ -40,7 +40,7 @@ describe Api::V1::OwnershipTransfersController, type: :controller do
         old_admin: user,
         expires_at: be_present
       )
-      expect(emailed_addresses).to contain_exactly(new_admin.email)
+      expect(all_emails.map(&:subject)).to contain_exactly("You've Been Asked to Become an Admin")
     end
   end
 end

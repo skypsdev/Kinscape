@@ -13,7 +13,7 @@ describe BoxFilter do
   let!(:child_box) { create :box, vault: user.vault, name: 'Child', parent_box_id: box1.id }
 
   context 'without any params' do
-    let(:params) { { id: vault_id } }
+    let(:params) { { vault_id: vault_id } }
 
     it do
       expect(result.count).to eq(3)
@@ -21,7 +21,7 @@ describe BoxFilter do
   end
 
   context 'with query' do
-    let(:params) { { id: vault_id, query: 'summer' } }
+    let(:params) { { vault_id: vault_id, query: 'summer' } }
 
     it do
       expect(result.count).to eq(2)
@@ -29,7 +29,7 @@ describe BoxFilter do
   end
 
   context 'with sort' do
-    let(:params) { { id: vault_id, sort_by: 'name', sort_direction: 'ASC' } }
+    let(:params) { { vault_id: vault_id, sort_by: 'name', sort_direction: 'ASC' } }
 
     it do
       expect(result).to match_array([box3, box1, box2])
@@ -37,7 +37,7 @@ describe BoxFilter do
   end
 
   context 'with box id' do
-    let(:params) { { id: vault_id, box_id: box1.id } }
+    let(:params) { { vault_id: vault_id, box_id: box1.id } }
 
     it do
       expect(result.count).to eq(1)
@@ -48,7 +48,7 @@ describe BoxFilter do
   context 'with all combined' do
     let(:params) do
       {
-        id: vault_id,
+        vault_id: vault_id,
         sort_by: 'name',
         sort_direction: 'ASC',
         query: 'summer'

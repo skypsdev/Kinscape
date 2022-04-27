@@ -7,7 +7,7 @@ RSpec.describe Api::V1::Families::KinshipsController, type: :request do
 
   path '/api/v1/families/{family_id}/kinships' do
     parameter name: 'family_id', in: :path, type: :string
-    let(:family_id) { family.uid }
+    let(:family_id) { family.id }
 
     get('list kinships') do
       include_context 'cookie'

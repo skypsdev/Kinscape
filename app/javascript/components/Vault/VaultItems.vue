@@ -1,11 +1,11 @@
 <template>
   <div class="vault">
-    <div class="vault__grid">
+    <v-container class="vault__grid">
       <h1
-        class="vault__title mt-12"
+        class="grid__title mt-12"
         v-text="vaultTitle"
       />
-      <template v-if="vault.items.length || $route.query.query">
+      <template v-if="hideEmptyState">
         <div class="vault__toolbar">
           <Search
             class="vault__search mt-6"
@@ -24,7 +24,6 @@
           </div>
         </div>
         <div
-          v-if="vault.items.length || $route.query.query"
           class="vault__items d-flex flex-wrap justify-start"
         >
           <div
@@ -48,7 +47,7 @@
       <div v-else-if="!isLoading">
         <EmptyState />
       </div>
-    </div>
+    </v-container>
   </div>
 
 </template>
@@ -95,6 +94,9 @@ export default {
     vaultTitle() {
       return this.insideMyVaultView ? this.$i18n.t('vaults.private.label') :
         this.$i18n.t('vaults.family.label', { community: this.community.name })
+    },
+    hideEmptyState() {
+      return this.vault.items.length || this.vault.box.id || this.$route.query.query
     }
   },
   watch: {
@@ -136,37 +138,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@mixin container-grid-size() {
-  $cover_width: 288px;
-  $min_col_width: 600px;
-  width: $cover_width;
-  @for $i from 0 to 6 {
-    @media screen and (min-width: $min_col_width + $cover_width * $i) {
-      width: $cover_width * ($i + 2);
-      @if $i > 1 {
-        padding: 0 155px;
-      }
-    }
-  }
-}
 
 .vault {
   &__wrap {
     margin-top: 23px;
     padding-bottom: 24px;
   }
-  &__title {
-    font-family: Enriqueta;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 40px;
-    line-height: 54px;
-    letter-spacing: -0.02em;
-    color: $color-tertiary;
-  }
+  
   &__grid {
-    padding: 0 8px;
-    margin: 0 auto;
     @include container-grid-size();
   }
   &__items {

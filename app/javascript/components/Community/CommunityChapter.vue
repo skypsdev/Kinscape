@@ -9,13 +9,36 @@
           <v-icon>mdi-circle-small</v-icon>{{ $moment(chapter.attributes.created_at).format('Do MMM YYYY') }}
         </div>
       </div>
-      <div v-html="contentHtml"/>
+      <div :id="`chapter-content${chapter.id}`" class="chapter__content" v-html="contentHtml" />
+      <div class="chapter__toolbar mt-3">
+        <ChapterLikeButton :chapter="chapter" />
+        <v-btn
+          class="pl-0"
+          plain
+          color="primary"
+          @click="showComments = !showComments"
+        >
+          <v-icon class="mr-1" color="primary">mdi-forum-outline</v-icon>
+          {{ $i18n.t('stories.comments.other', { count: commentsCount }) }}
+          <v-icon color="primary">mdi-chevron-{{ showComments ? 'up' : 'down' }}</v-icon>
+        </v-btn>
+      </div>
+      <Comments
+        v-if="showComments"
+        commentable-type="Chapter"
+        :commentable-id="chapter.id"
+        :parent-id="community.id"
+        parent-type="Family"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Avatar from '../Elements/Avatar'
+import Comments from '../Elements/Comments'
+import ChapterLikeButton from "@/components/Elements/Chapters/ChapterLikeButton"
 
 let previousAudio
 document.addEventListener('play', function (e) {
@@ -27,7 +50,9 @@ document.addEventListener('play', function (e) {
 
 export default {
   components: {
-    Avatar
+    Avatar,
+    Comments,
+    ChapterLikeButton
   },
   props: {
     chapter: {
@@ -35,7 +60,20 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    showComments: false,
+  }),
   computed: {
+    ...mapState({
+      allComments: state => state.comments.allComments,
+      community: state => state.families.community
+    }),
+    commentsCount() {
+      const comments = this.allComments.filter((comment) => comment.attributes.commentableId === this.chapter.id)
+      let commentsLength = comments.length
+      comments.forEach((comment) => commentsLength += comment.attributes?.commentsCount || 0)
+      return commentsLength
+    },
     contentHtml () {
       let html = this.chapter.attributes.rich_body.html
       html = html.split('<br>').join('\n')
@@ -49,8 +87,8 @@ export default {
       if (regexYoutube.test(html)) {
         console.log('regexYoutube')
         const youtube = `
-        <div class='iframe-wrapper'>
-          <iframe src='https://www.youtube.com/embed/$2'></iframe>
+        <div>
+          <iframe src='https://www.youtube.com/embed/$2' width="100%" height="550" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         `
         html = html.replace(regexYoutube, youtube)
@@ -66,8 +104,8 @@ export default {
       if (regexYoutubeIframe.test(html)) {
         console.log('regexYoutubeIframe')
         const youtube = `
-        <div class='iframe-wrapper'>
-          <iframe src='https://www.youtube.com/embed/$1'></iframe>
+        <div>
+          <iframe src='https://www.youtube.com/embed/$1' width="100%" height="550" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         `
         html = html.replace(regexYoutubeIframe, youtube)
@@ -84,8 +122,8 @@ export default {
       if (regexVimeoIframe.test(html)) {
         console.log('regexVimeoIframe')
         const iframe = `
-        <div class='iframe-wrapper'>
-          <iframe src='//player.vimeo.com/video/$4'></iframe>
+        <div>
+          <iframe src='//player.vimeo.com/video/$4' width="100%" height="550" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         `
         html = html.replace(regexVimeoIframe, iframe)
@@ -100,8 +138,8 @@ export default {
       if (regexVimeo.test(html)) {
         console.log('regexVimeo')
         const iframe = `
-        <div class='iframe-wrapper'>
-          <iframe src='//player.vimeo.com/video/$5'></iframe>
+        <div>
+          <iframe src='//player.vimeo.com/video/$5' width="100%" height="550" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         `
         html = html.replace(regexVimeo, iframe)
@@ -137,6 +175,10 @@ export default {
     font-weight: normal;
     font-size: 13px;
     color: $color-grey;
+  }
+
+  ::v-deep img {
+    max-width: 80vw;
   }
 }
 </style>

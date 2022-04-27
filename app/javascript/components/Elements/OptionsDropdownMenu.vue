@@ -1,23 +1,27 @@
 <template>
   <div>
     <v-menu
-        bottom
-        offset-y
-        :nudge-left="nudgeLeft"
-        :nudge-bottom="nudgeBottom"
-        v-model="displaySwitcher"
-        content-class="dropdown-button"
-        :close-on-content-click="false"
+      bottom
+      offset-y
+      :nudge-left="nudgeLeft"
+      :nudge-bottom="nudgeBottom"
+      v-model="displaySwitcher"
+      :content-class="`dropdown-button dropdown-button-${
+        theme === 'primary' ? 'primary' : 'secondary'
+      }`"
+      :close-on-content-click="false"
     >
       <template v-slot:activator="{ on }">
-        <div
-            class="dropdown-button__activator"
-            @click="toggleSwitcher"
-        >
-          <slot name="activator" :v-on="on"/>
+        <div class="dropdown-button__activator" @click="toggleSwitcher">
+          <slot name="activator" :v-on="on" />
         </div>
       </template>
-      <div class="dropdown-button__wrapper">
+      <div
+        class="dropdown-button__wrapper"
+        :class="`dropdown-button dropdown-button-${
+          theme === 'primary' ? 'primary' : 'secondary'
+        }`"
+      >
         <slot name="content" />
       </div>
     </v-menu>
@@ -34,6 +38,10 @@ export default {
       type: Number,
       default: 0,
     },
+    theme: {
+      type: String,
+      default: "primary",
+    },
   },
   data: () => ({
     displaySwitcher: false,
@@ -42,8 +50,8 @@ export default {
     toggleSwitcher() {
       this.displaySwitcher = !this.displaySwitcher
     },
-  }
-}
+  },
+};
 </script>
 <style lang="scss" scoped>
 .dropdown-button {
@@ -66,7 +74,12 @@ export default {
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
+  }
+  &-primary:before {
     border-bottom: 8px solid $color-primary;
+  }
+  &-secondary:before {
+    border-bottom: 8px solid $color-secondary;
   }
   &:after {
     top: 1px;
@@ -85,10 +98,15 @@ export default {
   }
   &__wrapper {
     background: $color-dark-white;
-    border: 1px solid $color-primary;
     border-radius: 5px;
     margin-top: 10px;
     overflow: hidden;
+    &-primary {
+      border: 1px solid $color-primary;
+    }
+    &-secondary {
+      border: 1px solid $color-secondary;
+    }
   }
 }
 </style>

@@ -7,6 +7,7 @@
         v-model="displaySwitcher"
         content-class="shared-in-menu"
         :close-on-content-click="false"
+        :disabled="!isShared"
     >
       <template v-slot:activator="{ attrs }">
         <v-btn
@@ -20,7 +21,7 @@
             @click="toggleMenu"
         >
           <v-icon left>mdi-redo</v-icon>
-          {{ $i18n.t('stories.action_button.shared_in') }}
+          {{ $i18n.t(`stories.action_button.${isShared? 'shared_in' : 'share'}`) }}
         </v-btn>
       </template>
       <div class="shared-in-menu__wrapper">
@@ -50,8 +51,8 @@
                       size="small"
                   />
                   <span class="pl-3">
-                  {{ publication.community.attributes.name }}
-                </span>
+                    {{ publication.community.attributes.name }}
+                  </span>
                   <v-img
                       class="ml-auto mr-0"
                       max-width="15"
@@ -92,7 +93,6 @@
 <script>
 import {mapActions, mapState} from 'vuex'
 import Avatar from '../../Elements/Avatar'
-import {PublicationsRepository} from "../../../repositories";
 import Search from "../../Elements/Forms/Search";
 
 export default {
@@ -105,6 +105,9 @@ export default {
     search: '',
   }),
   computed:{
+    isShared(){
+      return this.story.publication?.attributes?.shareType == 'shared'
+    },
     ...mapState({
       story: state => state.stories.story
     }),
@@ -123,16 +126,26 @@ export default {
       setDialog: 'layout/setDialog'
     }),
     toggleMenu() {
-      this.displaySwitcher = !this.displaySwitcher
+      if (!this.isShared) {
+        this.displaySwitcher = false
+        this.setDialog({
+          component: 'ShareStoryDialog',
+          title: this.$i18n.t('stories.share_modal.with_family.title'),
+          size: 'big'
+        })
+      } else {
+        this.displaySwitcher = !this.displaySwitcher
+      }
     },
     async unShareItem (publicationId) {
-      try {
-        await PublicationsRepository.deletePublication(this.story.id, publicationId)
-        this.setSnackbar(this.$i18n.t('stories.unpublished'))
-        this.$router.go()
-      } catch (error) {
-        this.setError(error)
-      }
+      this.setDialog({
+        component: 'StoryDeleteDialog',
+        title: this.$i18n.t('stories.unshare_title'),
+        size: 'big',
+        data: {
+          publicationId
+        }
+      })
     },
     openShareDialog() {
       this.setDialog({

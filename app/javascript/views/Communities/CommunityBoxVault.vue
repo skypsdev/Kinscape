@@ -46,6 +46,6 @@ export default {
 }
 </script>
 <style lang="scss">
-  @import '@/assets/styles/components/vaultMoveDialog';
-  @import '@/assets/styles/components/vaultDetailsBtn';
+@import "@/assets/styles/components/vaultMoveDialog";
+@import "@/assets/styles/components/vaultDetailsBtn";
 </style>

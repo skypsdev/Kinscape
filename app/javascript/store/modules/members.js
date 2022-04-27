@@ -1,8 +1,7 @@
 import { FamiliesRepository, KinshipsRepository } from '../../repositories'
-import FamilySectionsRepository from '../../repositories/family-sections-repository'
+import ChaptersRepository from '../../repositories/chapters-repository'
 import { camelizeKeys, decamelizeKeys } from 'humps'
-import { Member } from "../../models/members"
-import { DirectUpload } from '@rails/activestorage'
+import { Member } from '../../models/members'
 
 const state = {
   viewType: 'grid',
@@ -13,7 +12,7 @@ const state = {
   all: [],
   responseHeaders: new Headers(),
   chapters: [],
-  activeChapter: '',
+  activeChapter: ''
 }
 
 const mutations = {
@@ -30,16 +29,10 @@ const mutations = {
     state.members = data
   },
   ADD_RECORD(state, data) {
-    state.members = [
-      ...state.members.filter(a => a.id !== data.id),
-      data
-    ]
+    state.members = [...state.members.filter((a) => a.id !== data.id), data]
   },
   ADD_RECORDS(state, data) {
-    state.members = [
-      ...state.members,
-      ...data
-    ]
+    state.members = [...state.members, ...data]
   },
   SET_RESPONSE_HEADERS(state, data) {
     state.responseHeaders = data
@@ -53,37 +46,58 @@ const mutations = {
   SET_MEMBER(state, member) {
     state.member = new Member(camelizeKeys(member))
   },
-  SET_ACTIVE_CHAPTER (state, chapter) {
+  SET_ACTIVE_CHAPTER(state, chapter) {
     state.activeChapter = chapter
   },
-  SET_TABLE_OF_CONTENT (state, links) {
+  SET_TABLE_OF_CONTENT(state, links) {
     state.member.content.links = links
   },
-  UPDATE_CHAPTERS (state, data) {
+  UPDATE_CHAPTERS(state, data) {
     state.chapters = data
   },
   SET_VIEW_TYPE(state, type) {
     state.viewType = type
-  },
+  }
 }
 
 const actions = {
-  setChangeStatus({commit}, isChanged= true) {
-    if (!state.member.isChanged) commit('SET_CHANGE_STATUS', isChanged)
+  getMyProfileByCommunityId({ commit }, {id, params={}}) {
+    return new Promise((resolve, reject) => {
+      commit('SET_LOADING', true)
+      const model = { include: 'family', ...params }
+      return KinshipsRepository.getKinshipByFamily(id, model)
+        .then((res) => {
+          res.data.included = res.included
+          commit('SET_MEMBER', res.data)
+          resolve(res.data)
+        })
+        .catch((err) => {
+          commit('SET_ERROR', true)
+          reject(err)
+        })
+        .finally(() => {
+          commit('SET_LOADING', false)
+        })
+    })
   },
-  setViewType({commit}, type) {
+  setChangeStatus({ commit }, isChanged = true) {
+    commit('SET_CHANGE_STATUS', isChanged)
+  },
+  setViewType({ commit }, type) {
     commit('SET_VIEW_TYPE', type)
   },
-  async getCurrentMembersPage ({ commit, getters }, payload) {
+  // TODO remove redundant function
+  async getCurrentMembersPage({ commit, getters }, payload) {
     commit('SET_LOADING', true)
     try {
       let requestParams = { page: getters.currentPage }
-      let { data, headers } =
-        await FamiliesRepository.listFamiliesMember(payload.id,
-            payload.type,
-            requestParams)
+      let { data, headers } = await FamiliesRepository.listFamiliesMember(
+        payload.id,
+        payload.type,
+        requestParams
+      )
       const camelizedData = camelizeKeys(data)
-      const members = camelizedData.map(member => new Member(member))
+      const members = camelizedData.map((member) => new Member(member))
       commit('SET_MEMBERS', members)
       commit('SET_RESPONSE_HEADERS', headers)
     } catch (error) {
@@ -93,19 +107,19 @@ const actions = {
       commit('SET_LOADING', false)
     }
   },
-  async loadNext ({ commit, getters }, payload = {}, params = {}) {
-    if (getters.currentPage &&
-       (getters.currentPage === getters.totalPages)) return
+  async loadNext({ commit, getters }, payload = {}, params = {}) {
+    if (getters.currentPage && getters.currentPage === getters.totalPages)
+      return
     commit('SET_LOADING', true)
     try {
       let requestParams = { page: getters.currentPage + 1, ...params }
-      let response = await
-      FamiliesRepository.listFamiliesMember(payload.id,
+      let response = await FamiliesRepository.listFamiliesMember(
+        payload.id,
         payload.type,
         requestParams
       )
       const camelizedData = camelizeKeys(response.data)
-      const members = camelizedData.map(member => new Member(member))
+      const members = camelizedData.map((member) => new Member(member))
       commit('ADD_RECORDS', members)
       commit('SET_RESPONSE_HEADERS', response.headers)
     } catch (error) {
@@ -115,17 +129,18 @@ const actions = {
       commit('SET_LOADING', false)
     }
   },
-  async getMember ({ commit }, payload) {
+  async getMember({ commit }, payload) {
     commit('SET_LOADING', true)
     try {
       let response = {}
       response = await KinshipsRepository.getKinship(
-          payload.id,
-          payload.options
+        payload.id,
+        payload.options
       )
       if (response.data) {
         response.data.included = response.included
         await commit('SET_MEMBER', response.data)
+        commit('comments/SET_COMMENTS', camelizeKeys(response.included), { root: true })
       }
       return response
     } catch (error) {
@@ -135,126 +150,118 @@ const actions = {
       commit('SET_LOADING', false)
     }
   },
-  clearMember ({ commit }) {
+  clearMember({ commit }) {
     commit('SET_MEMBER', new Member())
   },
-  clearMembers ({ commit }) {
+  clearMembers({ commit }) {
     commit('SET_MEMBERS', [])
     commit('SET_RESPONSE_HEADERS', new Headers())
   },
-  getTableOfContents ({ commit, state }) {
+  clearChapters({ commit }) {
+    commit('UPDATE_CHAPTERS', [])
+  },
+  getTableOfContents({ commit, state }) {
     let optionsData = {
       object_id: state.member.id,
       object_type: 'Kinship'
     }
     try {
-      FamilySectionsRepository.listTableOfContents(
-          optionsData
-      ).then(response => {
-        commit('SET_TABLE_OF_CONTENT', response.data.attributes.links)
-      })
+      ChaptersRepository.listTableOfContents(optionsData).then(
+        (response) => {
+          commit('SET_TABLE_OF_CONTENT', response.data.attributes.links)
+        }
+      )
     } catch (error) {
       console.log(error)
     }
   },
-  async getChapters ({ commit, state }) {
+  async getChapters({ commit, state },options={}) {
     try {
-      await FamilySectionsRepository.getSection(
-          {
-            object_id: state.member.id,
-            object_type: 'Kinship'
-          }
-      )
-          .then(response => {
-            commit('UPDATE_CHAPTERS', response.data)
-          })
+      await ChaptersRepository.getSection({
+        object_id: state.member.id,
+        object_type: 'Kinship',
+        ...options
+      }).then((response) => {
+        commit('UPDATE_CHAPTERS', response.data)
+      })
     } catch (error) {
       console.error(error)
     }
   },
-  async deleteChapter ({ dispatch, state }, payload) {
+  async deleteChapter({ dispatch, state }, payload) {
     try {
-      await FamilySectionsRepository.deleteSection(
-          payload.id,
-          {
-            object_id: state.member.id,
-            object_type: 'Kinship'
-          }
-      )
-          .then(() => {
-            dispatch('getChapters')
-            dispatch('getTableOfContents')
-          })
+      await ChaptersRepository.deleteSection(payload.id, {
+        object_id: state.member.id,
+        object_type: 'Kinship'
+      }).then(() => {
+        dispatch('getChapters')
+        dispatch('getTableOfContents')
+      })
     } catch (error) {
       console.error(error)
     }
   },
   createNewChapter({ commit, dispatch }, params) {
     commit('SET_LOADING', true)
-    FamilySectionsRepository.createSection(params)
-        .then(async (res)=> {
-          dispatch('layout/setSnackbar', 'The chapter has been created', {root: true})
-          dispatch('getTableOfContents')
-          await dispatch('getChapters')
-          dispatch('setActiveChapter', res.data.id)
-        })
-        .catch((error) => {
-          dispatch('layout/setError', error, {root: true})
-        })
-        .finally(()=> {
-          commit('SET_LOADING', false)
-        })
+    ChaptersRepository.createSection(params)
+      .then(async (res) => {
+        dispatch('getTableOfContents')
+        await dispatch('getChapters')
+        dispatch('setActiveChapter', res.data.id)
+      })
+      .catch((error) => {
+        dispatch('layout/setError', error, { root: true })
+      })
+      .finally(() => {
+        commit('SET_LOADING', false)
+      })
   },
-  updateChapter({commit, dispatch}, chapter) {
+  updateChapter({ commit, dispatch }, chapter) {
     commit('SET_LOADING', true)
-    FamilySectionsRepository.updateChapter(chapter.id, decamelizeKeys(chapter.form))
-        .then(()=> {
-          dispatch('layout/setSnackbar', 'Saved', {root: true})
-          dispatch('setChangeStatus')
-          dispatch('getTableOfContents')
-        })
-        .catch((error) => {
-          dispatch('layout/setError', error, {root: true})
-        })
-        .finally(() => {
-          commit('SET_LOADING', false)
-        })
+    ChaptersRepository.updateChapter(
+      chapter.id,
+      decamelizeKeys(chapter.form)
+    )
+      .then(() => {
+        dispatch('setChangeStatus')
+        dispatch('getTableOfContents')
+      })
+      .catch((error) => {
+        dispatch('layout/setError', error, { root: true })
+      })
+      .finally(() => {
+        commit('SET_LOADING', false)
+      })
   },
-  setActiveChapter ({commit}, chapter = '') {
+  setActiveChapter({ commit }, chapter = '') {
     commit('SET_ACTIVE_CHAPTER', chapter.toString())
   },
-  updateMember({ commit, dispatch }, payload) {
-    commit('SET_LOADING', true)
-    KinshipsRepository.updateKinship(payload.id, decamelizeKeys(payload.form))
-        .then((res)=> {
-          commit('SET_MEMBER', {...res.data})
-          dispatch('layout/setSnackbar', 'Saved', {root: true})
-          dispatch('setChangeStatus')
-        })
-        .catch((error) => {
-          dispatch('layout/setError', error, {root: true})
-        })
-        .finally(() => {
-          commit('SET_LOADING', false)
-        })
+  async updateMember({ commit, dispatch }, payload) {
+    try {
+      commit('SET_LOADING', true)
+      const res = await KinshipsRepository.updateKinship(payload.id, decamelizeKeys(payload.form))
+      commit('SET_MEMBER', { ...res.data })
+
+      dispatch('setChangeStatus')
+
+      return Promise.resolve()
+    } catch (error) {
+      dispatch('layout/setError', error, { root: true })
+      return Promise.reject()
+    } finally {
+      commit('SET_LOADING', false)
+    }
   },
-  updateAvatar({commit, dispatch}, image) {
-    commit('SET_LOADING', true)
-    const upload = new DirectUpload(image, '/rails/active_storage/direct_uploads')
-    upload.create((error, blob) => {
-      if (error) {
-        commit('SET_LOADING', false)
-        throw new Error(`Direct upload failed: ${error}`)
-      } else {
-        dispatch('updateMember', {
-          id: state.member.id,
-          form: {
-            avatar: blob.signed_id
-          }
-        })
+  updateAvatar({ state, dispatch }, payload) {
+    if (!payload) throw new Error('Empty payload')
+
+    return dispatch('updateMember', {
+      id: state.member.id,
+      form: {
+        avatar: payload
       }
     })
-  },
+  }
 }
 
 const getters = {
@@ -274,7 +281,7 @@ const getters = {
     return parseInt(state.responseHeaders.get('Total-Pages') || 0)
   },
   load: (state) => {
-    return id => state.members.find(a => a.id === id)
+    return (id) => state.members.find((a) => a.id === id)
   }
 }
 

@@ -68,20 +68,31 @@ Create seeds
 
     docker-compose run app rails db:seed
 
+Mailer Preview
+-------
+Link to list with prepared previews
+
+    http://localhost:3000/rails/mailers
+
+File where previews methods are defined
+
+    spec/mailers/previews/mailer_preview.rb
+
 Testing
 -------
-To run the unit test suite, run the following command:
+### Unit
+To run test suite, use the following command:
 
     bundle exec rspec
 
-Alternatively, you can run guard to run the tests automatically on file changes,
-as well as installing bundler and yarn packages automatically:
+### Feature
+To run test suite, use the following command:
 
-    bundle exec guard
+    bundle exec cucumber
 
-Within the guard console, you can trigger the entire suite by typing the following command:
+To run it with headless mode:
 
-    all
+    CI=true bundle exec cucmber
 
 Deployment
 ----------

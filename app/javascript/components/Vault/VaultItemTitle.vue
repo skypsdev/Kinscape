@@ -1,6 +1,6 @@
 <template>
   <v-card-title
-    :class="isBox && 'vault-card__title--box' "
+    :class="itemIsBox && 'vault-card__title--box'"
     class="vault-card__title"
   >
     <input
@@ -11,10 +11,10 @@
       :disabled="loading"
       @blur="updateName"
       @keyup.enter="updateName"
-    >
+    />
     <span
       v-else
-      :class="isBox && 'vault-title--box' "
+      :class="itemIsBox && 'vault-title--box'"
       v-text="truncate(name)"
       :title="name"
     />
@@ -28,6 +28,7 @@ import _ from 'lodash'
 import vaultIdMixin from '@/components/Vault/mixins/vaultIdMixin.js'
 import vaultPermissions from '@/components/Vault/mixins/vaultPermissionsMixin.js'
 import filters from '@/utils/filters'
+import { splitExtension } from '@/utils/common'
 
 export default {
   name: "VaultItemTitle",
@@ -50,31 +51,26 @@ export default {
     }),
     ...mapState('vaults', ['loading', 'vault']),
     canRename() {
-      return this.canAddBoxesToVault()
+      return this.canAddBoxesToVault(this.vault)
     },
     editMode() {
       return Boolean(this.isSelected(this.item.id, this.item.attributes.itemType))
     },
     extension() {
-      return this.isBox === false && this.item?.attributes?.name?.split('.').pop()
+      return this.itemIsBox === false && splitExtension(this.item?.attributes?.name)[1]
     },
-    isBox() {
-      return this.item?.attributes?.itemType === 'box'
-    },
-    insideMyVaultView() {
-      return ["MyVault", "MyBoxVault"].includes(this.$route.name)
+    itemIsBox() {
+      return this.isBox(this.item)
     },
     name: {
       get() {
         if (this.item) {
           let { name } = this.item.attributes
           // should return full name if it's box or is not in edit mode
-          if (this.isBox || !this.editMode) return name
+          if (this.itemIsBox || !this.editMode) return name
 
           // pop extension in edit mode
-          name = this.item.attributes.name.split('.')
-          name.pop()
-          return name.join('.')
+          return splitExtension(name)[0]
         } else return ''
 
       },
@@ -83,7 +79,7 @@ export default {
         if (this.nameCopy.trim() == value.trim()) return
 
 
-        if (!this.isBox) value = `${value}.${this.extension}`
+        if (!this.itemIsBox) value = `${value}.${this.extension}`
 
         const { id } = this.item
         const { itemType } = this.item.attributes
@@ -114,9 +110,7 @@ export default {
         const { id: boxId } = this.item
         let { vaultId, name } = this;
 
-        if (!this.isBox) name = `${name}.${this.extension}`
-
-        if (this.isBox) {
+        if (this.itemIsBox) {
           await this.updateBox({ vaultId, boxId, payload: { name } })
         } else {
           await this.updateAttachment({ vaultId, boxId, payload: { title: name } })
@@ -131,65 +125,5 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.vault-card__title {
-  height: 36px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &--box {
-    height: 42px;
-  }
-
-  span {
-    font-family: Lato;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 17px;
-
-    text-align: center;
-
-    color: $color-text;
-    &:not(.vault-title--box) {
-      //truncate
-      width: 100px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    &.vault-title--box {
-      font-family: Lato;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 120%;
-      padding: 5px 9px;
-
-      color: $tertiary;
-    }
-  }
-
-  input {
-    max-width: 113px;
-    background: #ffffff;
-    border: 1px solid $color-medium-grey;
-    box-sizing: border-box;
-    height: 24px;
-    border-radius: 5px;
-    font-family: Lato;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 13px;
-    line-height: 16px;
-    color: #666666;
-    outline: none;
-    padding: 0 9px;
-    &:focus {
-      border-color: darken($color-medium-grey, 5%);
-    }
-  }
-}
+<style lang="scss" src="./VaultItemTitle.scss" scoped>
 </style>

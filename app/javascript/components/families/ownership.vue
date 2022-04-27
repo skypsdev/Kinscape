@@ -3,20 +3,22 @@
     <div class="for-form">
       <div>
         <h2 class="form-title">
-          Change Administrator
+          {{ $i18n.t('transfer.form.title') }}
         </h2>
         <div class="form-subtitle for-subtitle">
-          Transfer Account Ownership from You to Different Community Member
+          {{ $i18n.t('transfer.form.subtitle') }}
         </div>
         <form class="simple_form transfer">
           <h5 class="ui-section-title">
-            Choose Community you want to change
+            {{ $i18n.t('transfer.form.choose_family_to_go') }}
           </h5>
         
           <fieldset>
             <div class="row">
               <div>
-                <label>Choose Community</label>
+                <label>
+                  {{ $i18n.t('transfer.form.choose_family') }}
+                </label>
                 <v-select
                   v-model="family"
                   :get-option-label="option => option.attributes.name"
@@ -29,7 +31,9 @@
               <div
                 v-if="selectedId"
               >
-                <label>Choose Member</label>
+                <label>
+                  {{ $i18n.t('transfer.form.choose_member') }}
+                </label>
                 <v-select
                   v-model="member"
                   label="name"
@@ -38,21 +42,12 @@
                   :options="members"
                 />
               </div>
-              <!-- <div
-                v-if="selectedId"
-                class="column pt22"
-              >
-                <label>Start Date</label>
-                <input
-                  id="startDt"
-                  v-model="startDate"
-                  type="datetime-local"
-                >
-              </div> -->
               <div
                 v-if="selectedId"
               >
-                <label>End Date</label>
+                <label>
+                  {{ $i18n.t('transfer.form.end_date') }}
+                </label>
                 <input
                   id="endDt"
                   v-model="endDate"
@@ -76,9 +71,7 @@
           </fieldset>
         
           <p>
-            An email will be sent to selected Community Member asking them to
-            accept or decline Community Administrator responsibilities and
-            ownership of this Community Account.
+            {{ $i18n.t('transfer.form.transferee_instructions') }}
           </p>
         </form>
       </div>
@@ -93,15 +86,22 @@ import 'vue-select/dist/vue-select.css'
 import familiesRepository from '../../repositories/families-repository'
 export default {
   components: { vSelect },
+  props: {
+    families: {
+      type: Array,
+      required: true
+    },
+    kinships: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
       family: '',
-      families: [],
-      kinships: '',
-      candidates: '',
       selectedId: '',
-      members: [],
       member: '',
+      members: [],
       // startDate: '',
       endDate: '',
       timeZone: ''
@@ -112,44 +112,21 @@ export default {
       currentUser: state => state.core.user
     })
   },
-  async created () {
-    try {
-      await familiesRepository.ownershipData()
-        .then(response => {
-          this.families = response.data.filter(i =>
-            i.attributes.connector_id.toString() ===
-              this.currentUser.id.toString()
-          )
-          this.kinships = response.included.filter(i => i.type === 'kinship')
-          this.candidates = response.included.filter(i => i.type === 'user')
-        })
-    } catch (error) {
-      console.log(error)
-    }
-  },
   methods: {
     ...mapActions({
       failureFlashMessage: 'failureFlashMessage',
       successFlashMessage: 'successFlashMessage'
     }),
-    onInput (value) {
-      this.selectedId = value.id
+    onInput (family) {
+      this.selectedId = family.id
       this.member = ''
-      this.members = []
-
-      let familyIds = []
-      this.kinships.map(k => {
-        if (k.attributes.family_id === this.selectedId) {
-          familyIds.push(k.attributes.user_id.toString())
-        }
-      })
-
-      this.candidates.map(c => {
-        if (familyIds.includes(c.id) && c.id !== this.currentUser.id) {
-          this.members.push({
-            name: c.attributes.name,
-            id: c.id
-          })
+      this.members = this.kinships.map(kinship => {
+        if (kinship.attributes.family_id === this.selectedId) {
+          return {
+            name: kinship.attributes.name,
+            userId: kinship.attributes.user_id,
+            id: kinship.id
+          }
         }
       })
 
@@ -181,12 +158,10 @@ export default {
       this.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
       let payload = {
         family_id: this.selectedId,
-        new_admin_id: this.member.id,
-        // startDate: this.startDate,
-        endDate: this.endDate,
-        timeZone: this.timeZone
+        new_admin_id: this.member.userId,
+        end_date: this.endDate,
+        time_zone: this.timeZone
       }
-      // if (!this.flag) {
       try {
         await familiesRepository.ownershipDataPost(payload)
           .then(response => {
@@ -194,7 +169,6 @@ export default {
               this.successFlashMessage(
                 'Administrator Change request sent Successfully.'
               )
-              // this.startDate = ''
               this.endDate = ''
               this.member = ''
               this.flag = false
@@ -205,9 +179,6 @@ export default {
       } catch (error) {
         this.failureFlashMessage(this.$i18n.t('requests.failure'))
       }
-      // } else {
-      //   this.failureFlashMessage('Please enter valid end date.')
-      // }
     }
   }
 }

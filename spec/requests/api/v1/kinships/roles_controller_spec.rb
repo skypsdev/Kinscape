@@ -2,8 +2,9 @@ require 'swagger_helper'
 
 RSpec.describe Api::V1::Kinships::RolesController, type: :request do
   let(:user) { create :user }
-  let!(:family) { create :family, users: [user] }
-  let(:kinship) { user.kinships.find_by(family: family) }
+  let(:member) { create :user }
+  let!(:family) { create :family, users: [user, member] }
+  let(:kinship) { member.kinships.find_by(family: family) }
   let(:kinship_id) { kinship.id }
 
   path '/api/v1/kinships/{kinship_id}/role' do
@@ -26,9 +27,12 @@ RSpec.describe Api::V1::Kinships::RolesController, type: :request do
           }
         }
       end
+      before { stub_mandrill }
+
       response(200, 'successful', save_request_example: :payload) do
         run_test! do
           expect(response.parsed_body['data']['attributes']['role']).to eq('co_admin')
+          expect(all_emails.map(&:subject)).to contain_exactly("Your Role Changed in #{family.name}")
         end
       end
     end

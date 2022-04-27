@@ -9,7 +9,7 @@ export const sectionsMixin = {
     chapterList () {
       try {
         StoriesRepository.listTableOfContents(
-          this.storyId
+          this.story.publication.id
         ).then(response => {
           this.updateChapterList(response.data.attributes.links)
         })
@@ -24,7 +24,6 @@ export const sectionsMixin = {
         this.sectionLoader(position, sections)
       }
       const params = {
-        media_type: 'text',
         position: position,
         title: this.$i18n.t('sections.title_placeholder'),
         rich_body: '<p>' + this.$i18n.t('sections.body_placeholder') + '</p>'
@@ -32,7 +31,7 @@ export const sectionsMixin = {
       this.$emit('update:savingStatus', 'started')
       try {
         const response =
-          await SectionsRepository.createSection(story.id, params)
+          await SectionsRepository.createSection(story.publication.id, params)
         this.$emit('success')
         this.$emit('update:storyChanged', true)
         this.$emit('update:savingStatus', 'finished')
@@ -58,7 +57,7 @@ export const sectionsMixin = {
         this.$emit('update:savingStatus', 'started')
         try {
           await SectionsRepository.updateSection(
-            this.storyId, section.id, section.attributes
+            this.story.publication.id, section.id, section.attributes
           )
           this.chapterList()
 

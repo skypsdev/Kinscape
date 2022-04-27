@@ -1,0 +1,61 @@
+.vault-card__title {
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    &--box {
+      height: 42px;
+    }
+  
+    span {
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 17px;
+  
+      text-align: center;
+  
+      color: $color-text;
+      &:not(.vault-title--box) {
+        //truncate
+        width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      &.vault-title--box {
+        font-family: Lato;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 120%;
+        padding: 5px 9px;
+  
+        color: $tertiary;
+      }
+    }
+  
+    input {
+      max-width: 113px;
+      background: #ffffff;
+      border: 1px solid $color-medium-grey;
+      box-sizing: border-box;
+      height: 24px;
+      border-radius: 5px;
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 13px;
+      line-height: 16px;
+      color: #666666;
+      outline: none;
+      padding: 0 9px;
+      &:focus {
+        border-color: darken($color-medium-grey, 5%);
+      }
+    }
+  }
+  

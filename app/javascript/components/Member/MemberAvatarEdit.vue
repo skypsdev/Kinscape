@@ -1,95 +1,69 @@
 <template>
-  <label class="avatar-edit">
+  <label class="avatar-edit" @click="openFileUpload">
     <div class="avatar-edit__image">
-      <v-icon
-          v-if="!isCustomAvatar"
-          class="avatar-edit__icon"
-          color="#C4C4C4"
-      >
+      <v-icon v-if="!avatarUrl" class="avatar-edit__icon" color="#C4C4C4">
         mdi-image-outline
       </v-icon>
-      <v-avatar
-          size="208"
-          v-else
-      >
-        <v-img
-            :src="url"
-            height="208px"
-        >
+      <v-avatar size="208" v-else>
+        <v-img :src="avatarUrl" height="208px">
           <template v-slot:placeholder>
             <div class="d-flex justify-center">
               <v-progress-circular
-                  class="mt-16"
-                  indeterminate
-                  color="#C4C4C4"
+                class="mt-16"
+                indeterminate
+                color="#C4C4C4"
               />
             </div>
           </template>
         </v-img>
       </v-avatar>
-      <v-file-input
-          ref="inputCommunityAvatar"
-          id="avatar"
-          class="hidden-input-file"
-          accept="image/*"
-          hide-input
-          v-model="image"
-          :disabled="member.isLoading"
-          @change="handleImageChange"
-      />
     </div>
 
     <div class="avatar-edit__label">
       <template v-if="!member.isLoading">
         {{ inputLabel }}
       </template>
-      <v-progress-circular
-          v-else
-          indeterminate
-          color="#C4C4C4"
-      />
+      <v-progress-circular v-else indeterminate color="#C4C4C4" />
     </div>
   </label>
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
-  data () {
-    return {
-      image: null,
-      url: null,
-    }
-  },
   computed: {
     ...mapState({
-      member: store => store.members.member
+      member: (store) => store.members.member
     }),
-    isCustomAvatar() {
-      return this.image || this.url
+    avatarUrl() {
+      return this.member.avatarUrl
     },
     inputLabel() {
-      return (this.isCustomAvatar)
-          ? this.$i18n.t('communities.member.edit.change_avatar')
-          : this.$i18n.t('communities.member.edit.select_avatar')
+      return this.avatarUrl
+        ? this.$i18n.t('communities.member.edit.change_avatar')
+        : this.$i18n.t('communities.member.edit.select_avatar')
     }
-  },
-  watch: {
-    'member.avatarUrl' () {
-      this.url = this.member.avatarUrl
-    }
-  },
-  mounted () {
-    this.url = this.member.avatarUrl
   },
   methods: {
     ...mapActions({
-      updateAvatar: 'members/updateAvatar',
+      setDialog: 'layout/setDialog',
+      updateAvatar: 'members/updateAvatar'
     }),
-    handleImageChange() {
-      this.url= URL.createObjectURL(this.image)
-      if (this.image) this.updateAvatar(this.image)
+    async handleImageChange([image]) {
+      try {
+        await this.updateAvatar(image.signedId)
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    openFileUpload() {
+      this.setDialog({
+        component: 'UploadDialog',
+        customClass: 'upload-dialog',
+        customSize: '800px',
+        data: { callback: this.handleImageChange },
+      })
     }
   }
 }
@@ -119,7 +93,7 @@ export default {
     position: absolute;
     bottom: 30px;
     width: 100%;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 0 0 3px 3px;
     opacity: 0.8;
     display: flex;

@@ -1,6 +1,13 @@
 .pages-wrapper.pb0
   .for-header
-    sub-header()
+    div
+      nav.my-life-submenu.mt-10
+        .story-tabs.family-tabs
+          a.tab href= "/account"
+            | Account Info
+          a.tab href="/communityInfo"
+            | Community Info
+
 
   .account-title
     = t('account.title', user_name: current_user.name)
@@ -13,92 +20,6 @@
       div.display-flex.g15.w100
         = f.input :email, as: :email
         = f.input :password, as: :password
-      span.fa.fa-fw.fa-eye.field-icon.toggle-password toggle="#password-field" 
-
       hr
-        = f.submit "Update account information", :class => 'w50'
-        .account-control.w50
-          delete-account(:current-user="#{current_user_serialize(current_user)}")
-  
-  .account__actions.storage_acttion 
-    .account__actions-item
-      = t('account.storage.header', user: current_user.name)
-      |:&nbsp;
-      b
-        = number_to_human_size(current_user.storage_size)
-  / For staging
-  - if false
-    .account__actions
-      .account__actions-item.btn_user
-        / = current_user.subscription.status
-        = link_to 'As Guest User', as_guest_user_user_path(current_user), class: 'guest_user'
-        = link_to 'As Active User', as_active_user_user_path(current_user), class: 'active_user'
-  - if false #Temp. remove payment feature
-    - if @subscription
-      .account__subscription
-        = render @subscription
-    - elsif current_user.connector?
-      = link_to t('account.actions.subscribe'),
-        renew_subscription_path,
-          method: :post
-
-
-  - if false #Temp. remove payment feature
-      .account__actions-title
-        = t('account.actions.subscription_status')
-      .account__actions-item.current-plan
-        p
-          = t('account.plans.title')
-          |:&nbsp;
-          b
-            = current_plan
-      - if @subscription
-        - if @subscription.active?
-          .account__actions-item.paid
-            p
-              = t('account.actions.last_payment_on')
-              |:&nbsp;
-              b
-                = Time.at(@billing&.current_period_start).strftime('%B %d, %Y')
-            p
-              = t('account.actions.renews')
-              |:&nbsp;
-              b
-                = Time.at(@billing&.current_period_end).strftime('%B %d, %Y')
-            br
-            - if @subscription.cancel_at_period_end
-              = link_to t('account.actions.resume_subscription'), resume_subscription_path, method: :post
-            - else
-              = link_to t('account.actions.upgrade_now'), new_billing_card_path, class: 'upgrade'
-              br
-              = link_to t('account.actions.cancel_subscription'), cancel_subscription_path, method: :post, class: 'cancel'
-
-        - else
-          .account__actions-item.free
-            - if @subscription.trialing?
-              p
-                = raw t('account.actions.trial_days_left', day: @subscription.trial_days)
-            - elsif @subscription.trial_past_due?
-              p
-                = t('account.actions.past_due')
-            = link_to t('account.actions.upgrade_now'), new_billing_card_path
-- content_for :javascript do
-  javascript:
-    $( document ).ready(function() {
-      $(document).on("click",".toggle-password",function() {
-        $(this).toggleClass("fa-eye fa-eye-slash");
-        var input = $("#user_password");
-        if (input.attr("type") == "password") {
-          input.attr("type", "text");
-        } else {
-          input.attr("type", "password");
-        }
-      });
-    });
-    
-
-
-- content_for :head do
-  = javascript_packs_with_chunks_tag 'families/index_for_account',
-                                     'account/delete_account'
+        = f.submit "Update account information"
 

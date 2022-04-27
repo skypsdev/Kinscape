@@ -152,7 +152,7 @@ export default {
     ...mapActions({
       closeDialog: 'layout/closeDialog',
       setSnackbar: 'layout/setSnackbar',
-      getVault: 'vaults/getVault',
+      getVaultItems: 'vaults/getVaultItems',
       getBox: 'vaults/getBox',
       clearSelectedAttachments: 'vaults/clearSelectedAttachments',
       clearVault: 'vaults/clearVault',
@@ -196,7 +196,7 @@ export default {
         // refetch data
         const { boxId } = this.$route.params
         if (this.insideBoxView) this.getBox({ vaultId, boxId })
-        else this.getVault({ vaultId, params: { page: 1 } })
+        else this.getVaultItems({ vaultId, params: { page: 1 } })
 
       } finally {
         this.onLoaded()

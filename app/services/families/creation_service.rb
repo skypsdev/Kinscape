@@ -9,15 +9,10 @@ module Families
       Family.create(
         **sanitized_params,
         kinships_attributes: [{
-          user: current_user,
           role: :admin,
-          nickname: current_user.first_name
-        }],
-        vault_attributes: {
-          boxes_attributes: [{
-            name: current_user.name
-          }]
-        }
+          nickname: current_user.name,
+          user_id: current_user.id
+        }]
       )
     end
 

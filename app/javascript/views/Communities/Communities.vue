@@ -20,6 +20,7 @@ import FamiliesLoader from '../../components/families/families-loader'
 import GridView from "../../components/Communities/GridView";
 import ListView from "../../components/Communities/ListView";
 import EmptyState from "../../components/Communities/EmptyState";
+import { communitiesShowCaseConfig, communitiesShowCaseData } from '@/plugins/showcaseStaticData';
 
 export default {
   name: 'Communities',
@@ -27,8 +28,7 @@ export default {
   computed: {
     ...mapState({
       viewType: state => state.families.viewType,
-      searchTerm: state => state.families.filters.search.query,
-      currentUser: state => state.core.user
+      searchTerm: state => state.families.filters.search.query
     }),
     ...mapGetters({
       isLoading: 'families/isLoading',
@@ -45,12 +45,10 @@ export default {
     }
   },
   watch: {
-    searchTerm () {
-      this.loadFamiliesWithFilters()
+    searchTerm :{
+      handler:'loadFamiliesWithFilters',
+      immediate: true
     }
-  },
-  created () {
-    this.loadFamiliesWithFilters()
   },
   mounted () {
     let query = Object.assign({}, this.$route.query)
@@ -90,6 +88,15 @@ export default {
         })
       }
     }
+
+    if (localStorage.getItem('tour') && !localStorage.getItem('fromPreviousTourStep')) {
+      this.showTour()
+    }
+
+    this.$eventBus.on('show-tour',()=>{
+      this.loadFamiliesWithFilters()
+      this.showTour()
+    })
   },
   methods: {
     ...mapActions({
@@ -107,13 +114,23 @@ export default {
         $state.complete()
       }
     },
-    loadFamiliesWithFilters () {
+    loadFamiliesWithFilters() {
       this.clearFamilies()
       let params = { query: this.searchTerm, page: 1 }
+
+      if (localStorage.getItem('tour') || localStorage.getItem('fromPreviousTourStep')) {
+        params.showcase = true
+      }
       this.loadFamilies(params)
     },
     familyChanged (familyID) {
       window.location = '/communities/' + familyID + '/edit'
+    },
+    showTour(){
+      this.$driver
+        .init(communitiesShowCaseConfig(this))
+        .defineSteps(communitiesShowCaseData(this.$driver, this))
+        .start()
     }
   }
 }

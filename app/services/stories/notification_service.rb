@@ -1,18 +1,31 @@
 module Stories
   class NotificationService
     class << self
-      def notify_contribution(publication, user)
+      def notify_contribution(publication, user, changed_attr)
         publication.update(notified_at: Time.zone.now)
+        section = publication.story.sections.find_by(id: changed_attr[:added_chapter]) if changed_attr[:added_chapter]
         recipients = publication.family.users.where.not(id: user.id)
         recipients.each do |recipient|
-          ::MailerService.call(
-            :story_updated,
-            params: {
-              publisher: user,
-              recipient: recipient,
-              publication: publication
-            }
-          )
+          if changed_attr[:added_chapter]
+            ::MailerService.call(
+              :story_updated_chapter_added,
+              params: {
+                publisher: user,
+                recipient: recipient,
+                publication: publication,
+                section: section
+              }
+            )
+          elsif changed_attr[:changed_generic]
+            ::MailerService.call(
+              :story_updated,
+              params: {
+                publisher: user,
+                recipient: recipient,
+                publication: publication
+              }
+            )
+          end
         end
       end
 
@@ -34,16 +47,21 @@ module Stories
         end
       end
 
-      def notify_appreciation(publication, user)
-        return if user == publication.story.user
+      def notify_appreciation(appreciable, user, publication_id)
+        template, params = nil
+        if appreciable.instance_of?(Publication)
+          return if user == appreciable.story.user
 
-        ::MailerService.call(
-          :appreciate_on_story,
-          params: {
-            user: user,
-            publication: publication
-          }
-        )
+          template = :appreciate_on_story
+          params = { user: user, publication: appreciable }
+        elsif appreciable.instance_of?(Section)
+          return if user == appreciable.author
+
+          template = :appreciate_on_chapter
+          params = { publication_id: publication_id, section: appreciable }
+        end
+
+        ::MailerService.call(template, params: params)
       end
     end
   end

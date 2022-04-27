@@ -20,7 +20,7 @@ export default {
           to: '/stories',
         },
         {
-          label: this.community.attributes.name || this.$i18n.t('stories.private_stories'),
+          label: this.community.name || this.$i18n.t('stories.private_stories'),
           icon: this.community.id ? 'mdi-account-multiple-outline' : 'mdi-lock-outline',
           list: this.allPublications,
         },
@@ -31,7 +31,7 @@ export default {
       ]
     },
     community() {
-      return this.story.communities.length ? this.story.communities[0] : {attributes: {}}
+        return this.story.community.id ? this.story.community : {}
     },
     allPublications() {
       return this.story.publication?.attributes?.allPublications || []
@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      loadSections: 'sections/loadNext',
       updateChapterList: 'stories/updateChapterList'
     }),
   }

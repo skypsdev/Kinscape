@@ -11,11 +11,15 @@ class VaultItemSerializer < BaseSerializer
     object.is_a?(Box) ? nil : object.user_id
   end
 
+  attribute :family_id do |object|
+    object.is_a?(Box) ? nil : object.family&.id
+  end
+
   attribute :user_name do |object|
     if object.is_a?(Box) || object.user.nil?
       nil
     elsif object.family_id.present?
-      object.user.kinships.find_by(family_id: object.family_id)&.nickname
+      object.user.all_kinships.find_by(family_id: object.family_id)&.nickname
     else
       object.user.name
     end
@@ -26,7 +30,13 @@ class VaultItemSerializer < BaseSerializer
   end
 
   attribute :name do |object|
-    object.is_a?(Box) ? object.name : (object.title || object.filename)
+    if object.is_a?(Box)
+      object.name
+    elsif object.title.present?
+      "#{object.title}.#{object.filename.extension}"
+    else
+      object.filename
+    end
   end
 
   attribute :item_type do |object|
@@ -57,6 +67,12 @@ class VaultItemSerializer < BaseSerializer
       []
     else
       Concern::Box.get_parents(object.parent_box)
+    end
+  end
+
+  attribute :blob_signed_id do |object|
+    if object.is_a?(ActiveStorage::Attachment)
+      object.blob.signed_id
     end
   end
 end

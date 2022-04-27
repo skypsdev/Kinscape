@@ -1,25 +1,15 @@
-# == Schema Information
-#
-# Table name: sections
-#
-#  id         :integer          not null, primary key
-#  body       :text
-#  story_id   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  media_type :string           not null
-#  position   :integer          not null
-#  author_id  :integer
-#  title      :string
-#  aws        :boolean
-#
-
 class Section < ApplicationRecord
+  include Showcase
+
   acts_as_list scope: :story, top_of_list: 0
 
   belongs_to :story, counter_cache: true, touch: true
   belongs_to :author, class_name: 'User'
+  belongs_to :kinship, optional: true
+  belongs_to :original_section, class_name: 'Section', optional: true
 
+  has_many :publications, through: :story
+  has_many :appreciations, as: :appreciable, dependent: :destroy
   has_many :comments,
            -> { order(:created_at) },
            dependent: :destroy,
@@ -33,22 +23,10 @@ class Section < ApplicationRecord
 
   after_commit :update_story_contributors!
 
-  # DEPRECATED BEGIN
-  has_many :attachments,
-           -> { order(:position) },
-           as: :containable,
-           dependent: :destroy,
-           inverse_of: :containable
-
-  has_many :media_files, through: :attachments
-  accepts_nested_attributes_for :attachments, allow_destroy: true
-  # DEPRECATED END
-
   delegate :user, to: :story
   delegate :name, to: :author, prefix: true
 
   # Used for displaying the number of contributors to a story
-  # TODO: Use counter_cache instead callback
   def update_story_contributors!
     story.update_column(:contributors_count, story.contributors.size) if story.persisted?
   end

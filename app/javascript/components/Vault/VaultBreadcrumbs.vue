@@ -66,10 +66,9 @@ export default {
       return this.insideMyVaultView ? this.$i18n.t('vault.my_vault') : `${this.community.name} ${this.$i18n.t('vaults.breadcrumb.vault')}`
     },
     fullBreadcrumb() {
-      let breadcrumb = [...this.vault?.attributes?.parent_boxes || [],]
-
-      if (this.vault?.attributes?.item_type == 'box') {
-        breadcrumb.push({ id: this.vault.id, name: this.vault?.attributes?.name })
+      let breadcrumb = [...this.vault.box.parentBoxes || [],]
+      if (this.vault.box.itemType === 'box') {
+        breadcrumb.push({ id: this.vault.box.id, name: this.vault.box.name })
       }
 
       return breadcrumb;
@@ -92,7 +91,7 @@ export default {
       return {
         name: this.insideMyVaultView ? 'MyBoxVault' : 'CommunityBoxVault', params: {
           boxId,
-          id: this.vaultId
+          id: this.community.id
         }
       }
     },

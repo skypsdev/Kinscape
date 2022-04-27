@@ -19,7 +19,7 @@ describe AttachmentFilter do
   let!(:box_attachment) { create :active_storage_attachment, record: user.vault, blob: image_blob4, box: box }
 
   context 'without any params' do
-    let(:params) { { id: vault_id } }
+    let(:params) { { vault_id: vault_id } }
 
     it do
       expect(result.count).to eq(3)
@@ -27,7 +27,7 @@ describe AttachmentFilter do
   end
 
   context 'with query - result from title' do
-    let(:params) { { id: vault_id, query: 'summer' } }
+    let(:params) { { vault_id: vault_id, query: 'summer' } }
 
     it do
       expect(result.count).to eq(1)
@@ -35,7 +35,7 @@ describe AttachmentFilter do
   end
 
   context 'with query - result from filename' do
-    let(:params) { { id: vault_id, query: 'image' } }
+    let(:params) { { vault_id: vault_id, query: 'image' } }
 
     it do
       expect(result.count).to eq(2)
@@ -43,7 +43,7 @@ describe AttachmentFilter do
   end
 
   context 'with sort' do
-    let(:params) { { id: vault_id, sort_by: 'name', sort_direction: 'ASC' } }
+    let(:params) { { vault_id: vault_id, sort_by: 'name', sort_direction: 'ASC' } }
 
     it do
       expect(result).to match_array([attachment3, attachment1, attachment2])
@@ -51,7 +51,7 @@ describe AttachmentFilter do
   end
 
   context 'with box id' do
-    let(:params) { { id: vault_id, box_id: box.id } }
+    let(:params) { { vault_id: vault_id, box_id: box.id } }
 
     it do
       expect(result.count).to eq(1)
@@ -62,7 +62,7 @@ describe AttachmentFilter do
   context 'with all combined' do
     let(:params) do
       {
-        id: vault_id,
+        vault_id: vault_id,
         sort_by: 'name',
         sort_direction: 'ASC',
         query: 'image'

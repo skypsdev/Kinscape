@@ -6,12 +6,26 @@ module Stories
     end
 
     def call
-      rendered_string = ApplicationController.render(
+      body = ApplicationController.render(
         template: 'pdf/story',
         layout: 'pdf',
         assigns: { story: story }
       )
-      pdf_data = WickedPdf.new.pdf_from_string(rendered_string)
+      footer = ApplicationController.render(
+        template: 'pdf/footer',
+        layout: 'pdf'
+      )
+      pdf_data = WickedPdf.new.pdf_from_string(
+        body,
+        footer: { content: footer },
+        zoom: 1.5,
+        margin: {
+          top: 15,
+          bottom: 15,
+          left: 10,
+          right: 10
+        }
+      )
       File.open(pdf_file_path, 'wb') { |file| file << pdf_data }
     end
 

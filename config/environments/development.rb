@@ -1,6 +1,10 @@
 require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
+  # Configure 'rails notes' to inspect Cucumber files
+  config.annotations.register_directories('features')
+  config.annotations.register_extensions('feature') { |tag| /#\s*(#{tag}):?\s*(.*)$/ }
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time
@@ -65,6 +69,7 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
   config.assets.raise_runtime_errors = true
+  config.asset_host = 'http://localhost:3000'
 
   # Raises error for missing translations.
   config.i18n.raise_on_missing_translations = true
@@ -79,7 +84,8 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  config.hosts += ['kinscape.dev', 'kinscape.local', 'kinscape.test', 'lvh.me', 'localhost:3000']
+  config.hosts += ['kinscape.dev', 'kinscape.local', 'kinscape.test', 'lvh.me', 'localhost:3000',
+                   /[a-z0-9-]+\.ngrok\.io/]
 
   config.after_initialize do
     Bullet.enable                      = true

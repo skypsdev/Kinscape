@@ -4,25 +4,23 @@ html
     meta charset="utf-8"
     meta name="ROBOTS" content="NOODP"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
-    meta name="filestack-api-key" content="#{ENV['FILEPICKER_API_KEY']}"
-    meta name="external-links" content="#{Global.app.external_links.to_json}"
     meta name="direct-upload-path" content="#{rails_direct_uploads_path}"
-    meta name="is-showcase" content="#{ENV.key? 'SHOWCASE_USER_ID'}"
-    meta name="blob-path" content="#{rails_service_blob_path(:signed_id, :filename)}"
-    / meta name="intercom" content=(ENV['INTERCOM_APP_ID'] || Global.intercom.app_id if Global.intercom.enabled)
     link rel="apple-touch-icon" href="#{image_path('touch-icons/touch-icon-80x80.png')}"
     link rel="apple-touch-icon" sizes="152x152" href="#{image_path('touch-icons/touch-icon-152x152.png')}"
     link rel="apple-touch-icon" sizes="180x180" href="#{image_path('touch-icons/touch-icon-180x180.png')}"
     link rel="apple-touch-icon" sizes="167x167" href="#{image_path('touch-icons/touch-icon-167x167.png')}"
     link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css"
+    link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@0.9.8/dist/driver.min.css"
     title = page_title
+    / stylesheet_link_tag is used only for legacy_styles
     = stylesheet_link_tag :application, media: 'all'
+
     = javascript_packs_with_chunks_tag 'vue-application'
-    = stylesheet_pack_tag 'vue-application'
     = csrf_meta_tags
     = render 'analytics'
   body(id="top")
+    - if Rails.env.production?
+      = render 'apiary_analytics'
     #app
-      app :current-user=current_user_serialize(current_user)
-  = render 'gtm_body_tag'
+      app :current-user=current_user_serialize(current_user, params)
   = render 'intercom_widget'

@@ -55,23 +55,26 @@
   </div>
 </template>
 <script>
+import {mapActions, mapState} from "vuex";
 import breakpointsMixin from "../../../mixins/breakpointsMixin";
-import {mapActions} from "vuex";
 
 export default {
-  mixins: [
-    breakpointsMixin
-  ],
+  mixins: [breakpointsMixin],
   data: () => ({
     displaySwitcher: false,
   }),
   computed: {
+    ...mapState({
+      isAdmin: state => state.families.community.isAdmin,
+      name: state => state.families.community.name
+    }),
     communityId() {
       return this.$route.params.id
     },
     switcherItems() {
-      return [
-        {
+      let data = []
+      if (this.isAdmin) {
+        data = [{
           id: 'addMember',
           title: this.$i18n.t('offline_member.add_member'),
           href: `/communities/${this.communityId}/offline_members/new`
@@ -88,8 +91,16 @@ export default {
           id: 'openDeleteCommunityDialog',
           title: this.$i18n.t('families.remove'),
           action: 'openDeleteCommunityDialog'
-        }
-      ]
+        }]
+      }
+      else {
+        data = [{
+          id: 'leaveCommunity',
+          title: this.$i18n.t('communities.member.header.leaveCommunity'),
+          action: 'leaveCommunityDialog'
+        }]
+      }
+      return data
     },
     selectedItem() {
       return this.switcherItems.find(item => item.id === this.$route.name)
@@ -115,13 +126,19 @@ export default {
     openDeleteCommunityDialog() {
       this.setDialog({
         component: 'CommunityDeleteDialog',
-        title: this.$i18n.t('confirmation_dialog.title')
+        title: this.$i18n.t('families.dialog_delete_community.title', { name: this.name })
       })
     },
     openInviteToCommunityDialog() {
       this.setDialog({
         component: 'CommunityInviteDialog',
         title: this.$i18n.t('invitations.family_member.title')
+      })
+    },
+    leaveCommunityDialog() {
+      this.setDialog({
+        component: 'LeaveCommunityDialog',
+        title: this.$i18n.t('communities.member.header.leaveDialog.title')
       })
     }
   }

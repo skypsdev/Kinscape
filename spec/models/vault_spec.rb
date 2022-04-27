@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: vaults
-#
-#  id         :integer          not null, primary key
-#  user_id    :integer
-#  family_id  :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  uuid       :bigint
-#
-
 require 'spec_helper'
 
 describe Vault, type: :model do
@@ -18,8 +6,6 @@ describe Vault, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to :owner }
-    it { is_expected.to have_many :attachments }
-    it { is_expected.to have_many :media_files }
   end
 
   describe '#name' do
@@ -40,7 +26,7 @@ describe Vault, type: :model do
     it 'returns users avatar url when vault is private' do
       vault = build :vault, owner: user
 
-      expect(vault.cover_url).to eq user.avatar_url(size: :medium)
+      expect(vault.cover_url).to eq user.personal_kinship.avatar_url(size: :medium)
     end
 
     it 'returns family cover url of family vault' do

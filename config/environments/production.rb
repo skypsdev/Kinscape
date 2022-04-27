@@ -6,15 +6,15 @@ Rails.application.configure do
   config.middleware.insert(0, Rack::ReverseProxy) do
     reverse_proxy_options preserve_host: true
     reverse_proxy(%r{^/home()$}, 'https://join.kinscape.com/$1')
-    %w[features pricing].each do |page|
+    %w[features pricing privacy-policy terms-of-use our-philosophy news].each do |page|
       reverse_proxy %r{^/(#{page}/)$}, 'https://join.kinscape.com/$1'
-      reverse_proxy %r{^/(#{page})$}, 'https://join.kinscape.com/$1/'
+      reverse_proxy %r{^/(#{page})$}, 'https://join.kinscape.com/$1'
     end
 
     # whole wp page available under /join route
     reverse_proxy(%r{^/join()$}, 'https://join.kinscape.com/$1')
     reverse_proxy(%r{^/join/()$}, 'https://join.kinscape.com/$1')
-    reverse_proxy(%r{^/join/(.*[^/])$}, 'https://join.kinscape.com/$1/')
+    reverse_proxy(%r{^/join/(.*[^/])$}, 'https://join.kinscape.com/$1')
     reverse_proxy %r{^/join/(.*/)$}, 'https://join.kinscape.com/$1'
   end
 
@@ -45,7 +45,7 @@ Rails.application.configure do
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
   config.assets.digest = true
-  config.assets.js_compressor = Uglifier.new(mangle: false)
+  config.assets.js_compressor = Uglifier.new(mangle: false, harmony: true)
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.asset_host = ENV['FASTLY_CDN_URL']

@@ -1,31 +1,17 @@
-# == Schema Information
-#
-# Table name: publications
-#
-#  id                  :integer          not null, primary key
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  family_id           :integer
-#  story_id            :integer          not null
-#  publish_on          :date
-#  notified_at         :datetime
-#  share_type          :string           default("community"), not null
-#  comments_count      :integer          default(0), not null
-#  appreciations_count :integer          default(0), not null
-#
-
 require 'spec_helper'
 
 RSpec.describe Publication, type: :model do
   describe '#time_capsules' do
-    let(:family) { create :family }
-    let(:story) { create :story }
+    let(:user) { create :user }
+    let(:family) { create :family, users: [user] }
+    let(:story) { create :story, user: user }
 
     before do
       # published
       build(:publication, publish_on: 1.day.ago,
                           notified_at: 1.day.ago,
                           story: story,
+                          kinship: family.kinship_for(story.user),
                           family: family).save validate: false
 
       # ordinary_publication
@@ -33,10 +19,11 @@ RSpec.describe Publication, type: :model do
                            family: family,
                            story: story,
                            notified_at: 1.day.ago
-      # unnotified
+      # not notified
       build(:publication, publish_on: 1.day.ago,
                           notified_at: nil,
                           story: story,
+                          kinship: family.kinship_for(story.user),
                           family: family).save validate: false
 
       # scheduled

@@ -1,4 +1,236 @@
-.home-wrapper {
-  position: relative;
-  z-index: 2;
+@import url('https://fonts.googleapis.com/css2?family=Enriqueta:wght@400;500;600;700&family=Lato:wght@100;300;400;700;900&display=swap');
+
+.home-header {
+  margin: 45px 60px;
+
+  .logo {
+    width: 200px;
+  }
+}
+
+input[type='submit'] {
+  font-weight: bold !important;
+  color: white !important;
+  float: none !important;
+  display: block !important;
+  border-radius: 26px !important;
+  border: 0 !important;
+}
+
+.home-container {
+  z-index: 5;
+  font-family: Lato, sans-serif;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  row-gap: 50px;
+  color: #666;
+
+  & h2 {
+    font-family: Enriqueta, serif;
+  }
+
+  .subscription-box {
+    flex-grow: 1;
+
+    .inner-box {
+      margin: auto;
+      max-width: 700px;
+
+      h2 {
+        size: 52px;
+        color: #1E1E1E;
+      }
+      .text {
+        margin: 1em 0;
+      }
+      .registration {
+        display: flex;
+        max-width: 20em;
+
+        input {
+          height: 2em;
+          border: 1px solid #E75749;
+          box-sizing: border-box;
+          padding-top: 2px;
+          padding-bottom: 2px;
+        }
+
+        input[type='text'] {
+          border-radius: 26px 0 0 26px !important;
+          border-right: 0;
+        }
+
+        input[type='submit'] {
+          padding-left: 25px;
+          padding-right: 25px;
+          border-radius: 0 26px 26px 0 !important;
+          font-weight: bold;
+          color: white;
+          background-color: #E75749;
+          width: auto !important;
+        }
+      }
+      .subscribe-error {
+        color: red;
+        font-weight: bold;
+        margin: -20px 0 20px 10px;
+        margin-top: -20px;
+        margin-bottom: 20px;
+
+      }
+      .already-have-account {
+        margin-left: 15px;
+        font-weight: bold;
+        color: #1E1E1E;
+
+        a {
+          color: #8b78fe;
+        }
+      }
+    }
+  }
+  .invite-received-box {
+    flex-grow: 1;
+
+    .inner-box {
+      max-width: 400px;
+      margin: auto;
+      padding: 25px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px 0 #2C2C2C29;
+      background-color: white;
+
+      h2 {
+        font-size: 28px;
+        color: #8B78FE;
+        margin-bottom: 20px;
+      }
+
+      .invalid-code {
+        text-align: center;
+        color: red;
+        font-weight: bold;
+        line-height: 20px;
+        margin-bottom: -20px;
+      }
+
+      .code-entry {
+        margin: 10px;
+        display: flex;
+
+        * {
+          flex-grow: 1;
+          margin: 0 5px;
+        }
+
+        input {
+          max-width: 56px;
+          font-size: 40px;
+          line-height: 48px;
+          padding: 0;
+          text-align: center;
+          height: 80px;
+          border-radius: 10px;
+          border: 1px solid #C4C4C4;
+
+          &:focus {
+            border-color: #A293FE;
+          }
+        }
+
+        .dash {
+          max-width: 16px;
+          min-width: 10px;
+          height: 40px;
+          border-bottom: 2px solid black;
+        }
+      }
+
+      input[type='submit'] {
+        margin: auto;
+        margin-top: 30px;
+        padding: 10px;
+        width: 70%;
+      }
+    }
+  }
+}
+
+.background {
+  .curve {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 0;
+  }
+
+  .people {
+    position: fixed;
+    right: 210px;
+    bottom: 47px;
+  }
+
+  .logo {
+    position: fixed;
+    right: 89px;
+    bottom: 65px;
+  }
+}
+
+@media(min-width: 500px) {
+  .home-container {
+    margin-left: 70px;
+    margin-right: 70px;
+  }
+}
+
+@media(min-width: 1400px) {
+  .home-container {
+    font-size: 1.5em;
+    line-height: 1.5;
+    margin-top: 5%;
+  }
+}
+
+@media(max-width: 400px) {
+  .home-container {
+    background-color: white;
+    .invite-received-box {
+      .inner-box {
+        box-shadow: #000 0 0;
+        padding: 0;
+        .code-entry {
+          > * {
+            margin: 0 3px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media(max-width: 500px) {
+  .home-container {
+    >* {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+}
+
+@media(max-width: 600px) {
+  .home-container {
+    margin-bottom: 100px;
+  }
+}
+
+@media(max-width: 1100px) {
+  .background {
+    .people, .logo {
+      display: none;
+    }
+  }
 }

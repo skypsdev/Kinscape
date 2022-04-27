@@ -128,7 +128,7 @@
         rounded
         color="primary"
         elevation="0"
-        class="ma-1 px-4"
+        class="ma-1 px-4 new-community-cvr-btn"
         :disabled="isLoading || community.name.length < 3"
         @click="sendPayload()"
       >
@@ -189,7 +189,8 @@ export default {
       closeDialog: 'layout/closeDialog',
       setSnackbar: 'layout/setSnackbar',
       setError: 'layout/setError',
-      addNewCommunity: 'families/addNewCommunity'
+      addNewCommunity: 'families/addNewCommunity',
+      getFamily: 'families/getFamily'
     }),
     handleImageChange() {
       this.url= URL.createObjectURL(this.image)
@@ -216,7 +217,10 @@ export default {
         .then((res) => {
           this.setSnackbar(this.$i18n.t('families.created'))
           this.closeDialog()
-          this.$router.push('/communities/' + res.data.id + '/edit')
+          this.$router.push({ name: 'community', params: { id: res.data.id } })
+          setTimeout( () => {
+            this.$router.go()
+          }, 500)
         })
         .catch((error) => {
           this.setError(error)

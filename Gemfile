@@ -6,19 +6,18 @@ gem 'activeadmin'
 gem 'active_link_to'
 gem 'active_model_serializers'
 gem 'acts_as_list'
+gem 'acts-as-taggable-on'
 gem 'airbrake'
 gem 'angularjs-rails-resource'
 gem 'autoprefixer-rails', '6.7.0'
 gem 'awesome_print'
 gem 'aws-sdk-s3', require: false
-gem 'base62'
 gem 'bitters', require: false
 gem 'bootsnap', require: false
 gem 'bourbon'
 gem 'cancancan'
 gem 'clearance'
 gem 'coffee-rails'
-gem 'colorize', require: false
 gem 'curb', require: false
 gem 'delayed_job_active_record'
 gem 'email_validator', require: false
@@ -38,12 +37,12 @@ gem 'jquery-ui-rails'
 gem 'jsonapi-serializer'
 gem 'jwt'
 gem 'kaminari'
+gem 'MailchimpMarketing'
 gem 'MailchimpTransactional'
 gem 'nokogiri', require: false
 gem 'normalize-rails'
 gem 'pagy'
 gem 'pg'
-gem 'progress_bar'
 gem 'puma', '4.3.6'
 gem 'rack-reverse-proxy', require: 'rack/reverse_proxy'
 gem 'rails', '~> 6.1.0'
@@ -71,7 +70,6 @@ gem 'zencoder'
 gem 'zip_tricks', require: false
 
 source 'https://rails-assets.org' do
-  gem 'rails-assets-angular-elastic', '2.5.1'
   gem 'rails-assets-dotdotdot',   '1.8.3'
   gem 'rails-assets-flexslider',  '~>2.6.3'
   gem 'rails-assets-modernizr', '2.8.3'
@@ -79,7 +77,6 @@ source 'https://rails-assets.org' do
 end
 
 group :development do
-  gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller', require: false
   gem 'bullet'
@@ -93,7 +90,6 @@ group :development do
   gem 'guard-yarn', require: false
   gem 'letter_opener'
   gem 'memory_profiler'
-  gem 'octokit', require: false
   gem 'rack-mini-profiler'
   gem 'stackprof'
   gem 'wkhtmltopdf-binary'
@@ -117,9 +113,11 @@ end
 
 group :test do
   gem 'capybara'
+  gem 'capybara-email'
+  gem 'capybara-selenium'
+  gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'email_spec'
-  gem 'faker'
   gem 'geckodriver-helper', require: false
   gem 'launchy', require: false
   gem 'rspec-its'
@@ -128,11 +126,13 @@ group :test do
   gem 'simplecov', require: false
   gem 'timecop'
   gem 'vcr'
+  gem 'webdrivers'
   gem 'webmock', require: false
 end
 
 group :development, :staging, :test do
   gem 'active_record_query_trace'
+  gem 'faker'
 end
 
 group :staging, :production do

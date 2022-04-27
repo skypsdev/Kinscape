@@ -20,12 +20,12 @@ class Story {
     this.isTimeCapsule = story.attributes?.isTimeCapsule || false
     this.publicationId = story.relationships?.publications?.data[0]?.id || null
 
-    this.canCollaborateStory = story.publication?.attributes?.canCollaborate || false
     this.appreciationsCount = story.attributes?.appreciationsCount || 0
     this.appreciation = story.attributes?.appreciation || null
 
     this.isChanged = false
     this.isLoading = false
+    this.chapterAdded = ''
 
     this.publication = story.publication || {}
     this.publications = story.publications || []
@@ -37,8 +37,8 @@ class Story {
     }
 
     this.community = {
-      id: story.attributes?.familyId || undefined,
-      name: story.attributes?.familyName || null,
+      id: story.family?.id || undefined,
+      name: story.family?.attributes?.name || '',
       connectorId: story.family?.attributes?.connectorId || null,
     }
     this.communities = story.families || []

@@ -5,10 +5,7 @@
         <div class="subtitle-2">
           {{ $i18n.t('requests.message.general') }}
         </div>
-        <v-form
-          ref="conversationForm"
-          v-model="isFormValid"
-        >
+        <v-form ref="conversationForm" v-model="isFormValid">
           <div class="subtitle-1">Community:</div>
           <v-select
             dense
@@ -18,7 +15,7 @@
             item-value="id"
             :rules="[rules.required]"
             :items="families"
-            :disabled="isLoading"
+            :disabled="isLoading || locked"
             v-model="form.familyId"
           />
           <div class="subtitle-1">Recipients:</div>
@@ -29,10 +26,23 @@
             color="primary"
             item-text="attributes.nickname"
             item-value="id"
+            :menu-props="{
+              minWidth: '360px',
+              maxHeight: '184px',
+              nudgeBottom: '10px',
+              nudgeRight: '15px'
+            }"
             :items="filteredMembers"
-            :disabled="isLoading"
+            :disabled="isLoading || locked"
             :rules="[rules.required]"
             v-model="form.kinshipsIds"
+          />
+          <div class="subtitle-1">Subject:</div>
+          <v-text-field
+            outlined
+            single-line
+            :rules="[rules.required]"
+            v-model="form.subject"
           />
           <div class="subtitle-1">Message:</div>
           <v-textarea
@@ -40,14 +50,12 @@
             :rules="[rules.required]"
             v-model="form.message"
           />
-        
         </v-form>
       </div>
-      
     </template>
     <template v-slot:actions>
       <div>
-       <v-btn
+        <v-btn
           x-large
           rounded
           outlined
@@ -63,11 +71,11 @@
           rounded
           color="primary"
           elevation="0"
-          class="ma-1"
+          class="ma-1 send-message-cvr-btn"
           :disabled="isLoading"
           @click="submitForm()"
         >
-          Send message
+          {{ $i18n.t('helpers.submit.request.create') }}
         </v-btn>
       </div>
     </template>
@@ -75,9 +83,11 @@
 </template>
 
 <script>
-import DialogContent from '../../components/Layout/Dialog/DialogContent'
-import rules from '../../utils/validators'
-import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
+
+import DialogContent from '@/components/Layout/Dialog/DialogContent'
+import rules from '@/utils/validators'
+
 export default {
   components: {
     DialogContent
@@ -88,33 +98,50 @@ export default {
     form: {
       familyId: '',
       kinshipsIds: '',
-      message: ''
+      message: '',
+      subject: ''
     }
   }),
-  computed:{
+  computed: {
     ...mapState({
-      dialog: state => state.layout.dialog,
-      families: state => state.families.simpleList.families,
-      members: state => state.families.simpleList.members,
-      isLoading: state => state.families.isLoading,
-      currentUser: state => state.core.user
+      dialog: (state) => state.layout.dialog.data,
+      currentUser: (state) => state.core.user,
+
+      families: (state) => state.families.simpleList.families,
+      members: (state) => state.conversations.recipients.members,
+      isLoading: (state) => state.conversations.loading
     }),
+    locked() {
+      return this.dialog?.locked ?? false
+    },
     filteredMembers() {
-      if (!this.form.familyId ) return []
-      if (!this.members.length ) return []
-      const family = this.families.find(f => f.id === this.form.familyId)
+      if (!this.form.familyId) return []
+      if (!this.members.length) return []
+
+      const family = this.families.find((f) => f.id === this.form.familyId)
       const familyKinships = family ? family.relationships.kinships.data : []
       const ids = familyKinships.map((u) => u.id)
-      return this.members.filter((member) =>
-          member.id !== this.currentUser.id && ids.includes(member.id)
+
+      return this.members.filter(
+        (member) => member.id !== this.currentUser.id && ids.includes(member.id)
       )
     }
   },
+  mounted() {
+    if (this.locked) {
+      this.form = {
+        ...this.form,
+        familyId: this.dialog.familyId,
+        kinshipsIds: this.dialog.kinshipsIds
+      }
+    }
+  },
+  created() {
+    this.getRecipients()
+  },
   methods: {
-    ...mapActions({
-      closeDialog: 'layout/closeDialog',
-      sendMessage: 'conversations/sendMessage'
-    }),
+    ...mapActions('layout', ['closeDialog']),
+    ...mapActions('conversations', ['sendMessage', 'getRecipients']),
     submitForm() {
       this.$refs.conversationForm.validate()
       if (this.isFormValid) this.sendMessage(this.form)
@@ -122,6 +149,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

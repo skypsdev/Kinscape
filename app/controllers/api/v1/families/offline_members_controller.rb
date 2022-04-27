@@ -6,10 +6,10 @@ module Api
           authorize! :manage, family
           offline_member = family.offline_members.new(
             **kinship_params,
-            role: 'member',
+            role: 'offline_member',
             inviter: current_user
           )
-          ::Invitations::NotifyAllMembers.call(family, offline_member: offline_member) if offline_member.save
+          ::Invitations::NotificationService.call(family, offline_member: offline_member) if offline_member.save
           response_service.render(KinshipSerializer, offline_member)
         end
 
@@ -32,7 +32,7 @@ module Api
         end
 
         def family
-          Family.find_by_uid!(params[:family_id])
+          Family.find(params[:family_id])
         end
       end
     end

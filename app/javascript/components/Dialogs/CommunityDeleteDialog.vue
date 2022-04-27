@@ -2,7 +2,7 @@
   <DialogContent>
     <template v-slot:content>
       <div class="mt-2">
-        {{ $i18n.t('families.remove_family_confirm') }}
+        {{ $i18n.t('families.dialog_delete_community.content_text') }}
       </div>
 
     </template>
@@ -17,7 +17,7 @@
             class="ma-1"
             @click="closeDialog()"
         >
-          {{ $i18n.t('confirmation_dialog.cancel') }}
+          {{ $i18n.t('families.dialog_delete_community.actions.cancel') }}
         </v-btn>
         <v-btn
             x-large
@@ -27,7 +27,7 @@
             class="ma-1"
             @click="deleteFamily"
         >
-          {{ $i18n.t('confirmation_dialog.confirm') }}
+          {{ $i18n.t('families.dialog_delete_community.actions.confirm') }}
         </v-btn>
       </div>
     </template>

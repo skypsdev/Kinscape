@@ -1,11 +1,13 @@
 <template>
   <v-avatar
+    v-bind="$attrs"
     :size="avatarSize"
     :min-height="avatarSize"
+    :min-width="avatarSize"
     class="simple-avatar"
     :class="outlined ? 'simple-avatar--outlined' : ''"
   >
-    <v-img v-if="src" :src="src" />
+    <v-img v-if="src" :contain="'contain' in $attrs" :src="src" />
     <v-icon v-else :size="iconFontSize" color="#939393">
       {{ icon }}
     </v-icon>
@@ -41,7 +43,7 @@ export default {
         default: 32,
         small: 22
       }
-      return sizes[this.size]
+      return sizes?.[this.size] ?? this.size
     },
     iconFontSize() {
       const sizes = {
@@ -52,7 +54,7 @@ export default {
         biggest: 128,
       }
 
-      return sizes[this.size]
+      return sizes?.[this.size] ?? this.size
     }
   }
 }
@@ -61,7 +63,6 @@ export default {
 <style lang="scss" scoped>
 .simple-avatar {
   background-color: #e6e6e6;
-  min-width: 16px !important;
   &--outlined {
     border: 3px solid #a293fe;
   }

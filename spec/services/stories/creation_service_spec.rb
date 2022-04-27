@@ -29,7 +29,9 @@ describe ::Stories::CreationService do
         .by(1)
         .and change(Publication, :count)
         .by(1)
-      expect(result).to have_attributes(params.except(:cover))
+      expect(result).to have_attributes(params.except(:cover, :categories))
+      expect(result.category_list).to eq(params[:categories])
+      expect(result.publications.count).to eq(1)
       expect(result.publications.first.share_type).to eq('private')
     end
 
@@ -42,7 +44,8 @@ describe ::Stories::CreationService do
           .by(1)
           .and change(Publication, :count)
           .by(1)
-        expect(result).to have_attributes(params.except(:cover))
+        expect(result).to have_attributes(params.except(:cover, :categories))
+        expect(result.category_list).to eq(params[:categories])
         expect(result.publications.first.share_type).to eq('private')
       end
     end

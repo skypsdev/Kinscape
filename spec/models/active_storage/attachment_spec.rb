@@ -15,7 +15,7 @@ RSpec.describe ActiveStorage::Attachment, type: :model do
 
     it do
       model.assign_attributes(blob: blob, record: user.vault, name: 'vault')
-      expect { model.save }.to have_enqueued_job(ActiveStorage::ConvertVideoJob)
+      expect { model.save }.to have_enqueued_job(ActiveStorage::ConvertAudioVideoJob)
     end
   end
 end

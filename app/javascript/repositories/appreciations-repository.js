@@ -1,14 +1,13 @@
-import {decamelizeKeys} from 'humps'
-
+import { decamelizeKeys } from 'humps'
 import Repository from './repository'
-const parent = '/publications'
+
 const resource = '/appreciations'
 
 export default {
-  createAppreciation (publicationId, payload) {
-    return Repository.post(`${parent}/${publicationId}${resource}`, decamelizeKeys(payload))
+  createAppreciation (payload = {}) {
+    return Repository.post(`${resource}`, decamelizeKeys(payload))
   },
-  deleteAppreciation (publicationId, appreciationId) {
-    return Repository.delete(`${parent}/${publicationId}${resource}/${appreciationId}`)
+  deleteAppreciation (appreciationId) {
+    return Repository.delete(`${resource}/${appreciationId}`)
   }
 }

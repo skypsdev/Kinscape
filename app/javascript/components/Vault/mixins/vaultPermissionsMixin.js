@@ -6,53 +6,49 @@ import { mapState } from 'vuex'
 /**
  * 
  * PERMISSION SET 1: can add files, delete empty boxes, create boxes, rename:
- * this.$possible('add_boxes_to_vault', 'Vault', {ownerType: 'User', ownerId: asset.attributes.userId}) || this.$possible('add_boxes_to_vault', 'Vault', {ownerType: 'Family', ownerId: this.current_family.id})
+ *  this.$possible('add_boxes_to_vault', 'Vault', {
+                ownerType: vault.ownerType,
+                ownerId: vault.ownerId
+            })
  * 
- * NOTICE that for ability to add files/create boxes canAddBoxesToVault() should be checked with currentUser.Id
  * 
  * 
  * PERMISSION SET 2: delete/move files:
- * this.$possible('manage', 'ActiveStorage::Attachment', {userId: asset.attributes.userId, familyId: this.current_family.id})
+ * this.$possible('manage', 'ActiveStorage::Attachment', {
+            userId: item.attributes.userId,
+            familyId: item.attributes.familyId
+        })
  * 
  */
 export default {
     computed: {
         ...mapState("vaults", ["selectedVaultItems"]),
-        ...mapState('families', ['community']),
-        ...mapState({
-            userId: state => state.core.user.id
-        }),
+        ...mapState('families', ['community'])
 
         /* ---------------------- Example of usage in component --------------------- */
         /*  
         permissionSet1() {
-            return this.selectedVaultItems.every(this.canAddBoxesToVault)
+            return this.canAddBoxesToVault(vault)
         },
         permissionSet2() {
-            return this.selectedVaultItems.every(item => this.isAsset(item) && this.canManage(item))
+            return this.selectedVaultItems.every(item => this.isAsset(item) && this.canManageAsset(item))
         } 
         */
     },
     methods: {
         isAsset: (item) => item.attributes.itemType == 'file',
-        canManage(item) {
+        isBox: (item) => item.attributes.itemType == 'box',
+        canManageAsset(item) {
             return this.$possible('manage', 'ActiveStorage::Attachment', {
-                userId: item?.attributes?.userId || Number(this.userId),
-                familyId: this.community.id
+                userId: item.attributes.userId,
+                familyId: item.attributes.familyId
             })
         },
-        canAddBoxesToVault(item) {
-            const userCan = this.$possible('add_boxes_to_vault', 'Vault', {
-                ownerType: 'User',
-                ownerId: item?.attributes.userId || Number(this.userId)
+        canAddBoxesToVault(vault) {
+            return this.$possible('add_boxes_to_vault', 'Vault', {
+                ownerType: vault.ownerType,
+                ownerId: vault.ownerId
             })
-
-            const familyCan = this.$possible('add_boxes_to_vault', 'Vault', {
-                ownerType: 'Family',
-                ownerId: this.community.id
-            })
-
-            return userCan || familyCan
         }
     }
 }

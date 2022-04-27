@@ -17,7 +17,7 @@ module Families
         family.kinship_for(new_admin).update!(role: 'admin')
         ownership_transfer.update!(status: 'accepted')
         ::MailerService.call(
-          :notify_previous_admin,
+          :admin_transfer_accepted,
           params: { ownership_transfer: ownership_transfer }
         )
       end

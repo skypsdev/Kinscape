@@ -1,33 +1,22 @@
 import Repository from './repository'
 
-const resource = '/stories'
-
 export default {
-  getStory (id, params = {}) {
-    return Repository.get(`${resource}/${id}`, params)
-  },
-  listStories (params = {}) {
-    return Repository.get(resource, params)
-  },
   createStory (params) {
-    return Repository.post(resource, params)
+    return Repository.post('/story', params)
   },
   updateStory (id, payload = {}) {
-    return Repository.put(`${resource}/${id}`, payload)
+    return Repository.put(`/publications/${id}/story`, payload)
   },
   deleteStory (id) {
-    return Repository.delete(`${resource}/${id}`)
+    return Repository.delete(`/publications/${id}/story`)
   },
   duplicateStory (id) {
-    return Repository.post(`${resource}/${id}/duplicate`)
+    return Repository.post(`/publications/${id}/story/duplicate`)
   },
-  notifyContribution (id) {
-    return Repository.post(`${resource}/${id}/notify`)
+  notifyContribution (id, payload = {}) {
+    return Repository.post(`/publications/${id}/story/notify`, payload)
   },
   listTableOfContents (id, payload = {}) {
-    return Repository.get(`${resource}/${id}/chapter_links`, payload)
+    return Repository.get(`/publications/${id}/story/chapter_links`, payload)
   },
-  getConfig (id) {
-    return Repository.get(`/${resource}/${id}/upload_config`)
-  }
 }

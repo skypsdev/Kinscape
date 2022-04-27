@@ -1,8 +1,4 @@
 class ApplicationController < ActionController::Base
-  before_action do
-    # host is required for rails_blob_url method
-    ActiveStorage::Current.host = request.base_url if Rails.env.test?
-  end
   include Clearance::Controller
   include VueRoutesHelper
   # Prevent CSRF attacks by raising an exception.
@@ -12,8 +8,7 @@ class ApplicationController < ActionController::Base
   # Temp. remove payment feature
   # before_action :require_subscription
   before_action :add_www_subdomain
-  before_action :require_login, unless: :showcase?
-  before_action :showcase_login, if: :showcase?
+  before_action :require_login
 
   helper_method :current_user?
 
@@ -27,9 +22,10 @@ class ApplicationController < ActionController::Base
   end
 
   def url_after_denied_access_when_signed_out
-    return sign_in_url unless request.original_fullpath.include?('/invitations/')
-
-    sign_in_url(invitation_id: request.original_fullpath.split('/').last)
+    if request.original_fullpath.include?('/invitations/')
+      cookies[:invitation_id] = request.original_fullpath.split('/').last
+    end
+    sign_in_url
   end
 
   def current_user
@@ -43,7 +39,7 @@ class ApplicationController < ActionController::Base
   def ensure_subscription_active
     return if family.active?
 
-    redirect_to "/communities/#{family.uid}/kinships",
+    redirect_to "/communities/#{family.id}/kinships",
                 alert: t('flashes.alert.paused_subscription')
   end
 
@@ -61,20 +57,11 @@ class ApplicationController < ActionController::Base
 
   def add_www_subdomain
     return unless Rails.env.production?
-    return if ENV.key? 'SHOWCASE_USER_ID'
     return if /^www/.match?(request.host)
 
     redirect_to(
       request.url.gsub(request.protocol, "#{request.protocol}www."),
       status: 301
     )
-  end
-
-  def showcase_login
-    sign_in(Clearance.configuration.user_model.find(ENV['SHOWCASE_USER_ID']))
-  end
-
-  def showcase?
-    ENV.key? 'SHOWCASE_USER_ID'
   end
 end

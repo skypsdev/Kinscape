@@ -6,7 +6,7 @@ RSpec.describe Api::V1::Families::InvitationsController, type: :request do
   let!(:family) { create :family, users: [user, existing] }
   let(:recipient) { create :user }
   let!(:invitation) { create :invitation, family: family, sender: user, recipient: recipient, email: recipient.email }
-  let(:family_id) { family.uid }
+  let(:family_id) { family.id }
   let(:id) { invitation.id }
 
   before do
@@ -56,7 +56,7 @@ RSpec.describe Api::V1::Families::InvitationsController, type: :request do
             message: 'some',
             users: [
               {
-                email: 'some_email@valid.com',
+                email: ' some_email@valid.com',
                 id: nil,
                 role: role
               },
@@ -78,7 +78,7 @@ RSpec.describe Api::V1::Families::InvitationsController, type: :request do
       response(200, 'successful', save_request_example: :payload) do
         run_test! do
           expect(response.parsed_body['errors']).to be_nil
-          expect(response.parsed_body['valid']).to eq(['some_email@valid.com'])
+          expect(response.parsed_body['valid']).to eq([' some_email@valid.com'])
           expect(response.parsed_body['invalid']).to eq(['invalid.com'])
           expect(response.parsed_body['existing']).to eq([existing.email])
           expect(emailed_addresses).to contain_exactly('some_email@valid.com')

@@ -1,6 +1,7 @@
 <template>
   <v-menu
-    v-model="model"
+    v-bind="$attrs"
+    v-on="$listeners"
     :content-class="`menu menu--${theme} elevation-${elevation}`"
     :close-on-content-click="false"
     :nudge-bottom="5"
@@ -15,12 +16,61 @@
     <v-list class="menu__list">
       <v-list-item
         class="menu__item"
-        v-for="(item, index) in items"
+        v-for="(item, index) in options"
         :key="`menu-${_uid}-option-${index}`"
-        @click="handleClick(item) && item.action"
+        @click="handleClick(item)"
       >
-        {{ item.title }}
+        <template v-if="item.title">
+          {{ item.title }}
+        </template>
+        <template v-else>
+          <slot name="item" :item="item" />
+        </template>
       </v-list-item>
+
+      <v-list-item-group v-for="(item, index) in controls" :key="index">
+        <v-list-item
+          class="menu__item menu__item--highlighted"
+          @click="showControl = !showControl"
+        >
+          {{ item.title }}
+        </v-list-item>
+
+        <template v-if="showControl && item.control === 'input'">
+          <div class="pt-4 px-4">
+            <v-text-field
+              v-model="newTextFieldValue"
+              :placeholder="
+                $i18n.t('profile.edit.fields.placeholders.create_custom_type')
+              "
+              ref="newTextField"
+              class="mb-2"
+              @keyup.esc="cancelControl(item)"
+              @keyup.enter="confirmControl(item)"
+              outlined
+              hide-details
+              x-small
+            />
+            <div class="d-flex align-center justify-center py-1">
+              <v-btn
+                color="primary"
+                x-small
+                @click="cancelControl(item)"
+                plain
+                >{{ $i18n.t('profile.edit.options.option_cancel') }}</v-btn
+              >
+              <v-btn
+                color="primary"
+                x-small
+                @click="confirmControl(item)"
+                :disabled="!newTextFieldValue.length"
+                plain
+                >{{ $i18n.t('profile.edit.options.option_save') }}</v-btn
+              >
+            </div>
+          </div>
+        </template>
+      </v-list-item-group>
     </v-list>
   </v-menu>
 </template>
@@ -29,7 +79,6 @@
 export default {
   props: {
     elevation: { type: Number, default: 0 },
-    toggle: { type: Boolean, required: true },
     items: { type: [Array, Object], required: true },
     theme: {
       type: String,
@@ -37,19 +86,53 @@ export default {
       validator: (value) => ['default', 'toolbar', 'orange'].includes(value)
     }
   },
+  data: () => ({
+    showControl: false,
+    newTextFieldValue: ''
+  }),
   computed: {
-    model: {
-      get() {
-        return this.toggle
-      },
-      set(value) {
-        return this.$emit('toggled', value)
+    options() {
+      return this.items.filter((item) => !item.control)
+    },
+    controls() {
+      return this.items.filter((item) => item.control)
+    }
+  },
+  watch: {
+    showControl(value) {
+      if (value) {
+        this.$nextTick(() => {
+          this.$refs.newTextField[0].focus()
+        })
       }
     }
   },
   methods: {
     handleClick(item) {
-      this.$emit(item.action, item)
+      if (item.control) {
+        this.$emit(item.action, {
+          title: this.newTextFieldValue
+        })
+      } else if (item.action) {
+        this.$emit(item.action, item)
+        this.model = false
+      } else {
+        this.$emit('action', item)
+      }
+
+      this.showControl = false
+    },
+    cancelControl() {
+      this.showControl = false
+      this.newTextFieldValue = ''
+    },
+    confirmControl(item) {
+      this.$emit(item.action, {
+        title: this.newTextFieldValue,
+        action: item.targetAction,
+        control: false
+      })
+      this.showControl = false
     }
   }
 }
@@ -87,6 +170,10 @@ export default {
   /** Vueitfy important overrides */
   .theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
     color: $color-text !important;
+
+    &.menu__item--highlighted {
+      color: $color-primary !important;
+    }
   }
 
   &--orange {

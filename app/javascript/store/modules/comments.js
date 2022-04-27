@@ -24,31 +24,30 @@ const mutations = {
 const actions = {
   addComment ({ commit, dispatch }, params) {
     commit('SET_LOADING', true)
-    CommentsRepository.createComment(
-      params.publicationId, decamelizeKeys(params.body))
-      .then((res) => {
-        commit('ADD_COMMENT', camelizeKeys(res.data))
-      })
-      .catch((error) => {
-        dispatch('layout/setError', error, {root: true})
-      })
-      .finally(() => {
-        commit('SET_LOADING', false)
-      })
+    CommentsRepository.createComment(decamelizeKeys(params))
+    .then((res) => {
+      commit('ADD_COMMENT', camelizeKeys(res.data))
+    })
+    .catch((error) => {
+      dispatch('layout/setError', error, {root: true})
+    })
+    .finally(() => {
+      commit('SET_LOADING', false)
+    })
   },
   deleteComment ({ commit, dispatch }, payload) {
     commit('SET_LOADING', true)
-    CommentsRepository.deleteComment(payload.parentId, payload.id)
-      .then(() => {
-        commit('REMOVE_COMMENT', payload)
-      })
-      .catch((error) => {
-        dispatch('layout/setError', error, {root: true})
-      })
-      .finally(() => {
-        commit('SET_LOADING', false)
-      })
-  }
+    CommentsRepository.deleteComment(payload.id)
+    .then(() => {
+      commit('REMOVE_COMMENT', payload)
+    })
+    .catch((error) => {
+      dispatch('layout/setError', error, {root: true})
+    })
+    .finally(() => {
+      commit('SET_LOADING', false)
+    })
+  },
 }
 
 export default {

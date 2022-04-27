@@ -1,0 +1,139 @@
+$block: ".vault-card";
+$selected-bg: rgba(252, 208, 196, 0.5);
+$selected-image-bg: rgba(252, 208, 196, 0.4);
+$meta-bg: rgba(75, 75, 75, 0.8);
+%before {
+  @include pseudo();
+  background: linear-gradient(0deg, $selected-image-bg, $selected-image-bg);
+}
+
+.vault-card {
+  border: 2px solid $color-medium-grey;
+  box-sizing: border-box;
+  border-radius: 5px !important;
+  height: 127px;
+  width: 127px;
+  flex-direction: column;
+  display: flex;
+  overflow: hidden;
+  @include transition();
+
+  &:hover:not(.vault-card--selected) {
+    border: 2px solid $color-primary;
+    &:after {
+      @include pseudo($height: 18px, $width: 18px);
+      top: 8px;
+      right: 8px;
+
+      background: $primary-white;
+      border: 2px solid $color-primary;
+      border-radius: 50%;
+      line-height: 15px;
+      padding-left: 4px;
+    }
+  }
+
+  &--selected {
+    border: 2px solid $color-primary;
+  }
+
+  &--selected &__image,
+  &--selected &__video {
+    &:before {
+      @extend %before;
+    }
+    &:after {
+      @include pseudo(
+        $content: url("../../assets/images/vault/check.svg"),
+        $height: 18px,
+        $width: 18px
+      );
+      top: 8px;
+      right: 8px;
+
+      border-radius: 50%;
+      line-height: 15px;
+      padding-left: 4px;
+
+      background: $color-primary;
+    }
+  }
+
+  &__video {
+    flex: 1;
+    max-height: 87px;
+    position: relative;
+
+    &:not(.vault-card__video--selected):after {
+      @include pseudo(
+        $content: url("../../assets/images/vault/triangle.svg"),
+        $height: 48px,
+        $width: 48px
+      );
+      @include center-absolute;
+      padding-top: 13px;
+      padding-left: 18px;
+
+      border-radius: 50%;
+
+      background: $color-primary;
+    }
+
+    video {
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+  }
+  &__image {
+    position: relative;
+    background: $color-dark-white;
+    border-radius: 0 !important;
+  }
+
+  &__label {
+    position: absolute;
+    left: 0;
+    top: 21px;
+    z-index: 10;
+    padding: 4px 12px;
+    background: $color-primary;
+    border-radius: 2px 10.5px 10.5px 2px;
+    font-family: Enriqueta;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 21px;
+    color: #ffffff;
+  }
+  &__chips {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  &__meta {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $meta-bg;
+    color: white;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 46px;
+  }
+}

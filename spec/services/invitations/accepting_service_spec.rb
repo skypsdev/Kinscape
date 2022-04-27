@@ -14,7 +14,8 @@ describe Invitations::AcceptingService do
            family: family,
            sender: admin,
            recipient: recipient,
-           email: email, kinship: kinship,
+           email: email,
+           kinship: kinship,
            role: 'co_admin'
   end
   let(:kinship) { nil }
@@ -29,7 +30,7 @@ describe Invitations::AcceptingService do
 
     it 'updates the accepted attribute and saves the recipient' do
       expect(result.accepted_at).to be_present
-      new_kinship = recipient.kinships.find_by(family: family)
+      new_kinship = family.kinships.find_by(user: current_user)
       expect(new_kinship.avatar.attached?).to eq(true)
       expect(new_kinship).to have_attributes(
         role: 'co_admin',
@@ -38,7 +39,27 @@ describe Invitations::AcceptingService do
         profile_attrs: { 'some' => 'thing' }
       )
       expect(result.recipient.families).to include invitation.family
-      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, current_user.email, some_user.email)
+      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, some_user.email)
+    end
+
+    context 'with personal family' do
+      let(:family) { admin.personal_family }
+
+      it 'updates the accepted attribute and saves the recipient' do
+        expect(result.accepted_at).to be_present
+        new_kinship = family.kinships.find_by(user: current_user)
+        expect(new_kinship.avatar.attached?).to eq(true)
+        expect(new_kinship).to have_attributes(
+          role: 'guest',
+          inviter_id: admin.id,
+          nickname: 'fl',
+          access_type: 'personal',
+          profile_attrs: { 'some' => 'thing' }
+        )
+        expect(result.recipient.families).not_to include invitation.family
+        # TODO: Notify Personal Family members?
+        # expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, current_user.email)
+      end
     end
   end
 
@@ -50,7 +71,7 @@ describe Invitations::AcceptingService do
       expect(result.accepted_at).to be_present
       expect(result.recipient).to eq current_user
       expect(result.recipient.families).to include invitation.family
-      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, current_user.email, some_user.email)
+      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, some_user.email)
     end
   end
 
@@ -62,7 +83,7 @@ describe Invitations::AcceptingService do
       expect(result.accepted_at).to be_present
       expect(result.recipient).to eq current_user
       expect(result.recipient.families).to include invitation.family
-      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, current_user.email, some_user.email)
+      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, some_user.email)
     end
   end
 
@@ -86,7 +107,7 @@ describe Invitations::AcceptingService do
       expect(result.accepted_at).to be_present
       expect(result.recipient).to eq current_user
       expect(result.recipient.families).to include invitation.family
-      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, current_user.email, some_user.email)
+      expect(all_emails.map(&:to).flatten).to contain_exactly(admin.email, some_user.email)
     end
   end
 end

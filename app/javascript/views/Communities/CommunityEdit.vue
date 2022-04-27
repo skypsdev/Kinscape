@@ -40,7 +40,7 @@
               view-type="community"
               :edit-mode="true"
           />
-          <EmptyState v-if="!isMobile && !sortedChapters.length" />
+          <EmptyState v-if="!isMobile && !sortedChapters.length" :edit-mode="true" />
         </v-col>
       </v-row>
     </v-container>
@@ -73,6 +73,7 @@ export default {
       community: store => store.families.community,
       activeChapter: store => store.families.activeChapter,
       chapters: store => store.families.chapters,
+      currentUser: state => state.core.user
     }),
     familyId () {
       return this.$route.params.id
@@ -81,6 +82,9 @@ export default {
       return this.chapters.slice(0).sort((a, b) => {
         return a.attributes.position - b.attributes.position
       })
+    },
+    communityCanEdit() {
+      return this.$possible('manage', 'Family', { id: this.familyId })
     }
   },
   watch: {
@@ -91,9 +95,15 @@ export default {
       }
     }
   },
+  created () {
+    if (!this.communityCanEdit) {
+      this.$router.push({ name: 'showFamily', params: { id: this.familyId } })
+    }
+  },
   mounted () {
+    this.$vuetify.goTo(document.body, 0)
     this.fetchFamily()
-    this.getChapters(this.familyId)
+    this.getChapters({id:this.familyId})
   },
   methods: {
     ...mapActions({

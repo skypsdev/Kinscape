@@ -7,10 +7,10 @@ describe 'Vault box abilities' do
   let(:admin) { create(:user) }
   let(:family_member) { create(:user) }
   let!(:family) { create(:family, users: [admin, family_member]) }
-  let(:box) { create :box, vault: vault }
+  let!(:box) { create :box, vault: vault }
 
   context 'with family vault' do
-    let(:vault) { create :vault, owner: family }
+    let(:vault) { family.vault }
 
     context 'when user is a family member' do
       let(:current_user) { admin }

@@ -16,8 +16,8 @@
       </v-chip>
     </div>
     <div class="d-flex mt-3 mb-6">
-      <Avatar :scr="story.publication.attributes.userAvatar" />
-      <div class="story-description__author ml-4" v-text="story.publication.attributes.userName" />
+      <Avatar :src="story.publication.attributes.userAvatar" />
+      <div class="story-description__author ml-4" v-text="authorName" />
     </div>
     <div
       v-if="story.description"
@@ -67,6 +67,15 @@ export default {
     }),
     storyDescription() {
       return this.story.description.split('\n')
+    },
+    isPublic() {
+         return this.story.publication?.attributes?.shareType ==='community'
+    },
+    communityName () {
+      return this.story.community.name
+    },
+    authorName(){
+      return this.isPublic ? this.communityName : this.story.publication.attributes.userName
     }
   },
   mounted() {

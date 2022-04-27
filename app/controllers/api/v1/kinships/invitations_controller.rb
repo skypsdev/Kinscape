@@ -6,7 +6,7 @@ module Api
           authorize! :manage, kinship
           return response_service.render_forbidden if kinship.user_id
 
-          invitation = ::Invitations::OfflineMembers::SendingService.call(
+          invitation = ::Invitations::OfflineMembers::CreationService.call(
             kinship: kinship,
             params: create_params,
             current_user: current_user

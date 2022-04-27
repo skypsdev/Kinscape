@@ -1,27 +1,19 @@
-# == Schema Information
-#
-# Table name: chapters
-#
-#  id                :bigint     not null, primary key
-#  chapterable_id    :integer    not null
-#  chapterable_type  :string     not null
-#  position          :integer    not null
-#  title             :string
-#  body              :text
-#  media_type        :string      not null
-#  created_at        :datetime    not null
-#  updated_at        :datetime    not null
-#
-
 class ChapterSerializer < BaseSerializer
   attributes(
     :title,
     :body,
-    :media_type,
     :position,
+    :appreciations_count,
+    :comments_count,
     :created_at,
     :updated_at
   )
+
+  has_many :comments
+
+  attribute :appreciation_id do |object, params|
+    object.appreciations.find { |appreciation| appreciation.user_id == params[:current_user].id }&.id
+  end
 
   attribute :rich_body do |object|
     object.rich_body.attributes.merge(
@@ -32,7 +24,7 @@ class ChapterSerializer < BaseSerializer
   attribute :author_avatar_url do |object|
     case object.chapterable_type
     when 'Family'
-      object.author.kinships.find_by(family: object.chapterable)&.avatar_url(size: :thumb)
+      object.kinship&.avatar_url(size: :thumb)
       # when 'Kinship'
       #   object.chapterable.avatar_url(size: :thumb)
     end
@@ -41,7 +33,7 @@ class ChapterSerializer < BaseSerializer
   attribute :author_name do |object|
     case object.chapterable_type
     when 'Family'
-      object.author.kinships.find_by(family: object.chapterable)&.nickname
+      object.kinship&.nickname
       # when 'Kinship'
       #   object.chapterable.nickname
     end

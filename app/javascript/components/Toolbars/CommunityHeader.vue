@@ -22,11 +22,18 @@
       />
     </v-col>
     <v-col v-else cols="3" class="d-flex flex-row align-center justify-end fill-height">
+      <v-progress-circular
+        v-if="loading"
+        class="mr-2"
+        indeterminate
+        color="medium_grey"
+      />
       <v-btn
           v-if="isEditable"
           class="ml-1"
           :fab="isMobile"
           :small="isMobile"
+          :disabled="loading"
           rounded
           outlined
           color="primary"
@@ -49,9 +56,9 @@
           :title="$i18n.t('families.edit_title')"
           :to="`/communities/${communityId}`"
       >
-        {{ community.isChanged ? $i18n.t('communities.edit.save') : $i18n.t("communities.edit.cancel") }}
+        {{ $i18n.t('communities.edit.save') }}
       </v-btn>
-      <CommunityButtonsDropdown v-if="!isEditMode"/>
+      <CommunityButtonsDropdown v-if="!isEditMode" :community="community"/>
     </v-col>
   </v-row>
 </template>
@@ -81,6 +88,7 @@ export default {
   computed: {
     ...mapState({
       community: state => state.families.community,
+      loading: state => state.families.loading,
       viewType: state => state.members.viewType,
     }),
     communityId() {

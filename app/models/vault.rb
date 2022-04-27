@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: vaults
-#
-#  id         :integer          not null, primary key
-#  user_id    :integer
-#  family_id  :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  uuid       :bigint
-#
-
 class Vault < ApplicationRecord
   OWNER_TYPES = %w(User Family).freeze
 
@@ -41,17 +29,6 @@ class Vault < ApplicationRecord
            dependent: :destroy,
            class_name: 'ActiveStorage::Attachment'
 
-  # DEPRECATED BEGIN
-  has_many :attachments,
-           -> { order('attachments.created_at DESC') },
-           as: :containable,
-           dependent: :destroy,
-           inverse_of: :containable
-
-  has_many :media_files, through: :attachments
-  accepts_nested_attributes_for :attachments, allow_destroy: true
-  # DEPRECATED END
-
   def name
     return I18n.t('vaults.family.label', community: owner.name) if owner_type == 'Family'
 
@@ -61,6 +38,6 @@ class Vault < ApplicationRecord
   def cover_url
     return owner.cover_image_url(size: :medium) if owner_type == 'Family'
 
-    owner.avatar_url(size: :medium)
+    owner.personal_kinship.avatar_url(size: :medium)
   end
 end

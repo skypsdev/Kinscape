@@ -3,9 +3,9 @@ require 'swagger_helper'
 RSpec.describe Api::V1::ChaptersController, type: :request do
   let(:user) { create :user }
   let!(:family) { create :family, users: [user] }
-  let!(:chapter) { create :chapter_family, chapterable: family }
+  let!(:chapter) { create :chapter_family, chapterable: family, author: user }
   let(:id) { chapter.id }
-  let(:object_id) { family.uid }
+  let(:object_id) { family.id }
   let(:object_type) { 'Family' }
 
   path '/api/v1/chapters' do
@@ -30,7 +30,6 @@ RSpec.describe Api::V1::ChaptersController, type: :request do
       parameter name: :payload, in: :body, schema: {
         type: :object,
         properties: {
-          media_type: { type: :string },
           object_id: { type: :string },
           object_type: { type: :string, enum: %w[Family Kinship] },
           position: { type: :integer },
@@ -45,7 +44,6 @@ RSpec.describe Api::V1::ChaptersController, type: :request do
       }
       let(:payload) do
         {
-          media_type: 'text',
           position: 1,
           rich_body: { body: 'some body' },
           title: 'Brzeczyszczykiewicz',
@@ -71,7 +69,6 @@ RSpec.describe Api::V1::ChaptersController, type: :request do
       parameter name: :payload, in: :body, schema: {
         type: :object,
         properties: {
-          media_type: { type: :string },
           position: { type: :integer },
           object_id: { type: :string },
           object_type: { type: :string, enum: %w[Family Kinship] },
@@ -86,7 +83,6 @@ RSpec.describe Api::V1::ChaptersController, type: :request do
       }
       let(:payload) do
         {
-          media_type: 'text',
           position: 1,
           rich_body: { body: 'some body' },
           title: 'Brzeczyszczykiewicz',

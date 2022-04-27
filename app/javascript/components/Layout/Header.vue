@@ -10,12 +10,14 @@
     <router-link to="/stories">
       <v-img
         class="hidden-xs-only mr-3"
+        contain
         :src="require('../../assets/images/logo-large.svg')"
         width="173"
         height="35"
       />
       <v-img
         class="hidden-sm-and-up mr-3"
+        contain
         :src="require('../../assets/images/logo-small.svg')"
         width="31"
         height="31"
@@ -25,7 +27,7 @@
       v-if="!isMobile"
       class="hidden-sm-and-down"
     />
-    <v-spacer/>
+    <v-spacer />
     <div class="d-flex align-center">
       <v-progress-circular
         v-if="loading"
@@ -34,9 +36,8 @@
         class="mr-1"
       />
     </div>
-    <!-- We don't want these buttons on the showcase version of the site -->
-    <template v-if="!this.$isShowcase">
-      <ActionButton/>
+    <template>
+      <ActionButton />
       <v-btn
         text
         class="app-bar-button"
@@ -51,76 +52,34 @@
         @click.stop="$emit('toggleMainMenu')"
       />
     </template>
-    <template v-else>
-    <v-btn
-        text
-        href="https://kinscape.com/"
-        class="app-bar-button app-bar-button--new-story"
-        :title="$i18n.t('showcase.leave_showcase')"
-    >
-      <v-icon>mdi-arrow-left-circle-outline</v-icon>
-      <div>{{ $i18n.t('showcase.leave_showcase') }}</div>
-    </v-btn>
-    </template>
-    <v-menu
-      bottom
-      offset-y
-    >
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          class="hidden-sm-and-down"
-          icon
-          v-bind="attrs"
-          v-on="on"
-        >
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
-      </template>
-      <v-list dense>
-        <v-list-item href="/account">
-          <v-list-item-content>
-            <v-list-item-title class="pr-2">{{ $i18n.t('user_menu.account') }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item link target="_blank" href="https://intercom.help/kinscape">
-          <v-list-item-content>
-            <v-list-item-title class="pr-2">{{ $i18n.t('user_menu.help_center') }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-list-item href="/sign_out">
-          <v-list-item-content>
-            <v-list-item-title class="pr-2">{{ $i18n.t('user_menu.sign_out') }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <BurgerButton />
     <template
       v-if="isSubHeaderShown"
       v-slot:extension
     >
-      <slot/>
+      <slot />
     </template>
   </v-app-bar>
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import MainNavigation from './MainNavigation'
 import breakpointsMixin from '../../mixins/breakpointsMixin'
 import ActionButton from "./Header/ActionButton";
+import BurgerButton from "./Header/BurgerButton";
 
 export default {
   components: {
     ActionButton,
+    BurgerButton,
     MainNavigation
   },
   mixins: [
     breakpointsMixin
   ],
   data: () => ({
-    isPageScrolled: false,
+    isPageScrolled: false
   }),
   computed: {
     ...mapGetters({
@@ -149,7 +108,7 @@ export default {
       return this.isCommunities && this.communities.length;
     },
   },
-  created() {
+  mounted() {
     window.addEventListener('scroll', this.handleScroll);
   },
   destroyed() {
@@ -159,6 +118,14 @@ export default {
     ...mapActions({
       setDialog: 'layout/setDialog'
     }),
+    showTour() {
+      localStorage.setItem('tour', true)
+      if (this.$route.name != 'communities') {
+        this.$router.push('/communities')
+      } else {
+        this.$eventBus.emit('show-tour')
+      }
+    },
     openConversationDialog() {
       this.setDialog({
         component: 'SendMessageToMembersDialog',

@@ -1,26 +1,16 @@
-# == Schema Information
-#
-# Table name: publications
-#
-#  id          :bigint           not null, primary key
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  family_id   :integer          not null
-#  story_id    :integer          not null
-#  publish_on  :date
-#  notified_at :datetime
-#
-
 class PublicationSerializer < BaseSerializer
   set_type :publication
   set_id :id
 
-  belongs_to_encoded :family
-  belongs_to_encoded :story do |_object, params|
-    { params: params.merge(publication_id: object.id) }
+  belongs_to :family
+  belongs_to :story
+  has_many :all_comments, serializer: CommentSerializer do |publication, params|
+    if publication.personal_type? && publication.story.user_id != params[:current_user].id
+      publication.all_comments.where(user_id: [params[:current_user].id, publication.story.user_id])
+    else
+      publication.all_comments
+    end
   end
-  has_many_encoded :comments
-  has_many_encoded :all_comments
 
   attributes(
     :appreciations_count,
@@ -29,6 +19,10 @@ class PublicationSerializer < BaseSerializer
     :all_comments_count,
     :share_type
   )
+
+  attribute :family_id do |object|
+    object.family&.id
+  end
 
   attribute :appreciation_id do |object, params|
     object.appreciations.find { |appreciation| appreciation.user_id == params[:current_user].id }&.id
@@ -39,11 +33,11 @@ class PublicationSerializer < BaseSerializer
   end
 
   attribute :user_name do |object|
-    object.story.user.kinships.find_by(family: object.family)&.nickname
+    object.kinship&.nickname
   end
 
   attribute :user_avatar do |object|
-    object.story.user.kinships.find_by(family: object.family)&.avatar_url(size: :thumb)
+    object.kinship&.avatar_url(size: :thumb)
   end
 
   attribute :can_collaborate do |object, params|

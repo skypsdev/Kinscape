@@ -1,24 +1,6 @@
-# == Schema Information
-#
-# Table name: families
-#
-#  id             :integer          not null, primary key
-#  name           :string           not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  old_cover      :string           default(""), not null
-#  cover_image_id :integer
-#  motto          :text             default(""), not null
-#  storage_size   :bigint           default(0)
-#  uuid           :bigint
-#  ability_all    :boolean          default(TRUE), not null
-#
-
 require 'spec_helper'
 
 describe Family, type: :model do
-  it_behaves_like 'uuidable'
-
   context 'associations' do
     it { is_expected.to have_one(:vault) }
     it { is_expected.to have_one(:admin_kinship) }
@@ -34,6 +16,17 @@ describe Family, type: :model do
 
   context 'validations' do
     it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:family_type) }
+    it { is_expected.to validate_presence_of(:kinships) }
+  end
+
+  context 'personal_not_changed' do
+    let!(:family) { create(:family) }
+
+    it do
+      expect { family.update!(access_type: 'private') }
+        .to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Access type - attribute change not allowed')
+    end
   end
 
   describe '#kinship_for' do

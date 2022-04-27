@@ -3,6 +3,21 @@ require 'active_support/core_ext/integer/time'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.middleware.insert(0, Rack::ReverseProxy) do
+    reverse_proxy_options preserve_host: true
+    reverse_proxy(%r{^/home()$}, 'https://dev.kinscape.com/$1')
+    %w[features pricing privacy-policy terms-of-use our-philosophy news].each do |page|
+      reverse_proxy %r{^/(#{page}/)$}, 'https://dev.kinscape.com/$1'
+      reverse_proxy %r{^/(#{page})$}, 'https://dev.kinscape.com/$1'
+    end
+
+    # whole wp page available under /join route
+    reverse_proxy(%r{^/join()$}, 'https://dev.kinscape.com/$1')
+    reverse_proxy(%r{^/join/()$}, 'https://dev.kinscape.com/$1')
+    reverse_proxy(%r{^/join/(.*[^/])$}, 'https://dev.kinscape.com/$1')
+    reverse_proxy %r{^/join/(.*/)$}, 'https://dev.kinscape.com/$1'
+  end
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -30,10 +45,14 @@ Rails.application.configure do
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
   config.assets.digest = true
-  config.assets.js_compressor = Uglifier.new(mangle: false)
+  config.assets.js_compressor = Uglifier.new(mangle: false, harmony: true)
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.asset_host = ENV['FASTLY_CDN_URL']
+  config.asset_host = if ENV['HEROKU_APP_NAME'].present?
+                        "https://#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+                      else
+                        'https://staging.kinscape.com'
+                      end
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache

@@ -14,10 +14,18 @@
         </v-col>
         <v-col cols="12" md="8" lg="9">
           <div class="my-life main-profile-div">
-            <ProfileDetailsEdit :key="member.id" />
+            <ProfileDetailsEdit :key="`details-edit-${member.id}`">
+              <ProfileContactDetails
+                class="mb-6"
+                :key="`profile-${member.id}`"
+                :kinship-id="member.id"
+                :attributes="member.profile"
+                editable
+              />
+            </ProfileDetailsEdit>
             <div
               v-for="(chapter, index) in sortedChapters"
-              :key="chapter.id"
+              :key="`chapters-${chapter.id}`"
               :ref="`member-chapter-${chapter.id}`"
             >
               <AddChapter
@@ -45,7 +53,7 @@
       </v-row>
     </v-container>
     <section v-if="!member">
-      <div class="message-container">
+      <div>
         <div class="inner">
           <p class="message">
             {{ $i18n.t("communities.members.edit.no_member_found") }}
@@ -66,7 +74,9 @@ import MemberTableOfContents from '../../components/Elements/Chapters/TableOfCon
 import MemberAvatarEdit from "../../components/Member/MemberAvatarEdit"
 import MemberChapterEdit from "../../components/Member/MemberChapterEdit"
 import AddChapter from "../../components/Elements/Chapters/AddChapter"
+
 import breakpointsMixin from "../../mixins/breakpointsMixin"
+import profileAttributesMixin from '@/views/MyLife/mixins/profileAttributesMixin'
 
 export default {
   components: {
@@ -77,8 +87,15 @@ export default {
     AddChapter,
   },
   mixins: [
-    breakpointsMixin
+    breakpointsMixin,
+    profileAttributesMixin
   ],
+  beforeRouteLeave(to, from, next) {
+    this.clearChapters()
+    this.clearMember()
+
+    next()
+  },
   computed: {
     ...mapState({
       currentUser: store => store.core.user,
@@ -89,7 +106,7 @@ export default {
     memberId() {
       return this.$route.params.id.toString()
     },
-    sortedChapters () {
+    sortedChapters() {
       return this.chapters.slice(0).sort((a, b) => {
         return a.attributes.position - b.attributes.position
       })
@@ -103,20 +120,24 @@ export default {
       }
     }
   },
-  async mounted () {
+  async mounted() {
+    this.$vuetify.goTo(document.body, 0)
+    
     await this.getMember({
       id: this.memberId,
       options: {
         include: 'family'
       }
     })
-    await this.getChapters()
+    this.getChapters()
   },
   methods: {
     ...mapActions({
       getMember: 'members/getMember',
       getChapters: 'members/getChapters',
-      setActiveChapter: 'members/setActiveChapter'
+      setActiveChapter: 'members/setActiveChapter',
+      clearMember: 'members/clearMember',
+      clearChapters: 'members/clearChapters',
     }),
     async goToSelectedChapter(chapterId) {
       let selectedChapter = this.chapters.find((chapter) => chapter.id === chapterId)
@@ -126,7 +147,7 @@ export default {
       } else {
         await this.$nextTick()
         const chapter = this.$refs[`member-chapter-${chapterId}`]
-        if (chapter) chapter[0].$el.scrollIntoView({behavior: 'smooth', block: 'center'})
+        if (chapter) chapter[0].$el.scrollIntoView({ behavior: 'smooth', block: 'center' })
       }
     },
   }

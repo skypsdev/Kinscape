@@ -1,16 +1,17 @@
 class SessionsController < Clearance::SessionsController
   before_action :redirect_if_logged_in, only: [:create]
-
-  # Temp. remove payment feature
-  # after_action :check_subscription, only: [:create]
-  rescue_from ActionController::InvalidAuthenticityToken,
-              with: :redirect_if_logged_in
+  layout 'new_application', only: [:new, :create]
+  rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_if_logged_in
 
   def create
     @user = authenticate(params)
 
     sign_in(@user) do |status|
-      return redirect_to invitation_url(params[:invitation_id]) if status.success? && params[:invitation_id].present?
+      if status.success? && cookies[:invitation_id].present?
+        redirect_to invitation_url(cookies[:invitation_id])
+        cookies.delete :invitation_id
+        return
+      end
       return redirect_back_or url_after_create if status.success?
 
       flash.now.alert = status.failure_message

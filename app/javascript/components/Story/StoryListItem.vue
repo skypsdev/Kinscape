@@ -27,16 +27,17 @@
     </v-col>
     <v-col cols="2" class="d-flex flex-row align-center">
       <v-chip
-          v-if="story.attributes.categories[0]"
-          color="secondary_lightest"
+        v-if="story.attributes.categories[0]"
+        color="secondary_lightest"
       >
         {{ story.attributes.categories[0] }}
       </v-chip>
       <v-menu
-          v-model="isDialogShown"
-          offset-y
-          nudge-left="110"
-          nudge-bottom="5"
+        v-if="story.attributes.categories.length > 1"
+        v-model="isDialogShown"
+        offset-y
+        nudge-left="110"
+        nudge-bottom="5"
       >
         <template v-slot:activator="{ on }">
           <v-btn
@@ -60,8 +61,18 @@
       </v-menu>
     </v-col>
     <v-col class="d-flex flex-row align-center py-2">
-      <Avatar :src="story.publication.attributes.userAvatar"/>
-      <span class="list-item__user-name pl-3">{{ story.publication.attributes.userName }}</span>
+      <span v-if="!isShareTypeCommunity">
+        <Avatar :src="story.publication.attributes.userAvatar"/>
+        <span class="list-item__user-name pl-3">
+          {{ story.publication.attributes.userName }}
+        </span>
+      </span>
+      <span v-else>
+        <Avatar :src="story.community.attributes.coverUrl"/>
+        <span class="list-item__user-name pl-3">
+          {{ story.community.attributes.name }}
+        </span>
+      </span>
       <span class="ml-auto mr-0 d-flex align-center align-self-end">
         <v-icon v-if="!isShareTypeCommunity">mdi-account</v-icon>
         <v-icon v-else>mdi-account-multiple-outline</v-icon>

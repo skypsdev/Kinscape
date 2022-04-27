@@ -13,7 +13,7 @@ module Api
         def create
           authorize! :manage, family
           emails = create_params[:users].map do |user_params|
-            ::Invitations::SendingService.call(
+            ::Invitations::CreationService.call(
               family: family,
               user_params: user_params,
               current_user: current_user,
@@ -34,7 +34,11 @@ module Api
         end
 
         def family
-          @family ||= Family.find_by_uid!(params[:family_id])
+          @family ||= if params[:showcase].present?
+                        User.find_by(email: Showcase::USER_EMAIL).personal_family
+                      else
+                        Family.find(params[:family_id])
+                      end
         end
       end
     end

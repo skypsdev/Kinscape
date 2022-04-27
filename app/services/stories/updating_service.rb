@@ -20,7 +20,12 @@ module Stories
 
         params[key] = ::SanitizerService.call(params[key])
       end
-      params[:categories].each { |category| ::SanitizerService.call(category) } if params[:categories].present?
+
+      if params[:categories].present?
+        params[:categories] = params[:categories].uniq
+        params[:categories].each { |category| ::SanitizerService.call(category.strip) }
+        params[:category_list] = params.delete(:categories)
+      end
       params
     end
   end

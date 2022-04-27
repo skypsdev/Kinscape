@@ -160,7 +160,7 @@
         hasMoreData(){
           const {hasMoreDataRef} = this.dialog.data;
           const ref =   get(this.$store, hasMoreDataRef)[0]
-  
+
           return typeof ref === 'function' ? ref():ref
         },
         viewableItems() {
@@ -209,7 +209,7 @@
       async onSlideChange(slideIndex){
         const {loadMoreItems} = this.dialog.data
 
-        // load more if is second item from end 
+        // load more if is second item from end
         if(this.hasMoreData && this.viewableItems.length - 2 === slideIndex){
         try {
           this.loadingState = true
@@ -318,9 +318,9 @@ $captionAudioColor:#666666;
 
     &--audio {
       background: $audioBg;
-      padding: 17px 25px 00;
+      padding: 17px 25px 0;
       min-width: 700px;
-      border-radius: 9px 9px 0px 0px;
+      border-radius: 9px 9px 0 0;
     }
 
     img {
@@ -376,7 +376,7 @@ $captionAudioColor:#666666;
   height: auto;
 }
 .v-carousel {
-  border-radius: 0px 0px 10px 10px;
+  border-radius: 0 0 10px 10px;
   &--audion {
     border-radius: 9px;
   }

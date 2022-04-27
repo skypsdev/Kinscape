@@ -18,6 +18,7 @@
               elevation="0"
               v-bind="attrs"
               block
+              :large="isMobile"
           >
             {{ selectedItem.title }}
             <v-icon class="mt-1">{{displaySwitcher ? 'mdi-chevron-up' : 'mdi-chevron-down'}}</v-icon>
@@ -50,7 +51,10 @@
     </v-menu>
 </template>
 <script>
+import breakpointsMixin from "../../../mixins/breakpointsMixin";
+
 export default {
+  mixins: [breakpointsMixin],
   props: {
     simulatePath: {
       type: String,

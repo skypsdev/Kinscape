@@ -7,12 +7,12 @@ en:
       opening: 'Someone, hopefully you, requested we send you a link to change
         your password:'
   flashes:
-    failure_after_create: Bad email or password. Try again!
+    failure_after_create: Incorrect email or password. Please try again.
     failure_after_update: Password can't be blank.
     password_not_match: Doesn't Match Password.
     failure_when_forbidden: Please double check the URL or try submitting
       the form again.
-    send_instructions: You will receive an email with instructions on how to reset 
+    send_instructions: You will receive an email with instructions on how to reset
       your password in a few minutes.
   helpers:
     label:
@@ -22,7 +22,7 @@ en:
         password: Choose password
     submit:
       password:
-        submit: Send me reset password instructions
+        submit: Reset Password
       password_reset:
         submit: Update password
       session:
@@ -42,7 +42,7 @@ en:
     new:
       description: To be emailed a link to reset your password, please enter
         your email address.
-      title: Forgot your password?
+      title: Reset Your Password
       email: can't be blank
   sessions:
     form:

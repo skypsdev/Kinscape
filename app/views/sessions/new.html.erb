@@ -1,0 +1,15 @@
+<section class="content">
+  <div class="content__left">
+    <div class="content-left__wrapper">
+      <%= image_tag('kinscape_logo_orange.svg', alt: "logo", class: 'logo') %>
+      <h4 class="content-left__title">
+        <%= I18n.t('users.sign_in.description') %>
+      </h4>
+    </div>
+  </div>
+  <div class="content__right">
+    <%= render partial: '/sessions/form' %>
+  </div>
+</section>
+
+<% content_for :body_class, "sessions-new" %>

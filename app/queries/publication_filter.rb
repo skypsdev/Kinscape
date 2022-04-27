@@ -21,7 +21,7 @@ class PublicationFilter < ApplicationQuery
   def family_filter
     return if params[:family_id].blank?
 
-    family = Family.find_by_uid(params[:family_id])
+    family = Family.find_by(id: params[:family_id])
     return unless family
 
     @publications = @publications.where(family_id: family.id)
@@ -42,7 +42,8 @@ class PublicationFilter < ApplicationQuery
   def category_filter
     return if params[:categories].blank?
 
-    @publications = @publications.where('stories.categories @> ARRAY[?]::varchar[]', params[:categories])
+    ids = Story.where(id: @publications.pluck(:story_id)).tagged_with(params[:categories].map(&:downcase)).ids
+    @publications = @publications.where(story_id: ids)
   end
 
   def author_filter

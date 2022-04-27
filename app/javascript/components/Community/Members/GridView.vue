@@ -6,11 +6,11 @@
         class="d-flex justify-center col-6 col-sm-4 col-md-3"
         :style="
       $vuetify.breakpoint.lgAndUp
-        ? ' flex: 1 0 18%; max-width: 18%; margin: 0 1%'
+        ? ' flex: 1 0 18%; max-width: 200px; margin: 0 1%'
         : ''
     "
     >
-    <CommunityTile
+    <MemberTile
         :member="member"
         :type="reqType"
         :is-invitation="isInvitation"
@@ -19,11 +19,11 @@
   </v-row>
 </template>
 <script>
-import CommunityTile from "./CommunityTile";
+import MemberTile from "./MemberTile";
 import { mapState } from "vuex";
 
 export default {
-  components: { CommunityTile },
+  components: { MemberTile },
   props: {
     isInvitation: {
       type: Boolean,

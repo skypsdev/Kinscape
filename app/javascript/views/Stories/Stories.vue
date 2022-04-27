@@ -5,11 +5,17 @@
       class="stories__grid"
     >
       <div class="stories__toolbar d-flex flex-wrap my-3">
-        <FilterByCategory class="my-1"/>
-        <FilterByAuthor v-if="!isMyStories" class="my-1 ml-sm-2"/>
-        <ClearFilters  class="my-1 ml-sm-2" />
-        <v-spacer/>
-        <Sorting :sorting-action="setStorySorting" class="my-1"/>
+        <FilterByCategory class="my-1" />
+        <FilterByAuthor
+          v-show="filtersByAuthorIsVisible"
+          class="my-1 ml-sm-2"
+        />
+        <ClearFilters class="my-1 ml-sm-2" />
+        <v-spacer />
+        <Sorting
+          :sorting-action="setStorySorting"
+          class="my-1"
+        />
       </div>
       <div
         v-if="stories.allStories.length"
@@ -20,56 +26,73 @@
           :key="story.publication.id"
           class="pa-3"
         >
-          <StoryCard :story="story"/>
+          <StoryCard :story="story" />
         </div>
       </div>
       <StoryCardLoader />
     </div>
 
-    <div class="stories__grid">
+    <v-container class="stories__grid">
       <section>
         <StoryListView
-            v-if="stories.allStories.length && stories.viewType === 'list'"
-            :stories="stories.allStories"
+          v-if="stories.allStories.length && stories.viewType === 'list'"
+          :stories="stories.allStories"
         />
 
         <div
           v-else-if="!stories.allStories.length && !stories.loading"
-          class="message-container"
         >
           <div
             v-if="stories.filters.query && stories.filters.query.length"
             class="inner animated empty-search"
           >
-            <p class="message" v-text="$i18n.t('stories.empty_search')" />
+            <p
+              class="message"
+              v-text="$i18n.t('stories.empty_search')"
+            />
           </div>
-          <div v-else class="inner">
-            <p class="message" v-text="$i18n.t('stories.empty_index')" />
+          <div
+            v-else
+            class="inner"
+          >
+            <p
+              class="message"
+              v-text="$i18n.t('stories.empty_index')"
+            />
             <a
               href=""
               :title="$i18n.t('stories.new_title')"
               @click.prevent="createStory"
             >
-              {{ $i18n.t('stories.new') }}
+              {{ $i18n.t("stories.new") }}
             </a>
           </div>
         </div>
-        </section>
-    </div>
+      </section>
+    </v-container>
 
+    <infinite-loading
+      v-if="hasMorePages"
+      spinner="spiral"
+      force-use-infinite-wrapper
+      @infinite="getMoreStories"
+    >
+      <div slot="no-more" />
+    </infinite-loading>
   </div>
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 
-import FilterByAuthor from '../../components/Toolbars/Stories/FilterByAuthor'
-import FilterByCategory from '../../components/Toolbars/Stories/FilterByCategory'
-import ClearFilters from '../../components/Toolbars/Stories/ClearFilters'
+import FilterByAuthor from '@/components/Toolbars/Stories/FilterByAuthor'
+import FilterByCategory from '@/components/Toolbars/Stories/FilterByCategory'
+import ClearFilters from '@/components/Toolbars/Stories/ClearFilters'
 import Sorting from "@/components/Toolbars/Stories/Sorting"
-import StoryCard from '../../components/Story/StoryCard'
-import StoryListView from "../../components/Story/StoryListView"
-import StoryCardLoader from '../../components/Story/StoryCardLoader'
+import StoryCard from '@/components/Story/StoryCard'
+import StoryListView from "@/components/Story/StoryListView"
+import StoryCardLoader from '@/components/Story/StoryCardLoader'
+import { storiesShowCaseConfig, storiesShowCaseData } from '@/plugins/showcaseStaticData'
 
 export default {
   name: 'Stories',
@@ -85,13 +108,19 @@ export default {
   computed: {
     ...mapState({
       stories: state => state.stories,
+      isLoading: state => state.stories.loading
     }),
-    isMyStories() {
-      return ['private_stories', 'shared_stories'].includes(this.stories.filters.publicationVisibility)
+    ...mapGetters({
+      hasMorePages: 'stories/hasMorePages'
+    }),
+    filtersByAuthorIsVisible() {
+      const { query } = this.$route
+
+      return Object.keys(query).includes('hideAuthor') === false
     }
   },
   watch: {
-    '$route.query' (query) {
+    '$route.query'(query) {
       if (!Object.keys(query).length) {
         this.clearStoryFilters()
         this.setStorySorting()
@@ -99,12 +128,13 @@ export default {
       this.getNewStories()
     }
   },
-  async mounted () {
+  created() {
+    this.getFollowings()
+  },
+  mounted() {
     if (this.$route.name === 'invitation') {
       this.getInvitation(this.$route.params.id).then((res) => {
-        if (res.data && res.data?.attributes?.newcomer) {
-          this.showWelcomeDialog()
-        } else if (res.data) {
+        if (res.data) {
           this.showJoinDialog()
         }
       }).catch((err) => {
@@ -112,13 +142,18 @@ export default {
         this.setSnackbar(err.message)
       })
     }
-    const filters = {...this.$route.query}
+    const filters = { ...this.$route.query }
     delete filters.sortBy
     delete filters.sortDirection
     this.setStoryFilters(filters)
-    const {sortBy, sortDirection} = this.$route.query
-    this.setStorySorting({sortBy, sortDirection})
+    const { sortBy, sortDirection } = this.$route.query
+    this.setStorySorting({ sortBy, sortDirection })
     this.getNewStories()
+
+
+    if (localStorage.getItem('tour') && !localStorage.getItem('fromPreviousTourStep')) {
+      this.showTour(1)
+    }
   },
   beforeDestroy() {
     this.clearStoryFilters()
@@ -134,21 +169,30 @@ export default {
       setDialog: 'layout/setDialog',
       setSnackbar: 'layout/setSnackbar',
     }),
-    getNewStories () {
+    ...mapActions('myPeople', ['getFollowings']),
+    getNewStories() {
       this.clearStories()
-      this.getPublications({ page: 1 })
+       let params = { page: 1 }
+      if (localStorage.getItem('tour') || localStorage.getItem('fromPreviousTourStep')) {
+        params.showcase = true
+      }
+
+      this.getPublications(params)
+    },
+    async getMoreStories ($state) {
+      try {
+        await this.getPublications()
+        $state.loaded()
+        if (!this.hasMorePages) $state.complete()
+      } catch (e) {
+        console.error(e)
+        $state.complete()
+      }
     },
     createStory() {
       this.setDialog({
         component: 'NewStoryFormDialog',
         title: this.$i18n.t('stories.newStoryDialog.title'),
-        size: 'big'
-      })
-    },
-    showWelcomeDialog() {
-      this.setDialog({
-        component: 'SignUpWelcomeDialog',
-        isToolbarHidden: true,
         size: 'big'
       })
     },
@@ -158,30 +202,20 @@ export default {
         component: 'SignUpExistingUserInvitationDialog',
         size: 'big'
       })
+    },
+    showTour(stepNumber = 0) {
+      this.$driver
+        .init(storiesShowCaseConfig(this))
+        .defineSteps(storiesShowCaseData(this.$driver, this))
+        .start(stepNumber)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@mixin container-grid-size() {
-  $cover_width: 288px;
-  $min_col_width: 600px;
-  width: $cover_width;
-  @for $i from 0 to 6 {
-    @media screen and (min-width: $min_col_width + $cover_width * $i) {
-      width: $cover_width * ($i + 2);
-      @if $i > 1 {
-        padding: 0 156px;
-      }
-    }
-  }
-}
-
 .stories {
   &__grid {
-    padding: 0 12px;
-    margin: 0 auto;
     @include container-grid-size();
   }
   &__covers {

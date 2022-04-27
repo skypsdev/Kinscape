@@ -1,11 +1,10 @@
 <template>
   <div class="member-options">
     <Menu
+      v-model="toggleOptions"
       :theme="theme"
       :items="memberOptions"
-      :toggle="toggleOptions"
       :elevation="1"
-      @toggled="(value) => (toggleOptions = value)"
       @toggleEditRole="toggleEditRole = !toggleEditRole"
       @toggleRemoveMember="toggleRemoveMember = !toggleRemoveMember"
       @toggleSetOffline="toggleSetOffline = !toggleSetOffline"
@@ -14,7 +13,7 @@
         <v-btn
           fab
           outlined
-          small
+          x-small
           :color="theme === 'default' ? 'secondary' : 'primary'"
           elevation="0"
           v-bind="attrs"
@@ -76,7 +75,7 @@ export default {
   }),
   computed: {
     isOfflineMember() {
-      return this.member.userType === 'offline member'
+      return this.member.role === 'offline_member'
     },
     memberOptions() {
       return [

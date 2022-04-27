@@ -31,5 +31,5 @@ end
 private
 
 def count_used_storage
-  (MediaFile.pluck(:size).compact.sum(0.0) / 1.gigabyte).round(2)
+  # (MediaFile.pluck(:size).compact.sum(0.0) / 1.gigabyte).round(2)
 end

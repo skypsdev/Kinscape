@@ -4,6 +4,7 @@ module Invitations
       @invitation = invitation
       @params = params
       @current_user = current_user
+      @family = invitation.family
     end
 
     def call
@@ -12,18 +13,24 @@ module Invitations
 
       invitation.kinship ? update_kinship : build_kinship
       invitation.accepted_at = Time.current
-
-      ::Invitations::NotifyAllMembers.call(invitation.family, invitation.recipient) if invitation.save!
+      # TODO: Notify Personal Family members?
+      if invitation.save! && family.default_access?
+        ::Invitations::NotificationService.call(invitation.family, invitation.recipient)
+      end
       invitation
     end
 
     private
 
-    attr_reader :invitation, :params, :current_user
+    attr_reader :invitation, :params, :current_user, :family
 
     def attach_recipient
       user = User.find_by(email: invitation.email)
       invitation.recipient = user || current_user
+    end
+
+    def role
+      family.personal_access? ? :guest : invitation.role
     end
 
     def build_kinship
@@ -31,9 +38,10 @@ module Invitations
         kinships_attributes: [
           {
             **params,
-            role: invitation.role,
+            role: role,
             family_id: invitation.family_id,
-            inviter_id: invitation.sender_id
+            inviter_id: invitation.sender_id,
+            access_type: family.access_type
           }
         ]
       }
@@ -43,8 +51,9 @@ module Invitations
     def update_kinship
       invitation.kinship.assign_attributes(
         **params,
-        role: invitation.role,
-        user_id: invitation.recipient_id
+        role: role,
+        user_id: invitation.recipient_id,
+        access_type: family.access_type
       )
     end
   end

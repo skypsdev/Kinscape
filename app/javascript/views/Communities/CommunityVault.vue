@@ -1,8 +1,5 @@
 <template>
-  <VaultItems
-    :get-more-items="getMoreVaultItems"
-    :get-items="getItems"
-  />
+  <VaultItems :get-more-items="getMoreVaultItems" :get-items="getItems" />
 </template>
 
 <script>
@@ -29,7 +26,7 @@ export default {
       clearVault: 'vaults/clearVault',
       clearVaultFilters: 'vaults/clearVaultFilters',
       clearVaultSorting: 'vaults/clearVaultSorting',
-      getVault: 'vaults/getVault'
+      getVaultItems: 'vaults/getVaultItems'
     }),
     async fetchCommunity() {
       if (this.community.id !== this.$route.params.id) {
@@ -43,14 +40,14 @@ export default {
       await this.fetchCommunity()
 
       this.clearVault()
-      this.getVault({
+      this.getVaultItems({
         vaultId: this.vaultId,
         params: { page: 1 }
       })
     },
     async getMoreVaultItems($state) {
       try {
-        await this.getVault({ vaultId: this.vaultId })
+        await this.getVaultItems({ vaultId: this.vaultId })
         $state.loaded()
         if (!this.hasMorePages) $state.complete()
       } catch (e) {
@@ -62,6 +59,6 @@ export default {
 }
 </script>
 <style lang="scss">
-  @import '@/assets/styles/components/vaultMoveDialog';
-  @import '@/assets/styles/components/vaultDetailsBtn';
+@import "@/assets/styles/components/vaultMoveDialog";
+@import "@/assets/styles/components/vaultDetailsBtn";
 </style>

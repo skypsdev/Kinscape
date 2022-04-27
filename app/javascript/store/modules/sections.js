@@ -33,11 +33,11 @@ const getters = {
 }
 
 const actions = {
-  async loadAll ({ commit }, parentId, params = {}) {
+  async loadAll ({ commit }, publicationId, params = {}) {
     commit('setLoading', true)
     try {
       let { data, headers } =
-        await SectionsRepository.listSections(parentId, params)
+        await SectionsRepository.listSections(publicationId, params)
       commit('loadAll', data)
       commit('setResponseHeaders', headers)
     } catch (error) {
@@ -47,14 +47,13 @@ const actions = {
       commit('setLoading', false)
     }
   },
-  async loadNext ({ commit, getters }, parentId, params = {}) {
-    if (getters.currentPage &&
-       (getters.currentPage === getters.totalPages)) return
+  async loadNext ({ commit, getters }, {id, params = {}}) {
+    if (getters.currentPage && getters.currentPage === getters.totalPages) return
     commit('setLoading', true)
     try {
       let requestParams = { page: getters.currentPage + 1, ...params }
       let { data, headers } =
-        await SectionsRepository.listSections(parentId, requestParams)
+        await SectionsRepository.listSections(id, requestParams)
       commit('addRecords', data)
       commit('setResponseHeaders', headers)
     } catch (error) {
@@ -64,12 +63,12 @@ const actions = {
       commit('setLoading', false)
     }
   },
-  async loadCurrentPage ({ commit, getters }, parentId, params = {}) {
+  async loadCurrentPage ({ commit, getters }, publicationId, params = {}) {
     commit('setLoading', true)
     try {
       let requestParams = { page: getters.currentPage || 1, ...params }
       let { data, headers } =
-        await SectionsRepository.listSections(parentId, requestParams)
+        await SectionsRepository.listSections(publicationId, requestParams)
       commit('addRecords', data)
       commit('setResponseHeaders', headers)
     } catch (error) {

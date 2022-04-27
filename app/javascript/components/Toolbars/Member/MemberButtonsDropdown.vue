@@ -68,6 +68,7 @@ export default {
     ...mapState({
       currentUser: store => store.core.user,
       member: store => store.members.member,
+      community: state => state.families.community
     }),
     memberId() {
       return this.member.id
@@ -76,7 +77,7 @@ export default {
       return this.member?.userId?.toString() === this.currentUser.id?.toString()
     },
     isCurrentUserAdmin() {
-      return this.member?.isCurrentUserConnector
+      return this.community.isAdmin
     },
     switcherItems() {
       return [

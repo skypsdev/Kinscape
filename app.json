@@ -1,7 +1,17 @@
 {
-  "name":"kinscape-staging",
+  "name": "kinscape-staging",
   "scripts":{
     "postdeploy": "bundle exec rake db:schema:load db:seed"
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "hobby"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "hobby"
+    }
   },
   "env":{
     "AIRBRAKE_PROJECT_ID":{
@@ -25,15 +35,6 @@
     "BUNDLE_GITHUB__COM":{
       "required":true
     },
-    "FILEPICKER_API_KEY":{
-      "required":true
-    },
-    "FILESTACK_SECRET":{
-      "required":true
-    },
-    "GA_KEY":{
-      "required":true
-    },
     "INTERCOM_API_KEY":{
       "required":true
     },
@@ -44,9 +45,6 @@
       "required":true
     },
     "JEMALLOC_VERSION":{
-      "required":true
-    },
-    "JS_PERSIST_DELAY_IN_MILLIS":{
       "required":true
     },
     "MAINTENANCE_PAGE_URL":{
@@ -96,27 +94,19 @@
     },
     "STRIPE_SECRET_KEY":{
       "required":true
-    },
-    "TIMEOUT_IN_SECONDS":{
-      "required":true
-    },
-    "WEB_TIMEOUT":{
-      "required":true
-    },
-    "ZENCODER_API_KEY":{
-      "required":true
-    },
-    "ZENCODER_CREDENTIALS":{
-      "required":true
     }
   },
   "buildpacks": [
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    },
     {
       "url": "heroku/nodejs"
     },
     {
       "url": "heroku/ruby"
     }
+
   ],
   "addons":[
     "heroku-postgresql"

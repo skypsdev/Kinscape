@@ -55,9 +55,7 @@ export default {
     }),
     async unshareStory () {
       try {
-        await PublicationsRepository.deletePublication(
-          this.story.id, this.story.publicationId
-        )
+        await PublicationsRepository.deletePublication(this.story.publicationId)
         if (this.story.isTimeCapsule) {
           this.setSnackbar(this.$i18n.t('stories.time_capsule_disabled'))
         } else {

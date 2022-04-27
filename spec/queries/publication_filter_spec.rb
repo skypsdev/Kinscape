@@ -5,17 +5,26 @@ describe PublicationFilter do
     described_class.call(publications: publications, params: params, current_user: story.user, includes: includes)
   end
 
-  let!(:family) { create :family }
-  let!(:family2) { create :family }
-  let!(:story) { create :story, title: 'Holidays 2019', categories: ['white'], created_at: Time.current - 3.days }
-  let!(:story2) { create :story, title: 'Holidays 2020', categories: %w[red yellow], created_at: Time.current - 2.days }
-  let!(:story3) { create :story, title: 'Winter', categories: %w[white yellow], created_at: Time.current - 1.day }
-  let!(:story4) { create :story, title: 'Only private', categories: %w[white yellow], created_at: Time.current - 1.day }
+  let!(:user) { create :user }
+  let!(:family) { create :family, users: [user] }
+  let!(:family2) { create :family, users: [user] }
+  let!(:story) do
+    create :story, user: user, title: 'Holidays 2019', category_list: ['white'], created_at: Time.current - 3.days
+  end
+  let!(:story2) do
+    create :story, user: user, title: 'Holidays 2020', category_list: %w[red yellow], created_at: Time.current - 2.days
+  end
+  let!(:story3) do
+    create :story, user: user, title: 'Winter', category_list: %w[white yellow], created_at: Time.current - 1.day
+  end
+  let!(:story4) do
+    create :story, user: user, title: 'Only private', category_list: %w[white yellow], created_at: Time.current - 1.day
+  end
   let!(:private_publication) do
     create :publication, publish_on: nil,
                          notified_at: nil,
                          story: story4,
-                         family: nil,
+                         family: story4.user.private_family,
                          share_type: :private,
                          created_at: Time.current - 3.days
   end
@@ -24,7 +33,7 @@ describe PublicationFilter do
     create :publication, publish_on: nil,
                          notified_at: nil,
                          story: story,
-                         family: nil,
+                         family: story.user.private_family,
                          share_type: :private,
                          created_at: Time.current - 3.days
   end
@@ -33,6 +42,7 @@ describe PublicationFilter do
                                       notified_at: 1.day.ago,
                                       story: story,
                                       family: family2,
+                                      kinship: family2.kinship_for(story.user),
                                       share_type: :shared,
                                       created_at: Time.current - 2.days)
     publication.save validate: false
@@ -67,7 +77,7 @@ describe PublicationFilter do
   end
 
   context 'with family_id' do
-    let(:params) { { family_id: family2.uid } }
+    let(:params) { { family_id: family2.id } }
 
     it do
       expect(result.count).to eq(1)
@@ -102,7 +112,7 @@ describe PublicationFilter do
     let(:params) { { author_id: story.user_id } }
 
     it do
-      expect(result.count).to eq(1)
+      expect(result.count).to eq(3)
     end
   end
 
@@ -127,7 +137,7 @@ describe PublicationFilter do
       {
         family_id: published.family_id,
         publication_visibility: 'shared_stories',
-        categories: published.story.categories,
+        categories: published.story.category_list,
         author_id: published.story.user_id,
         query: 'holiday'
       }

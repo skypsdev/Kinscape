@@ -4,7 +4,6 @@ class Member {
     constructor(member = {}) {
         this.id = member.id || null
         this.userId = member.attributes?.userId || null
-        this.userType = member.attributes?.userType || ''
         this.role = member.attributes?.role || ''
         this.familyId = member.attributes?.familyId || ''
         this.name = member.attributes?.name || ''
@@ -16,17 +15,12 @@ class Member {
         this.acceptedAt = member.attributes?.acceptedAt || ''
         this.invitedBy = member.attributes?.invitedBy || ''
         this.senderName = member.attributes?.senderName || ''
+        this.accessType = member.attributes?.accessType || 'default'
 
         this.isConnectedByCurrentUser = member.attributes?.isConnectedByCurrentUser || false
         this.isCurrentUserConnector = member.attributes?.isCurrentUserConnector || false
 
-        this.profile = {
-            birthDate: member.attributes?.profileAttrs?.birthDate || '',
-            birthPlace: member.attributes?.profileAttrs?.birthPlace || '',
-            addresses: member.attributes?.profileAttrs?.addresses || '',
-            locations: member.attributes?.profileAttrs?.locations || '',
-            phoneNumbers: member.attributes?.profileAttrs?.phoneNumbers || ''
-        }
+        this.profile = member.attributes?.profileAttrs || {}
         this.content = {
             links: member.attributes?.links || [],
             chapters: []

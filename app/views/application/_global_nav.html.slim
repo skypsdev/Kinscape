@@ -50,10 +50,6 @@ nav#slide-menu
           i.fa.fa-cog
           span = t("user_menu.edit_profile")
       li
-        = link_to Global.app.external_links.help, target: '_blank' do
-          i.fa.fa-info-circle
-          span = t("user_menu.help_center")
-      li
         = link_to sign_out_path, method: :delete do
           i.fa.fa-sign-out
           span = t('user_menu.sign_out')

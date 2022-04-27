@@ -5,81 +5,95 @@
         <v-form ref="newStoryForm" v-model="isValid">
           <v-row>
             <v-col cols="12" md="4" class="d-flex justify-md-end">
-              <label class="story-avatar-edit mt-14 mr-md-4">
-                <div class="story-avatar-edit__image">
-                  <v-icon
-                    v-if="!image || !url"
-                    class="story-avatar-edit__icon"
-                    color="medium_grey"
-                  >
-                    mdi-image-outline
-                  </v-icon>
-                  <v-img
-                    v-else
-                    :src="url"
-                    height="156px"
-                  >
-                    <template v-slot:placeholder>
-                      <div class="d-flex justify-center">
-                        <v-progress-circular
-                          class="mt-16"
-                          indeterminate
-                          color="medium_grey"
-                        />
-                      </div>
-                    </template>
-                  </v-img>
-                  <v-file-input
-                    ref="inputStoryAvatar"
-                    id="story-avatar"
-                    class="hidden-input-file"
-                    accept="image/*"
-                    hide-input
-                    v-model="image"
-                    :disabled="isLoading"
-                    @change="handleImageChange"
+              <UploadDialog
+                :configuration="uploadDialogConfiguration"
+                :active.sync="uploadDialogConfiguration.active"
+              >
+                <template #default>
+                  <UploadDialogContent
+                    :configuration="uploadDialogContentConfiguration"
                   />
-                </div>
+                </template>
 
-                <div class="story-avatar-edit__label">
-                  <template v-if="!isLoading">
-                    {{ inputLabel }}
-                  </template>
-                  <v-progress-circular
-                    v-else
-                    indeterminate
-                    color="medium_grey"
-                  />
-                </div>
-              </label>
+                <template #activator="{ attrs, on }">
+                  <label
+                    class="story-avatar-edit mt-14 mr-md-4"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    <div class="story-avatar-edit__image">
+                      <v-icon
+                        v-if="!coverUrl"
+                        class="story-avatar-edit__icon"
+                        color="medium_grey"
+                      >
+                        mdi-image-outline
+                      </v-icon>
+                      <v-img v-else :src="coverUrl" height="156px">
+                        <template v-slot:placeholder>
+                          <div class="d-flex justify-center">
+                            <v-progress-circular
+                              class="mt-16"
+                              indeterminate
+                              color="medium_grey"
+                            />
+                          </div>
+                        </template>
+                      </v-img>
+                    </div>
+                    <div class="story-avatar-edit__label">
+                      <template v-if="!isLoading">
+                        {{ inputLabel }}
+                      </template>
+                      <v-progress-circular
+                        v-else
+                        indeterminate
+                        color="medium_grey"
+                      />
+                    </div>
+                  </label>
+                </template>
+              </UploadDialog>
             </v-col>
             <v-col>
-              <h4 class="new-story__label d-inline-block mt-10 mr-3">{{ $i18n.t('stories.newStoryDialog.storyTitleLabel') }}</h4>
-              <p class="new-story__label--required d-inline-block mb-3">* {{ $i18n.t('stories.newStoryDialog.required') }}</p>
+              <h4 class="new-story__label d-inline-block mt-10 mr-3">
+                {{ $i18n.t("stories.newStoryDialog.storyTitleLabel") }}
+              </h4>
+              <p class="new-story__label--required d-inline-block mb-3">
+                * {{ $i18n.t("stories.newStoryDialog.required") }}
+              </p>
               <v-text-field
                 class="new-story__input"
-                :placeholder="$i18n.t('stories.newStoryDialog.storyTitlePlaceholder')"
-                  v-model="form.title"
-                  :rules="[rules.required]"
-                  outlined
-                  single-line
-                  color="primary"
-                  type="text"
+                :placeholder="
+                  $i18n.t('stories.newStoryDialog.storyTitlePlaceholder')
+                "
+                v-model="form.title"
+                :rules="[rules.required]"
+                outlined
+                single-line
+                color="primary"
+                type="text"
               />
-              <h4 class="new-story__label mb-3" v-text="$i18n.t('placeholders.story.categories')"/>
-              <Combobox
-                ref="Categories"
-                :items="allCategories"
+              <h4
+                class="new-story__label mb-3"
+                v-text="$i18n.t('placeholders.story.categories')"
               />
-              <h4 class="new-story__label mb-3">{{ $i18n.t('stories.newStoryDialog.storyDescriptionLabel') }}</h4>
+              <Combobox ref="Categories" :items="allCategories" class="mb-6" />
+              <h4 class="new-story__label mb-3">
+                {{ $i18n.t("stories.newStoryDialog.storyDescriptionLabel") }}
+              </h4>
               <v-textarea
-                  :placeholder="$i18n.t('stories.newStoryDialog.storyDescriptionPlaceholder')"
-                  v-model="form.description"
-                  rows="4"
-                  outlined
+                :placeholder="
+                  $i18n.t('stories.newStoryDialog.storyDescriptionPlaceholder')
+                "
+                v-model="form.description"
+                rows="4"
+                outlined
               />
-              <h4 class="new-story__label mb-3">{{ $i18n.t('stories.newStoryDialog.storyDateLabel') }}</h4>
-              <DateRangePicker ref="DateRangPicker"/>
+              <h4 class="new-story__label mb-3">
+                {{ $i18n.t("stories.newStoryDialog.storyDateLabel") }}
+              </h4>
+              <DateRangePicker ref="DateRangPicker" />
             </v-col>
           </v-row>
         </v-form>
@@ -88,52 +102,65 @@
     <template v-slot:actions>
       <div>
         <v-btn
-            x-large
-            rounded
-            color="primary"
-            elevation="0"
-            class="ma-1"
-            :disabled="!isValid || isLoading"
-            @click="createStoryThenRedirect"
+          x-large
+          rounded
+          color="primary"
+          elevation="0"
+          class="ma-1 new-story-cvr-btn"
+          :disabled="!isValid || isLoading"
+          @click="createStoryThenRedirect"
         >
-          {{ $i18n.t('stories.newStoryDialog.button') }}
+          {{ $i18n.t("stories.newStoryDialog.button") }}
         </v-btn>
       </div>
     </template>
   </DialogContent>
 </template>
 <script>
-import DialogContent from '../../components/Layout/Dialog/DialogContent'
-import {mapActions, mapState} from 'vuex'
-import { DirectUpload } from '@rails/activestorage'
-import validators from '../../utils/validators'
-import {StoriesRepository} from '../../repositories'
-import {decamelizeKeys} from 'humps'
-import DateRangePicker from '../Elements/Forms/DateRangePicker'
-import Combobox from '../Elements/Forms/Combobox'
+import { mapActions, mapState } from 'vuex'
+import { decamelizeKeys } from 'humps'
+
+import DialogContent from '@/components/Layout/Dialog/DialogContent'
+import DateRangePicker from '@/components/Elements/Forms/DateRangePicker'
+import Combobox from '@/components/Elements/Forms/Combobox'
+import BaseDialog from '@/components/Layout/Dialog/Dialog'
+import UploadDialog from '@/components/Dialogs/UploadDialog'
+
+import validators from '@/utils/validators'
+import { StoriesRepository } from '@/repositories'
 
 export default {
   components: {
     DateRangePicker,
     DialogContent,
-    Combobox
+    Combobox,
+    UploadDialog: BaseDialog,
+    UploadDialogContent: UploadDialog
   },
   data() {
     return {
+      uploadDialogConfiguration: {
+        customClass: 'upload-dialog',
+        active: false,
+        persistent: true
+      },
+      uploadDialogContentConfiguration: {
+        closeGlobalDialog: false,
+        closeDialog: this.closeUploadDialog,
+        data: { callback: this.handleImageChange }
+      },
+      coverUrl: '',
       isValid: false,
-      isDateRange: false,
-      image: null,
-      url: null,
       isLoading: false,
       form: {
         title: '',
         description: '',
         cover: '',
         categories: []
-      }
+      },
     }
   },
-  computed:{
+  computed: {
     ...mapState({
       story: store => store.stories.story,
       allCategories: store => store.stories.allCategories
@@ -142,21 +169,25 @@ export default {
       return {
         required: value => validators.required(value),
         isAfterStartDate: value => new Date(value) > new Date(this.story.dateAsText)
-            || this.$i18n.t('errors.attributes.must_be_after_start')
+          || this.$i18n.t('errors.attributes.must_be_after_start')
       }
     },
     inputLabel() {
-      return (this.image)
+      return (this.form.cover)
         ? this.$i18n.t('stories.change_cover')
         : this.$i18n.t('stories.select_cover')
     }
   },
-  created() {},
+  created() {
+    this.getCategories()
+  },
   methods: {
     ...mapActions({
       setError: 'layout/setError',
       createNewStory: 'stories/createNewStory',
-      closeDialog: 'layout/closeDialog'
+      setDialog: 'layout/setDialog',
+      closeDialog: 'layout/closeDialog',
+      getCategories: 'stories/getCategories'
     }),
     async createStoryThenRedirect() {
       const response = await StoriesRepository.createStory({
@@ -170,24 +201,12 @@ export default {
       await this.$router.push('/stories/' + publicationId + '/edit')
       this.closeDialog()
     },
-    handleImageChange() {
-      this.url= URL.createObjectURL(this.image)
-      if (this.image) this.addStoryAvatar(this.image)
+    handleImageChange([image], [blob]) {
+      this.$set(this.form, 'cover', image.signedId)
+      this.coverUrl = URL.createObjectURL(blob)
     },
-    addStoryAvatar(image) {
-      this.isLoading = true
-      const upload = new DirectUpload(image, '/rails/active_storage/direct_uploads')
-      upload.create((error, blob) => {
-        if (error) {
-          this.setError(`Direct upload failed: ${error}`)
-          this.image = null
-          this.url = null
-          this.form.cover = null
-        } else {
-          this.form.cover = blob.signed_id
-        }
-        this.isLoading = false
-      })
+    closeUploadDialog() {
+      this.$set(this.uploadDialogConfiguration, 'active', false)
     }
   }
 }
@@ -196,7 +215,7 @@ export default {
 .new-story {
   &__input::v-deep.v-text-field {
     font-size: 18px;
-    color: #4B4B4B;
+    color: $color-tertiary;
     .v-input__control {
       min-height: 48px !important;
     }
@@ -231,7 +250,7 @@ export default {
 .story-avatar-edit {
   display: block;
   background: $color-dark-white;
-  border: 2px dotted #D0D0D0;
+  border: 2px dotted $gray1;
   box-sizing: border-box;
   border-radius: 5px;
   max-width: 208px;
@@ -249,7 +268,7 @@ export default {
     align-content: center;
   }
   &__label {
-    background: #FDFDFD;
+    background: $white1;
     border-radius: 0px 0px 2px 2px;
     display: flex;
     align-items: center;

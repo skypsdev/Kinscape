@@ -3,7 +3,13 @@ module Api
     class FamiliesController < BaseController
       def index
         authorize! :read, Family
-        @pagy, records = pagy(families_query([:chapters, :cover_attachment, :rich_text_profile]), items: 12)
+        @pagy, records = pagy(families_query(
+                                [
+                                  :chapters,
+                                  { cover_attachment: :blob },
+                                  { kinships: { avatar_attachment: :blob } }
+                                ]
+                              ), items: 12)
         response_service.render_collection(
           FamilySerializer,
           records,
@@ -20,10 +26,13 @@ module Api
         authorize! :read, Family
         response_service.render_collection(
           FamilySerializer,
-          families_query([:kinships, :cover_attachment]),
+          families_query([kinships: { avatar_attachment: :blob }, cover_attachment: :blob]),
           options: {
             include: [:kinships],
-            fields: { family: [:name, :cover_url, :kinships], kinship: [:nickname, :avatar_url, :user_id] }
+            fields: {
+              family: [:name, :cover_url, :user_role, :kinships],
+              kinship: [:nickname, :avatar_url, :user_id]
+            }
           }
         )
       end
@@ -36,7 +45,8 @@ module Api
 
       def show
         authorize! :read, family
-        response_service.render(FamilySerializer, family, options: { include: includes })
+        options = { include: [:all_comments] }
+        response_service.render(FamilySerializer, family, options: options)
       end
 
       def update
@@ -47,6 +57,7 @@ module Api
 
       def destroy
         authorize! :destroy, family
+        ::MailerService.call(:community_deleted, params: { family: family, user: current_user })
         family.destroy!
         response_service.render_no_content
       end
@@ -54,7 +65,7 @@ module Api
       private
 
       def families_query(includes = {})
-        families = Family.accessible_by(current_ability).includes(includes)
+        families = Family.default_access.accessible_by(current_ability).includes(includes)
         if params[:query].present?
           families = families.where('LOWER(families.name) LIKE ?', "%#{params[:query].downcase}%")
         end
@@ -62,7 +73,12 @@ module Api
       end
 
       def family
-        @family ||= Family.find_by_uid!(params[:id])
+        @family ||= if params[:showcase].present?
+                      families = User.find_by(email: Showcase::USER_EMAIL).families
+                      families.find_by(name: Showcase::FAMILY_NAME)
+                    else
+                      Family.find(params[:id])
+                    end
       end
 
       def family_update_params

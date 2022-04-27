@@ -23,20 +23,38 @@ RSpec.describe Api::V1::Vaults::AttachmentsController, type: :request do
         type: :object,
         properties: {
           box_id: { type: :string },
-          file: { type: :string }
-        },
-        required: %w[file]
+          files: {
+            type: :array,
+            items: {
+              type: :object,
+              properties: {
+                title: { type: :string },
+                signed_id: { type: :string }
+              }
+            }
+          }
+        }
       }
       let(:payload) do
         {
           box_id: nil,
-          file: image_blob.signed_id
+          files: [
+            { signed_id: image_blob.signed_id, title: 'some title 1' },
+            { signed_id: image_blob_2.signed_id }
+          ]
         }
       end
       response(200, 'successful', save_request_example: :payload) do
         run_test! do
-          expect(response.parsed_body['data']['attributes']['name']).to eq(image_blob.filename.to_s)
-          expect(response.parsed_body['data']['attributes']['cover_url']).to be_present
+          expect(response.parsed_body['data'].size).to eq(2)
+          image1 = response.parsed_body['data'].find { |x| x['attributes']['blob_signed_id'] == image_blob.signed_id }
+          image2 = response.parsed_body['data'].find { |x| x['attributes']['blob_signed_id'] == image_blob_2.signed_id }
+          expect(image1['attributes']['cover_url']).to be_present
+          expect(image1['attributes']['blob_signed_id']).to be_present
+          expect(image1['attributes']['name']).to eq('some title 1.jpg')
+          expect(image2['attributes']['cover_url']).to be_present
+          expect(image2['attributes']['blob_signed_id']).to be_present
+          expect(image2['attributes']['name']).to eq('image.jpg')
         end
       end
     end
@@ -94,7 +112,7 @@ RSpec.describe Api::V1::Vaults::AttachmentsController, type: :request do
         required: %w[ids new_vault_id]
       }
       let(:family) { create :family, users: [user] }
-      let(:family_vault) { create :vault, owner: family }
+      let(:family_vault) { family.vault }
       let(:box) { create :box, vault: family_vault }
       let(:attachment) { create :active_storage_attachment, record: user.vault, blob: image_blob, user: user }
       let(:payload) do
@@ -143,7 +161,7 @@ RSpec.describe Api::V1::Vaults::AttachmentsController, type: :request do
       end
       response(200, 'successful', save_request_example: :payload) do
         run_test! do
-          expect(response.parsed_body['data']['attributes']['name']).to eq('new title')
+          expect(response.parsed_body['data']['attributes']['name']).to eq('new title.jpg')
         end
       end
     end

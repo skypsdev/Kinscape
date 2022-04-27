@@ -35,18 +35,10 @@
               <h4 class="member-card__name">{{ member.name }}</h4>
             </div>
             <div class="member-card__role d-flex align-center">
-              <span class="member-card__role-value"
-                >{{
-                  getRoleLabel(member.userType || member.user_type)
-                }}
-                &gt;</span
-              >
-
               <Menu
+                v-model="roleOptionsOpen"
                 theme="orange"
                 :items="availableRoles"
-                :toggle="roleOptionsOpen"
-                @toggled="toggleRoleOptions"
                 @setRole="(option) => setRole(option)"
               >
                 <template v-slot:activator="{ on, attrs }">
@@ -95,7 +87,7 @@
         x-large
         rounded
         outlined
-        @click="$emit('close')"
+        @click="closeDialog"
       >
         {{ $i18n.t('families.dialog_change_role.actions.confirm') }}
       </v-btn>
@@ -129,51 +121,51 @@ export default {
   }),
   computed: {
     availableRoles() {
-      return {
-        default: {
+      return [
+        {
+          id: 'member',
           title: this.$i18n.t('families.member_roles.member'),
-          action: 'setRole',
-          value: 'member'
+          action: 'setRole'
         },
-        guest: {
+        {
+          id: 'guest',
           title: this.$i18n.t('families.member_roles.guest'),
-          action: 'setRole',
-          value: 'guest'
+          action: 'setRole'
         },
-        co_admin: {
+        {
+          id: 'co_admin',
           title: this.$i18n.t('families.member_roles.co_admin'),
-          action: 'setRole',
-          value: 'co_admin'
+          action: 'setRole'
         }
-      }
+      ]
     }
+  },
+  mounted () {
+    this.newRoleLabel = this.$i18n.t(`families.member_roles.${this.member.role}`)
   },
   methods: {
     ...mapActions({
       setError: 'layout/setError'
     }),
-    getRoleLabel(label) {
-      return this.availableRoles[label].title
-    },
     async setRole(role) {
       const { id } = this.member
 
       await updateRole(id, {
         kinship: {
-          role: role.value
+          role: role.id
         }
       })
         .then(() => {
           this.newRoleLabel = role.title
-          this.toggleRoleOptions()
         })
         .catch((error) => {
           this.setError(error)
         })
     },
-    toggleRoleOptions() {
-      this.roleOptionsOpen = !this.roleOptionsOpen
-    },
+    closeDialog () {
+      this.$emit('close')
+      this.$router.go()
+    }
   }
 }
 </script>

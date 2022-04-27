@@ -1,26 +1,33 @@
 <template>
   <v-row>
     <v-col class="d-flex flex-row align-center">
-      <StoryBreadcrumbs/>
+      <StoryBreadcrumbs />
     </v-col>
     <v-col class="d-flex flex-row align-center justify-end fill-height">
+      <v-progress-circular
+        v-if="story.isLoading"
+        class="mr-2"
+        indeterminate
+        color="medium_grey"
+      />
       <v-btn
         class="ml-1"
         rounded
         outlined
+        :disabled="story.isLoading"
         color="primary"
         elevation="0"
         :title="$i18n.t('stories.preview_title')"
         @click="doneEditing"
       >
-        {{ story.isChanged ? $i18n.t('stories.preview') : $i18n.t("stories.cancel") }}
+        {{ $i18n.t('stories.preview') }}
       </v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import StoryBreadcrumbs from './Stories/StoryBreadcrumbs'
 
 export default {
@@ -37,7 +44,7 @@ export default {
       setDialog: 'layout/setDialog'
     }),
     doneEditing () {
-      if (this.story.isPublished && this.story.isChanged && !this.story.isTimeCapsule) {
+      if (this.story.isPublished && this.changedAttr() && !this.story.isTimeCapsule) {
         this.setDialog({
           title: this.$i18n.t('stories.notifications.title'),
           component: 'NotifyAboutChangesDialog'
@@ -48,6 +55,9 @@ export default {
           params: { id: this.story.publication.id }
         })
       }
+    },
+    changedAttr () {
+      return this.story.isChanged
     }
   }
 }

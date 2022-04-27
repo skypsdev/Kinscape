@@ -1,36 +1,35 @@
 module Api
   module V1
     class PublicationsController < BaseController
+      after_action :set_headers, only: [:index]
+
       def index
         authorize! :read, Publication
         @pagy, records = pagy(filtered_publications, items: 10)
         options = {
-          include: [:family, :story, :comments],
+          include: [:family, :story],
           params: { unread: unread_list(filtered_publications) },
           fields: {
-            family: [:name],
+            family: [:name, :cover_url],
             publication: PublicationSerializer.attributes_to_serialize.keys.excluding(:all_publications) +
-                         [:family, :story, :comments],
+                         [:family, :story],
             story: StorySerializer.attributes_to_serialize.keys.excluding(:full_size_cover_url, :links)
           }
         }
-        set_headers
         response_service.render_collection(PublicationSerializer, records, options: options)
       end
 
       def show
-        includes = [:family, :story, :comments, :all_comments]
-        publication = Publication.includes(includes).find(params[:id])
         authorize! :read, publication
         publication.story.mark_as_read! for: current_user
         options = { include: [:all_comments, :story, :'story.publications', :'story.families'] }
-        set_headers
         response_service.render(PublicationSerializer, publication, options: options)
       end
 
       def create
-        authorize! :update, story
-        publications = ::Publications::CreationService.call(story, current_user, create_params)
+        publication = Publication.includes(:family, :story).find(create_params[:id])
+        authorize! :create_another, publication
+        publications = ::Publications::CreationService.call(publication.story, current_user, create_params)
         response_service.render_collection(PublicationSerializer, publications)
       rescue Date::Error
         # TODO: move it to service and return as an error in AR
@@ -38,8 +37,11 @@ module Api
       end
 
       def destroy
-        publication = story.publications.find params[:id]
         authorize! :destroy, publication
+        if publication.shared_type?
+          ::MailerService.call(:shared_story_deleted, params: { publication: publication, user: current_user })
+          ::MailerService.call(:shared_story_deleted_owner, params: { publication: publication, user: current_user })
+        end
         publication.destroy!
 
         response_service.render_no_content
@@ -53,16 +55,17 @@ module Api
           params: publication_params,
           current_user: current_user,
           includes: [
-            :family,
             :appreciations,
-            :comments,
+            { kinship: { avatar_attachment: :blob } },
+            { family: { cover_attachment: :blob } },
             { story: [
-              :publications,
               :not_private_publications,
+              :published_publications,
               :sections,
               :families,
-              { cover_attachment: { blob: :variant_records } },
-              { user: :avatar }
+              :user,
+              { taggings: :tag },
+              { cover_attachment: { blob: :variant_records } }
             ] }
           ]
         )
@@ -76,18 +79,22 @@ module Api
       end
 
       def set_headers
-        @story_headers = {
-          unfiltered_count: all_publications.size,
-          all_categories: all_publications.pluck(:'stories.categories').flatten.tally
-        }
+        tags = ActsAsTaggableOn::Tag
+               .joins(:taggings)
+               .where(taggings: { taggable_type: 'Story', taggable_id: all_publications&.pluck(:story_id) })
+               .distinct
+               .order(updated_at: :desc)
+        response.headers['All-Stories-Categories'] = tags.map do |tag|
+          { text: tag.name, number: tag.taggings_count }
+        end.to_json
       end
 
       def all_publications
         @all_publications ||= Publication.accessible_by(current_ability).includes(:story)
       end
 
-      def story
-        @story ||= current_user.stories.find_by_uid!(params[:story_id])
+      def publication
+        @publication ||= Publication.includes(:family, :story).find(params[:id])
       end
 
       def publication_params
@@ -104,6 +111,7 @@ module Api
 
       def create_params
         params.require(:publication).permit(
+          :id,
           :share_type,
           publish_on: {},
           families_ids: []

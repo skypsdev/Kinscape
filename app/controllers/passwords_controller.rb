@@ -1,5 +1,6 @@
 class PasswordsController < Clearance::PasswordsController
   before_action :clear_flash_msg
+  layout 'new_application', only: [:new, :create]
 
   def create
     @user = find_user_for_create

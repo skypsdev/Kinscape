@@ -15,18 +15,7 @@
       v-text="$i18n.t('vaults.empty.description')"
     />
     <div class="d-flex flex-wrap justify-center mt-8">
-      <UploadFile>
-        <v-btn
-          large
-          rounded
-          color="primary"
-          elevation="0"
-          min-width="170"
-          class="ma-2"
-        >
-          {{ $i18n.t('vaults.empty.upload_content') }}
-        </v-btn>
-      </UploadFile>
+      <UploadFile :big-button="true"/>
       <v-btn
         large
         rounded
@@ -34,6 +23,7 @@
         elevation="0"
         min-width="170"
         class="ma-2"
+        :disabled="disabled"
         @click="addVaultBox"
       >
         {{ $i18n.t('vaults.empty.add_box') }}
@@ -42,17 +32,24 @@
   </v-container>
 </template>
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 import vaultIdMixin from '@/components/Vault/mixins/vaultIdMixin.js'
 
 import UploadFile from '../Toolbars/Vault/UploadFile'
+import vaultPermissions from "@/components/Vault/mixins/vaultPermissionsMixin";
 
 export default {
   components: {
     UploadFile
   },
-  mixins: [vaultIdMixin],
+  mixins: [vaultIdMixin, vaultPermissions],
+  computed: {
+    ...mapState('vaults', ['vault']),
+    disabled() {
+      return !this.canAddBoxesToVault(this.vault)
+    }
+  },
   methods: {
     ...mapActions({
       setDialog: 'layout/setDialog',

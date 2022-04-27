@@ -14,14 +14,14 @@ module Api
       end
 
       def update
-        authorize! :manage, object
+        authorize! :update, chapter
         chapter_updated = ::Chapters::UpdatingService.call(chapter, chapter_params)
 
         response_service.render(ChapterSerializer, chapter_updated)
       end
 
       def destroy
-        authorize! :manage, object
+        authorize! :destroy, chapter
         chapter.destroy
         object.touch
 
@@ -38,7 +38,6 @@ module Api
 
       def chapter_params
         params.permit(
-          :media_type,
           :position,
           :title,
           rich_body: [:body]
@@ -52,7 +51,12 @@ module Api
       def object
         @object ||= case params[:object_type]
                     when 'Family'
-                      Family.find_by_uid!(params[:object_id])
+                      if params[:showcase].present?
+                        families = User.find_by(email: Showcase::USER_EMAIL).families
+                        families.find_by(name: Showcase::FAMILY_NAME)
+                      else
+                        Family.find(params[:object_id])
+                      end
                     when 'Kinship'
                       Kinship.find(params[:object_id])
                     end

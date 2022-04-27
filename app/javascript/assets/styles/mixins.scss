@@ -11,10 +11,12 @@
 }
 
 @function -zf-to-rem($value, $base: $rem-base) {
-  @if (unit($value) != 'rem') {
+  @if (unit($value) != "rem") {
     $value: strip-unit($value) / strip-unit($base) * 1rem;
   }
-  @if ($value == 0rem) { $value: 0; }
+  @if ($value == 0rem) {
+    $value: 0;
+  }
   @return $value;
 }
 
@@ -37,19 +39,19 @@
   @return $rem-values;
 }
 $breakpoints: (
-        "phone": $phone,
+  "phone": $phone,
   //360px
-        "phablet": $phablet,
+  "phablet": $phablet,
   //540px
-        "tablet": $tablet,
+  "tablet": $tablet,
   //760px
-        "tablet-narrow": $tablet-narrow,
+  "tablet-narrow": $tablet-narrow,
   //960px
-        "desktop": $desktop,
+  "desktop": $desktop,
   //1280px
-        "desktop-wide": $desktop-wide,
+  "desktop-wide": $desktop-wide,
   //1450px
-        "desktop-huge": $desktop-huge,
+  "desktop-huge": $desktop-huge,
   //1900px,,,
 );
 
@@ -86,7 +88,13 @@ $breakpoints: (
 // .foo-bar::before{
 //   @include pseudo($width: 100px)
 // }
-@mixin pseudo($display: block, $pos: absolute, $content: '', $width: 100%, $height: 100%){
+@mixin pseudo(
+  $display: block,
+  $pos: absolute,
+  $content: "",
+  $width: 100%,
+  $height: 100%
+) {
   content: $content;
   display: $display;
   position: $pos;
@@ -95,12 +103,14 @@ $breakpoints: (
 }
 
 @mixin center-absolute-x {
-  left:50%;
+  position: absolute;
+  left: 50%;
   transform: translateX(-50%);
 }
 
 @mixin center-absolute-y {
-  top:50%;
+  position: absolute;
+  top: 50%;
   transform: translateY(-50%);
 }
 
@@ -111,10 +121,44 @@ $breakpoints: (
   transform: translate(-50%, -50%);
 }
 
+@mixin center-flex-full {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin center-flex-y {
+  display: flex;
+  align-items: center;
+}
+
 @mixin transition(
   $what: all,
   $time: 0.2s,
-  $how: cubic-bezier(0.25, 0.8, 0.25, 1)
+  $how: cubic-bezier(0.25, 0.8, 0.25, 1),
+  $important: false
 ) {
-  transition: $what $time $how;
+  @if $important {
+    transition: $what $time $how !important;
+  } @else {
+    transition: $what $time $how;
+  }
+}
+
+@mixin container-grid-size {
+  padding: 0 20px;
+  margin: 0 auto;
+
+  $cover_width: 288px;
+  $min_col_width: 600px;
+  @for $i from 0 to 6 {
+    @media screen and (min-width: $min_col_width + $cover_width * $i) {
+      width: $cover_width * ($i + 2);
+      @if $i > 1 {
+        padding: 0 156px;
+      } @else {
+        width: 100%;
+      }
+    }
+  }
 }

@@ -45,7 +45,8 @@ export default {
   },
   computed: {
     ...mapState({
-      story: state => state.stories.story
+      story: state => state.stories.story,
+      activeChapter: state => state.stories.activeChapter
     })
   },
   methods: {
@@ -62,8 +63,14 @@ export default {
       this.closeDialog()
     },
     async sendNotification () {
+      var params = {
+        changed_generic: this.story.isChanged,
+      }
+      if (this.story.chapterAdded.length > 0) {
+        params.added_chapter = this.story.chapterAdded
+      }
       try {
-        await StoriesRepository.notifyContribution(this.story.id)
+        await StoriesRepository.notifyContribution(this.story.publication.id, {changed_attr: params})
         this.setSnackbar(this.$i18n.t('stories.notification'))
       } catch (error) {
         this.setError(error)

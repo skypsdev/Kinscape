@@ -1,33 +1,10 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer          not null, primary key
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  email              :string           not null
-#  encrypted_password :string(128)      not null
-#  confirmation_token :string(128)
-#  remember_token     :string(128)      not null
-#  old_avatar         :string           default(""), not null
-#  metadata           :hstore
-#  tour_completed     :boolean
-#  first_name         :string
-#  last_name          :string
-#  avatar_id          :integer
-#  caretaker_id       :integer
-#  title              :string
-#  confirmed_at       :datetime
-#  admin              :boolean          default(FALSE)
-#  stripe_id          :string
-#  storage_size       :bigint           default(0)
-#  uuid               :bigint
-#  ability_all        :boolean          default(TRUE), not null
-#
-require 'filestack_config'
-
 class User < ApplicationRecord
   include Clearance::User
+  include Showcase
+
+  ONBOARDING_DEFAULT = {
+    pending: true
+  }.freeze
 
   METADATA_FIELDS = [
     :nickname,
@@ -43,8 +20,9 @@ class User < ApplicationRecord
   acts_as_reader
 
   after_create :create_vault
+  after_create :create_personal_family, :create_private_family
   before_destroy :check_if_admin
-  # before_destroy :destroy_family_vaults
+  before_destroy :destroy_personal_family
 
   has_one :active_subscription, -> { active }, class_name: 'Subscription', inverse_of: :user
   has_one :active_family_subscription, -> { active }, class_name: 'FamilySubscription', inverse_of: :user
@@ -54,21 +32,34 @@ class User < ApplicationRecord
     has_many :subscriptions
     has_many :family_subscriptions
     has_many :comments
-    has_many :kinships, inverse_of: :user
-    has_many :admin_kinships, -> { role_admin }, class_name: 'Kinship', inverse_of: :user
     has_many :stories
     has_many :invitations, foreign_key: :sender_id, inverse_of: :sender
+    has_many :received_invitations, foreign_key: :recipient_id, inverse_of: :recipient, class_name: 'Invitation'
     has_many :appreciations
+    has_many :all_kinships,                                          class_name: 'Kinship', inverse_of: :user
+    has_one :private_kinship, -> { private_access.role_admin },      class_name: 'Kinship', inverse_of: :user
+    has_one :personal_kinship, -> { personal_access.role_admin },    class_name: 'Kinship', inverse_of: :user
+    has_many :kinships, -> { default_access },                       class_name: 'Kinship', inverse_of: :user
+    has_many :following_kinships, -> { personal_access.role_guest }, class_name: 'Kinship', inverse_of: :user
+    has_many :admin_kinships, -> { default_access.role_admin },      class_name: 'Kinship', inverse_of: :user
   end
-  has_many :families, through: :kinships
-  has_many :owned_families, through: :admin_kinships, class_name: 'Family', source: :family
+  has_many :all_families,       class_name: 'Family', source: :family, through: :all_kinships
+  has_one :private_family,      class_name: 'Family', source: :family, through: :private_kinship
+  has_one :personal_family,     class_name: 'Family', source: :family, through: :personal_kinship
+  has_many :families,           class_name: 'Family', source: :family, through: :kinships
+  has_many :following_families, class_name: 'Family', source: :family, through: :following_kinships
+  has_many :owned_families,     class_name: 'Family', source: :family, through: :admin_kinships
+
+  has_many :followers, -> { role_guest }, through: :personal_family,     class_name: 'Kinship', source: :kinships
+  has_many :followings, -> { role_admin }, through: :following_families, class_name: 'Kinship', source: :kinships
+
+  has_many :followers_families, class_name: 'Family', source: :family, through: :followers
+
   has_many :family_vaults, through: :families, source: :vault, class_name: 'Vault'
   has_many :sections, through: :stories
   has_many :publications, through: :stories
   has_one_attached :zip_file
 
-  belongs_to :avatar, optional: true
-  accepts_nested_attributes_for :avatar, reject_if: :all_blank
   accepts_nested_attributes_for :kinships
 
   store_accessor :metadata, *METADATA_FIELDS
@@ -76,7 +67,7 @@ class User < ApplicationRecord
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :password, confirmation: true, unless: proc { |a| a.password.blank? }
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :terms_and_conditions, acceptance: true
 
   scope :sorted_by_name, -> { order('last_name, first_name, email') }
   scope :admins, -> { where(admin: true) }
@@ -84,6 +75,13 @@ class User < ApplicationRecord
   delegate :can?, :cannot?, to: :ability
   delegate :trial_days, to: :active_subscription, prefix: :subscription, allow_nil: true
   delegate :trialing?, :active?, to: :active_subscription, allow_nil: true
+
+  enum registration_method: {
+    direct: 'direct',
+    offline: 'offline', # from invitation to take over offline profile
+    member: 'member', # from invitation to join community
+    follower: 'follower' # from invitation to follow someone's life stories
+  }, _prefix: true
 
   def role_for(family)
     return unless family
@@ -93,20 +91,6 @@ class User < ApplicationRecord
 
   def ability
     @ability ||= Ability.new(self)
-  end
-
-  def avatar_url(size: nil)
-    return avatar.url if avatar.present? && size.nil?
-
-    avatar.cdn_url(format: size) if avatar.present?
-  end
-
-  def draft_stories
-    stories.draft
-  end
-
-  def media_uploads_count
-    sections.where.not(media_type: 'text').count
   end
 
   def name
@@ -148,7 +132,35 @@ class User < ApplicationRecord
     create_vault!
   end
 
-  # def destroy_family_vaults
-  #   Vault.where(owner_id: id, owner_type: 'User').destroy_all
-  # end
+  def create_personal_family
+    Family.create(
+      name: 'My Life Stories',
+      family_type: 'Personal',
+      access_type: 'personal',
+      kinships_attributes: [{
+        user_id: id,
+        nickname: name,
+        access_type: 'personal',
+        role: :admin
+      }]
+    )
+  end
+
+  def create_private_family
+    Family.create(
+      name: 'Private Stories',
+      family_type: 'Private',
+      access_type: 'private',
+      kinships_attributes: [{
+        user_id: id,
+        nickname: name,
+        access_type: 'private',
+        role: :admin
+      }]
+    )
+  end
+
+  def destroy_personal_family
+    personal_family&.destroy
+  end
 end

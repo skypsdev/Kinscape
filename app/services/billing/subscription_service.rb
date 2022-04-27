@@ -41,7 +41,7 @@ module Billing
           trial_end: 'now'
         )
 
-        Subscription.transaction do
+        ActiveRecord::Base.transaction do
           subscription = Subscription.new(
             stripe_id: stripe_subscription.id,
             user_id: user.id,
@@ -122,7 +122,7 @@ module Billing
           user.subscription.stripe_id
         )
 
-        Subscription.transaction do
+        ActiveRecord::Base.transaction do
           subscription = Subscription.find_by!(
             stripe_id: user.subscription.stripe_id
           )
@@ -208,7 +208,7 @@ module Billing
 
           return false unless customer
 
-          Subscription.transaction do
+          ActiveRecord::Base.transaction do
             stripe_subscription = if subscriptions?(customer)
                                     customer.subscriptions.data[0]
                                   else

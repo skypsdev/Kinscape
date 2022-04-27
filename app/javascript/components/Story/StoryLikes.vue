@@ -29,8 +29,7 @@ export default {
       isLoading: state => state.stories.loading,
       appreciationsCount: state => state.stories.story.publication.attributes.appreciationsCount,
       appreciationId: state => state.stories.story.publication.attributes.appreciationId,
-      publicationId: state => state.stories.story.publication.id,
-      storyId: state => state.stories.story.id
+      publicationId: state => state.stories.story.publication.id
     }),
     actionName () {
       return this.appreciationId ? 'unnappreciate' : 'appreciate'
@@ -44,16 +43,15 @@ export default {
     }),
     handleAppreciate () {
       const {appreciationId, publicationId} = this
-      
+
       if (appreciationId) {
-        this.removeStoryAppreciation({ publicationId, appreciationId })
+        this.removeStoryAppreciation({ appreciationId })
       } else {
-        this.createStoryAppreciation({ publicationId,
-          params: {
-            reaction: 'smile',
-            appreciableId: this.storyId,
-            appreciableType: 'Story'
-          }
+        this.createStoryAppreciation({
+          reaction: 'smile',
+          appreciableId: this.publicationId,
+          appreciableType: 'Publication',
+          publicationId: publicationId
         })
       }
     }

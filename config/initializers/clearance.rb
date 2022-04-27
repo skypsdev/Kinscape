@@ -1,7 +1,6 @@
 Clearance.configure do |config|
-  config.mailer_sender = Global.clearance.mailer_sender
+  config.mailer_sender = 'Kinscape <welcome@kinscape.com>'
   config.routes = false
-  config.cookie_name = Global.clearance.cookie_name
+  config.cookie_name = "remember_token_#{Rails.env}"
   config.rotate_csrf_on_sign_in = false
-  config.sign_in_guards = [ConfirmedUserGuard]
 end

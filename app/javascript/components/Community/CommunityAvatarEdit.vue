@@ -1,8 +1,8 @@
 <template>
   <label class="community-avatar-edit">
-    <div class="community-avatar-edit__image">
+    <div class="community-avatar-edit__image" @click="openFileUpload">
       <v-icon
-          v-if="!isCustomAvatar"
+          v-if="!contentUrl"
           class="community-avatar-edit__icon"
           color="medium_grey"
       >
@@ -10,8 +10,9 @@
       </v-icon>
       <v-img
           v-else
-          :src="url"
+          :src="contentUrl"
           height="156px"
+          max-width="80vw"
       >
         <template v-slot:placeholder>
           <div class="d-flex justify-center">
@@ -23,16 +24,6 @@
           </div>
         </template>
       </v-img>
-      <v-file-input
-          ref="inputCommunityAvatar"
-          id="community-avatar"
-          class="hidden-input-file"
-          accept="image/*"
-          hide-input
-          v-model="image"
-          :disabled="community.isLoading"
-          @change="handleImageChange"
-      />
     </div>
 
     <div class="community-avatar-edit__label">
@@ -52,40 +43,34 @@
 import {mapActions, mapState} from 'vuex'
 
 export default {
-  data () {
-    return {
-      image: null,
-      url: null,
-    }
-  },
   computed: {
     ...mapState({
       community: store => store.families.community
     }),
-    isCustomAvatar() {
-      return this.image || this.url
+    contentUrl(){
+      return this.community.coverUrl
     },
     inputLabel() {
-      return (this.isCustomAvatar)
+      return (this.contentUrl)
           ? this.$i18n.t('stories.change_cover')
           : this.$i18n.t('stories.select_cover')
     }
   },
-  watch: {
-    'community.coverUrl' () {
-      this.url = this.community.content.cover
-    }
-  },
-  mounted () {
-    this.url = this.community.content.cover
-      },
   methods: {
     ...mapActions({
-      updateCommunityAvatar: 'families/updateCommunityAvatar',
+      setDialog: 'layout/setDialog',
+      updateCommunityAvatar: 'families/updateCommunityAvatar'
     }),
-    handleImageChange() {
-      this.url= URL.createObjectURL(this.image)
-      if (this.image) this.updateCommunityAvatar(this.image)
+    async handleImageChange([image]) {      
+      await this.updateCommunityAvatar(image.signedId)
+    },
+    openFileUpload(){
+      this.setDialog({
+        component: 'UploadDialog',
+        customClass: 'upload-dialog',
+        size: 'big',
+        data: { callback: this.handleImageChange },
+      })
     }
   }
 }

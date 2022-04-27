@@ -8,20 +8,23 @@ module Attachments
 
     def call
       ActiveRecord::Base.transaction do
-        blob.attachments.create!(
-          name: 'files',
-          record: vault,
-          box: box,
-          family: family,
-          user: current_user
-        )
+        params[:files].map do |file|
+          blob(file[:signed_id]).attachments.create!(
+            name: 'files',
+            record: vault,
+            box: box,
+            family: family,
+            user: current_user,
+            title: file[:title]
+          )
+        end
       end
     end
 
     private
 
-    def blob
-      @blob ||= ActiveStorage::Blob.find_signed!(params[:file])
+    def blob(file)
+      ActiveStorage::Blob.find_signed!(file)
     end
 
     def box

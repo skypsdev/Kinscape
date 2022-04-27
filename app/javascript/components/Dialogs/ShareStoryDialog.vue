@@ -9,21 +9,28 @@
         <v-row class="mt-2">
           <v-col cols="12" md="4">
             <v-text-field
-                ref="search"
-                v-model="search"
-                full-width
-                hide-details
-                label="Search"
-                single-line
-                outlined
-                rounded
-                prepend-inner-icon="mdi-magnify"
+              ref="search"
+              v-model="search"
+              full-width
+              hide-details
+              label="Search"
+              single-line
+              outlined
+              rounded
+              prepend-inner-icon="mdi-magnify"
             ></v-text-field>
           </v-col>
         </v-row>
-        <ToggleSelect :items="filteredCommunities" v-model="selected" :search="search"/>
+        <ToggleSelect
+          :items="filteredCommunities"
+          v-model="selected"
+          :search="search"
+        />
         <v-row>
-          <PublishDatePicker @changeDate="addPublishDate" @validate="setValidation"/>
+          <PublishDatePicker
+            @changeDate="addPublishDate"
+            @validate="setValidation"
+          />
         </v-row>
       </div>
     </template>
@@ -35,7 +42,7 @@
           color="primary"
           elevation="0"
           class="ma-1"
-          :disabled="!isValid"
+          :disabled="!isValid || !selected.length"
           @click="goToNextStep"
         >
           {{ $i18n.t("stories.share_modal.button.share") }}
@@ -46,10 +53,11 @@
 </template>
 
 <script>
-import DialogContent from '../../components/Layout/Dialog/DialogContent'
-import {mapActions, mapState} from 'vuex'
-import PublishDatePicker from "../Elements/Forms/PublishDatePicker";
-import ToggleSelect from "../Elements/Forms/ToggleSelect";
+import { mapActions, mapState } from 'vuex'
+
+import DialogContent from '@/components/Layout/Dialog/DialogContent'
+import PublishDatePicker from "@/components/Elements/Forms/PublishDatePicker"
+import ToggleSelect from "@/components/Elements/Forms/ToggleSelect"
 
 export default {
   components: {
@@ -65,20 +73,20 @@ export default {
     search: '',
     selected: [],
   }),
-  computed:{
+  computed: {
     ...mapState({
-      communities: state => state.families.simpleList.families,
       dialog: state => state.layout.dialog,
-      story: state => state.stories.story
+      story: state => state.stories.story,
+      sharableFamilies: state => state.families.sharableFamilies,
     }),
-    filteredCommunities () {
+    filteredCommunities() {
       const search = this.search.toLowerCase()
       let result = []
 
       if (!search) {
-        result = this.communities
+        result = this.sharableFamilies
       } else {
-        result = this.communities.filter(item => {
+        result = this.sharableFamilies.filter(item => {
           const text = item.attributes.name.toLowerCase()
 
           return text.indexOf(search) > -1
@@ -94,9 +102,12 @@ export default {
     },
   },
   watch: {
-    selected () {
+    selected() {
       this.search = ''
     },
+  },
+  created() {
+    this.getSharableFamilies(this.story.publication.id)
   },
   methods: {
     ...mapActions({
@@ -104,7 +115,9 @@ export default {
       closeDialog: 'layout/closeDialog',
       setSnackbar: 'layout/setSnackbar',
       setError: 'layout/setError',
+
     }),
+    ...mapActions('families', ['getSharableFamilies']),
     addPublishDate(form) {
       if (form.isVisible) {
         this.publication.publishOn = { ...form }
@@ -129,17 +142,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.share-story-modal {
-  padding: 20px;
-
-  .time-capsule__date-selector {
-    display: block;
-
-    span {
-      display: block;
-    }
-  }
-}
-</style>

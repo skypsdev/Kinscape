@@ -13,7 +13,7 @@
       <v-icon class="flip-h" left>mdi-message-plus-outline</v-icon>
       {{ $i18n.t('comments.add_comment') }}
     </v-btn>
-    
+
     <div v-if="displayedCommentForm === commentableId">
       <v-textarea
         class="comments__textarea"
@@ -37,7 +37,7 @@
         </v-btn>
       </div>
     </div>
-    
+
     <v-list>
       <v-list-item
         v-for="comment in comments"
@@ -55,7 +55,7 @@
             </div>
             <div class="comments__date ml-1" v-html="formatDate(comment.attributes.createdAt)" />
             <v-btn
-              v-if="canRemoveComment(comment.attributes.userId)"
+              v-if="canRemoveComment(comment)"
               class="comments__button--remove"
               plain
               color="primary"
@@ -113,7 +113,7 @@
                     </div>
                     <div class="comments__date ml-1" v-html="formatDate(reply.attributes.createdAt)" />
                     <v-btn
-                      v-if="canRemoveComment(reply.attributes.userId)"
+                      v-if="canRemoveComment(reply)"
                       class="comments__button--remove"
                       plain
                       color="primary"
@@ -164,7 +164,6 @@
     </v-list>
   </div>
 </template>
-
 <script>
 import {mapActions, mapState} from 'vuex'
 import Avatar from './Avatar'
@@ -175,6 +174,10 @@ export default {
   },
   props: {
     parentId: {
+      type: String,
+      required: true
+    },
+    parentType:{
       type: String,
       required: true
     },
@@ -222,12 +225,10 @@ export default {
     },
     addNewComment (commentableId, commentableType) {
       this.addComment({
-        publicationId: this.parentId,
-        body: {
-          body: this.newComment,
-          commentableType,
-          commentableId
-        }
+        parent: { parentId: this.parentId, parentType: this.parentType },
+        body: this.newComment,
+        commentableType,
+        commentableId
       })
       this.newComment = ''
       this.displayedCommentForm = ''
@@ -239,8 +240,11 @@ export default {
         type: commentableType
       })
     },
-    canRemoveComment(id) {
-      return id.toString() === this.currentUser.id || this.currentUser.isAdmin
+    canRemoveComment(comment) {
+      return this.$possible('destroy', 'Comment', {
+        userId: comment.attributes.userId,
+        publication: { familyId: comment.attributes.familyId }
+      })
     },
     handleShowReplies(id) {
       if (this.showReplies.includes(id)) {
@@ -258,7 +262,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .comments {
   &__replies {

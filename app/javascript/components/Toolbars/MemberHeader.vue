@@ -14,7 +14,7 @@
     </v-col>
     <v-col cols="3" md="4" class="d-flex flex-row align-center justify-end fill-height">
       <v-btn
-        v-if="!isEditMode && isCurrentUserAllowedToEdit"
+        v-if="!isEditMode && canManageKinship"
         class="ml-1"
         :fab="isMobile"
         :small="isMobile"
@@ -40,10 +40,10 @@
         :title="$i18n.t('families.edit_title')"
         :to="`/communities/members/${member.id}`"
       >
-        {{ member.isChanged ? $i18n.t('communities.edit.save') : $i18n.t("communities.edit.cancel") }}
+        {{ $i18n.t('communities.edit.save')  }}
       </v-btn>
       <CommunityMemberOptions
-        v-if="member && member.isCurrentUserConnector"
+        v-if="isDisplayMemberOptions"
         class="ml-1"
         :member="member"
         theme="toolbar"
@@ -79,6 +79,7 @@ export default {
     ...mapState({
       currentUser: store => store.core.user,
       member: store => store.members.member,
+      community: state => state.families.community
     }),
     communityId() {
       return this.member.familyId
@@ -86,14 +87,19 @@ export default {
     isCurrentUserConnector() {
       return this.member?.isCurrentUserConnector
     },
-    isCurrentUser() {
-      return this.member.userId?.toString() === this.currentUser.id?.toString()
+    isCurrentUserAdmin() {
+      return this.community.isAdmin
+    },
+    isDisplayMemberOptions() {
+      return this.isCurrentUserAdmin && !this.isCurrentUserConnector
     },
     isEditMode() {
       return this.$route.name === 'memberEdit'
     },
-    isCurrentUserAllowedToEdit() {
-      return this.$possible('manage', 'Kinship', { userId: this.member.userId })
+    canManageKinship() {
+      return this.$possible('manage', 'Kinship', {
+        userId: this.member.userId, familyId: this.member.familyId, accessType: this.member.accessType
+      })
     },
     menuButtons() {
       return [
@@ -111,6 +117,11 @@ export default {
           label: 'families.submenu.invited_members',
           title: 'families.submenu.invited_members_title',
           to: { name: 'invitedMembers', params: { id: this.communityId } }
+        },
+        {
+          label: 'families.submenu.vault',
+          title: 'families.submenu.vault_title',
+          to: { name: 'communityVault', params: { id: this.communityId } }
         }
       ]
     },

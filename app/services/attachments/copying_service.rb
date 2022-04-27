@@ -15,21 +15,21 @@ module Attachments
       raise ActiveRecord::RecordNotFound if attachments.size != params[:ids].size
 
       errors << I18n.t('copying.errors.different_vaults') if attachments.pluck(:record_id).uniq.size != 1
-      errors << I18n.t('copying.errors.same_vault') if vault == new_vault
 
       return if errors.any?
 
-      Attachment.transaction do
+      ActiveRecord::Base.transaction do
         attachments.map do |attachment|
-          blob = attachment.blob
-          next if blob.attachments.find_by(record: new_vault)
-
-          blob.attachments.create!(
+          existing_attachments = attachment.blob.attachments.where(record: new_vault)
+          copy_number = lowest_available(existing_attachments.pluck(:copy_number))
+          attachment.blob.attachments.create!(
             name: 'files',
             record: new_vault,
             box: box,
             family_id: attachment.family_id,
-            user_id: attachment.user_id
+            user_id: attachment.user_id,
+            copy_number: copy_number,
+            title: title(attachment.blob, copy_number)
           )
         end
       end
@@ -41,6 +41,20 @@ module Attachments
 
     def box
       @box ||= new_vault.boxes.find(params[:box_id]) if params[:box_id]
+    end
+
+    def title(blob, copy_number)
+      return if copy_number.zero?
+
+      blob.filename.base + "(#{copy_number})"
+    end
+
+    def lowest_available(ids_array)
+      return 0 if ids_array.blank?
+
+      ids_array.sort.filter_map.with_index do |id, index|
+        break index if index != id
+      end.presence || ids_array.max + 1
     end
   end
 end

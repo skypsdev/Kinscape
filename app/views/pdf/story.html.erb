@@ -1,0 +1,65 @@
+<div class="v-application v-application--is-ltr theme--light">
+  <div class="v-application--wrap">
+    <div class="mx-16">
+      <div class="d-flex flex-row justify-center pt-6">
+        <%= image_tag(wicked_pdf_asset_base64('logo-large.svg'), alt: "Kinscape", class: 'logo_image') %>
+      </div>
+      <div class="d-flex flex-row justify-center pt-16">
+        <h1 class="story-title"><%= @story.title %></h1>
+      </div>
+      <div class="d-flex flex-row justify-center pt-16">
+        <div class="cover-image" style="background-image: url(<%= @story.cover.url %>)"></div>
+      </div>
+      <% kinships = @story.user.kinships.left_joins(:avatar_attachment) %>
+      <% kinship_with_avatar = kinships.having('COUNT(active_storage_attachments) != 0').group(:id).limit(1).first || kinships.first %>
+      <% story_avatar = kinship_with_avatar.avatar&.variant(resize_to_limit: IMAGE_SIZE[:medium])&.processed&.url %>
+      <div class="d-flex flex-row justify-center align-center pt-6">
+        <div class="user__avatar mr-3" style="background-image: url(<%= story_avatar %>)"></div>
+        <span class="user__name mr-3">
+          <%= kinship_with_avatar.nickname %>
+        </span>
+      </div>
+      <% if @story.description.present? %>
+        <div class="description d-flex flex-row justify-center align-center pt-6">
+          <%= @story.description %>
+        </div>
+      <% end %>
+      <div class="page-break"></div>
+      <div class="d-flex flex-row justify-left align-center mr-16">
+        <h4 class="table-of-contents__heading mr-16 pr-16">Table of Contents</h4>
+      </div>
+      <div class="d-flex flex-row justify-left align-center pt-5 mb-5">
+        <ul class="table-of-contents__list">
+          <% @story.sections.map.with_index do |section, i| %>
+            <li class="table-of-contents__item">
+              <%= link_to "<strong class='mr-3'>#{i + 1}</strong> #{section.title}".html_safe, "#{section.title}" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="page-break"></div>
+      <div>
+        <% @story.sections.each do |section| %>
+          <div class="content__section my-12">
+            <h1 class="content__title"><%= section.title %></h1>
+            <% if section.author&.kinships.present? %>
+              <% kinships = section.author.kinships.left_joins(:avatar_attachment) %>
+              <% kinship_with_avatar = kinships.having('COUNT(active_storage_attachments) != 0').group(:id).limit(1).first || kinships.first %>
+              <% section_avatar = kinship_with_avatar.avatar&.variant(resize_to_limit: IMAGE_SIZE[:medium])&.processed&.url %>
+              <div class="content__author mt-2">
+                <span class="content__author--thumbnail" style="background-image: url(<%= section_avatar %>)"></span>
+                <span class="content__author--name"><%= kinship_with_avatar.nickname %></span>
+              </div>
+            <% end %>
+            <div class="content__body mt-2">
+              <%= section.rich_body.body %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<% content_for :head do %>
+  <title><%= @story.title %></title>
+<% end %>

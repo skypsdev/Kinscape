@@ -1,40 +1,43 @@
-# == Schema Information
-#
-# Table name: comments
-#
-#  id               :bigint           not null, primary key
-#  body             :text             not null
-#  commentable_id   :integer          not null
-#  commentable_type :string           not null
-#  user_id          :integer          not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#
-
 class CommentSerializer < BaseSerializer
-  set_id :uid
   set_type :comment
 
-  has_many_encoded :comments
+  def initialize(*args)
+    super
+    @family = nil
+  end
+
+  has_many :comments do |comment, params|
+    if comment.top_commentable.instance_of?(Publication) && comment.top_commentable.personal_type? &&
+       comment.top_commentable.story.user_id != params[:current_user].id
+      comment.comments.where(user_id: [params[:current_user].id, comment.top_commentable.story.user_id])
+    else
+      comment.comments
+    end
+  end
 
   attributes(
     :body,
     :created_at,
     :user_id,
+    :commentable_id,
     :commentable_type,
     :comments_count
   )
 
-  attribute :commentable_id do |object|
-    # TODO-UUID: use attr without a block after migration to UUID in Section and Publication
-    object.commentable.respond_to?(:uid) ? object.commentable.uid : object.commentable_id
+  attribute :family do |object|
+    @family = case object.top_commentable_type
+              when 'Publication', 'Kinship' then object.top_commentable.family
+              when 'Family' then object.top_commentable
+              end
   end
 
+  attribute family_id: @family&.id
+
   attribute :user_name do |object|
-    object.user.kinships.find_by(family: object.publication.family)&.nickname
+    object.user.all_kinships.find_by(family: @family)&.nickname
   end
 
   attribute :user_avatar_url do |object|
-    object.user.kinships.find_by(family: object.publication.family)&.avatar_url(size: :thumb)
+    object.user.all_kinships.find_by(family: @family)&.avatar_url(size: :thumb)
   end
 end

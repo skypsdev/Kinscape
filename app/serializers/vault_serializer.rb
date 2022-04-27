@@ -1,6 +1,11 @@
 class VaultSerializer < BaseSerializer
   set_id :id
 
+  attributes(
+    :owner_type,
+    :owner_id
+  )
+
   attribute :name do |object|
     if object.owner_type == 'User'
       I18n.t('vaults.private.label')
@@ -11,7 +16,7 @@ class VaultSerializer < BaseSerializer
 
   attribute :avatar_url do |object|
     if object.owner_type == 'User'
-      kinships = object.owner.kinships.left_joins(:avatar_attachment)
+      kinships = object.owner.all_kinships.left_joins(:avatar_attachment)
       kinship_with_avatar = kinships.having('COUNT(active_storage_attachments) != 0').group(:id).limit(1).first
       kinship_with_avatar&.avatar_url(size: :medium)
     else

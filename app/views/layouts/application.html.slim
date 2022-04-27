@@ -4,15 +4,13 @@ html ng-app="kinscape"
     meta charset="utf-8"
     meta name="ROBOTS" content="NOODP"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
-    meta name="filestack-api-key" content="#{ENV['FILEPICKER_API_KEY']}"
     link rel="apple-touch-icon" href="#{image_path('touch-icons/touch-icon-80x80.png')}"
     link rel="apple-touch-icon" sizes="152x152" href="#{image_path('touch-icons/touch-icon-152x152.png')}"
     link rel="apple-touch-icon" sizes="180x180" href="#{image_path('touch-icons/touch-icon-180x180.png')}"
     link rel="apple-touch-icon" sizes="167x167" href="#{image_path('touch-icons/touch-icon-167x167.png')}"
     title = page_title
     = stylesheet_link_tag :application, media: 'all'
-    = javascript_packs_with_chunks_tag 'application'
-    = stylesheet_pack_tag 'application'
+    = javascript_packs_with_chunks_tag 'vue-application'
     = csrf_meta_tags
     = action_cable_meta_tag
     = render 'analytics'
@@ -23,7 +21,8 @@ html ng-app="kinscape"
     id="top"
     class="legacy-styles"
   )
-    = render 'gtm_body_tag'
+    - if Rails.env.production?
+      = render 'apiary_analytics'
     - if signed_in?
       = render 'global_nav'
     saving-status

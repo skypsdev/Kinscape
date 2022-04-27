@@ -1,18 +1,14 @@
 <template>
   <label class="story-avatar-edit">
-    <div class="story-avatar-edit__image">
+    <div class="story-avatar-edit__image" @click="openFileUpload">
       <v-icon
-        v-if="!isCustomAvatar"
+        v-if="!contentUrl"
         class="story-avatar-edit__icon"
         color="medium_grey"
       >
         mdi-image-outline
       </v-icon>
-      <v-img
-        v-else
-        :src="url"
-        height="156px"
-      >
+      <v-img v-else :src="contentUrl" height="156px">
         <template v-slot:placeholder>
           <div class="d-flex justify-center">
             <v-progress-circular
@@ -23,69 +19,46 @@
           </div>
         </template>
       </v-img>
-      <v-file-input
-        ref="inputStoryAvatar"
-        id="story-avatar"
-        class="hidden-input-file"
-        accept="image/*"
-        hide-input
-        v-model="image"
-        :disabled="story.isLoading"
-        @change="handleImageChange"
-      />
     </div>
-    
+
     <div class="story-avatar-edit__label">
-      <template v-if="!story.isLoading">
-        {{ inputLabel }}
-      </template>
-      <v-progress-circular
-        v-else
-        indeterminate
-        color="medium_grey"
-      />
+      {{ inputLabel }}
     </div>
   </label>
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
-  data () {
-    return {
-      image: null,
-      url: null,
-    }
-  },
   computed: {
     ...mapState({
       story: store => store.stories.story
     }),
-    isCustomAvatar() {
-      return this.image || (this.url && this.url.includes('/active_storage/'))
+    contentUrl() {
+      return this.story.content.cover
     },
     inputLabel() {
-      return (this.isCustomAvatar)
+      return this.contentUrl
         ? this.$i18n.t('stories.change_cover')
         : this.$i18n.t('stories.select_cover')
     }
   },
-  watch: {
-    'story.content.cover' () {
-      this.url = this.story.content.cover
-    }
-  },
-  mounted () {
-    this.url = this.story.content.cover
-  },
   methods: {
     ...mapActions({
+      setDialog: 'layout/setDialog',
       updateStoryAvatar: 'stories/updateStoryAvatar',
     }),
-    handleImageChange() {
-      this.url= URL.createObjectURL(this.image)
-      if (this.image) this.updateStoryAvatar(this.image)
+    async handleImageChange([image]) {
+      await this.updateStoryAvatar(image.signedId)
+    },
+    openFileUpload() {
+      this.setDialog({
+        component: 'UploadDialog',
+        customClass: 'upload-dialog',
+        size: 'big',
+        data: { callback: this.handleImageChange },
+      })
     }
   }
 }
@@ -94,7 +67,7 @@ export default {
 <style lang="scss">
 .story-avatar-edit {
   background: $color-dark-white;
-  border: 2px dotted #D0D0D0;
+  border: 2px dotted $gray1;
   box-sizing: border-box;
   border-radius: 5px;
   max-width: 208px;
@@ -111,7 +84,7 @@ export default {
     align-content: center;
   }
   &__label {
-    background: #FDFDFD;
+    background: $white1;
     border-radius: 0px 0px 2px 2px;
     display: flex;
     align-items: center;

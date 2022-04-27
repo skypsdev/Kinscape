@@ -13,7 +13,7 @@ describe Api::V1::RequestsController, type: :controller do
       post :create,
            params: {
              request: {
-               family_id: family.uid,
+               family_id: family.id,
                kinships_ids: [recipient.kinships.first.id],
                message: 'Blah'
              }
@@ -39,7 +39,7 @@ describe Api::V1::RequestsController, type: :controller do
       post :create,
            params: {
              request: {
-               family_id: family.uid,
+               family_id: family.id,
                kinships_ids: [recipient.kinships.first.id, recipient_2.kinships.first.id],
                message: 'Blah'
              }

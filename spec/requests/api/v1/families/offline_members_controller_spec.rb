@@ -4,7 +4,7 @@ RSpec.describe Api::V1::Families::OfflineMembersController, type: :request do
   let(:user) { create :user }
   let!(:family) { create :family, users: [user] }
   let(:kinship) { user.kinships.find_by(family: family) }
-  let(:family_id) { family.uid }
+  let(:family_id) { family.id }
   let(:id) { kinship.id }
 
   path '/api/v1/families/{family_id}/offline_members' do
@@ -47,6 +47,7 @@ RSpec.describe Api::V1::Families::OfflineMembersController, type: :request do
       response(200, 'successful', save_request_example: :payload) do
         run_test! do
           expect(response.parsed_body['data']['attributes']['nickname']).to eq('johnny bravo')
+          expect(response.parsed_body['data']['attributes']['role']).to eq('offline_member')
         end
       end
     end

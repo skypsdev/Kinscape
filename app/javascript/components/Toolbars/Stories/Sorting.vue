@@ -4,10 +4,14 @@
     <v-menu
       bottom
       offset-y
+      v-model="displaySwitcher"
       content-class="sorting-switcher"
     >
-      <template v-slot:activator="{ on, attrs }">
-        <div class="sorting-switcher__activator">
+      <template v-slot:activator="{ attrs }">
+        <div
+          class="sorting-switcher__activator"
+          @click="displaySwitcher = !displaySwitcher"
+        >
           <v-text-field
             :value="selectedParameter.text"
             dense
@@ -19,9 +23,8 @@
             background-color="light_grey"
             type="text"
             class="sorting-switcher__input"
-            :append-icon="attrs['aria-expanded'] !== 'false' ? 'mdi-menu-up' : 'mdi-menu-down'"
+            :append-icon="displaySwitcher ? 'mdi-menu-up' : 'mdi-menu-down'"
             v-bind="attrs"
-            v-on="on"
           />
         </div>
       </template>
@@ -51,6 +54,9 @@ export default {
       required:true
     }
   },
+  data: () => ({
+    displaySwitcher: false
+  }),
   computed: {
     sortParameters() {
       return [
@@ -98,7 +104,7 @@ export default {
     },
     sortingQuery(){
       return {
-          sortBy: this.$route.query?.sortBy || "created_at",
+          sortBy: this.$route.query?.sortBy || 'updated_at',
           sortDirection: this.$route.query?.sortDirection || "DESC"
       }
     }

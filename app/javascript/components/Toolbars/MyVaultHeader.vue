@@ -1,18 +1,14 @@
 <template>
-  <v-row>
+  <v-row class="flex-nowrap">
     <template v-if="!isEditMode">
-      <v-col></v-col>
-      <v-col>
-        <MyLifeMenu :has-simulated-path="hasSimulatedPath" />
-      </v-col>
-      <v-col class="d-flex flex-row align-center">
-        <v-spacer />
-        <AddBoxButton
-          :vault-id="vaultId"
-          class="mr-2"
-        />
-        <UploadFile class="ml-2" />
-      </v-col>
+      <v-spacer />
+      <MyLifeMenu :has-simulated-path="hasSimulatedPath" />
+      <v-spacer />
+      <AddBoxButton
+        :vault-id="vaultId"
+        class="mr-2"
+      />
+      <UploadFile class="ml-2" />
     </template>
     <template v-else>
       <v-col class="d-inline-flex align-center py-0">

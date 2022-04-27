@@ -9,12 +9,13 @@
             <StoryCommentsButton disabled class="mb-9" />
             <TableOfContents
                 data-type="story"
+                :add-chapter-enabled="canCurrentUserCollaborate"
                 is-edit-mode
             />
           </div>
         </v-col>
         <v-col cols="12" md="8" lg="9">
-          <StoryDescriptionEdit v-if="story.canCollaborateStory" :key="story.id" />
+          <StoryDescriptionEdit v-if="canCurrentUserEdit" :key="story.id" />
           <StoryDescription v-else />
           <v-divider class="my-12" />
           <div
@@ -30,13 +31,15 @@
               :edit-mode="true"
             />
             <StoryChapterEdit
-              v-if="chapter.attributes.is_author"
+              v-if="canCurrentUserEditSection(chapter)"
               class="mb-16"
               :chapter="chapter"
             />
             <StoryChapter
               v-else
               :chapter="chapter"
+              :share-type="story.publication.attributes.shareType"
+              :can-destroy-chapter="canDestroyChapter"
             />
           </div>
           <AddChapter
@@ -96,17 +99,48 @@ export default {
       return this.chapters.slice(0).sort((a, b) => {
         return a.attributes.position - b.attributes.position
       })
-    }
+    },
+    canCurrentUserCollaborate() {
+      return this.$possible('collaborate', 'Publication', {
+            shareType: this.story.publication?.attributes?.shareType,
+            familyId: this.story.publication?.attributes?.familyId,
+            story: { userId: this.story.userId }
+          })
+    },
+    canCurrentUserEdit() {
+      return this.$possible('edit', 'Publication', {
+            shareType: this.story.publication.attributes.shareType,
+            familyId: this.story.publication.attributes.familyId,
+            story: { userId: this.story.userId }
+          })
+    },
+    canDestroyChapter() {
+      return this.$possible('destroy', 'Section', {
+        story: {
+          publications: {
+            familyId: this.story.publication.attributes.familyId,
+            shareType: this.story.publication.attributes.shareType
+          }
+        }
+      })
+    },
+
   },
   watch: {
     activeChapter(chapterId) {
       if (chapterId) {
         this.goToSelectedChapter(chapterId)
-        this.setStoryActiveChapter()
+        this.setStoryActiveChapter(chapterId)
       }
     }
   },
+  created () {
+    if (!this.canCurrentUserCollaborate) {
+      this.$router.push({ name: 'showStory', params: { id: this.publicationId } })
+    }
+  },
   mounted () {
+    this.$vuetify.goTo(document.body, 0)
     this.fetchStory()
   },
   methods: {
@@ -121,9 +155,9 @@ export default {
       const selectedChapter = this.chapters.find((chapter) => chapter.id === chapterId)
       if (!selectedChapter) {
         if (this.hasMorePages) {
-          await this.getChapters(this.story.id)
+          await this.getChapters({id: this.story.publication.id})
         } else {
-          await this.getChaptersAgain(this.story.id)
+          await this.getChaptersAgain(this.story.publication.id)
         }
         await this.goToSelectedChapter(chapterId)
       } else {
@@ -146,7 +180,10 @@ export default {
           }
         })
       }
-    }
+    },
+    canCurrentUserEditSection(section) {
+      return this.$possible('update', 'Section', { authorId: section.attributes.author_id })
+    },
   }
 }
 </script>
@@ -154,6 +191,7 @@ export default {
 <style lang="scss" scoped>
 .story-left-sidebar {
   position: sticky;
-  height: calc(100vh - 176px);
+  top: 176px;
+  height: calc(100vh - 280px);
 }
 </style>

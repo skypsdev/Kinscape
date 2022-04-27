@@ -1,6 +1,6 @@
 class BoxFilter < ApplicationQuery
   def initialize(params:)
-    @boxes = Box.where(vault_id: params[:id], parent_box_id: params[:box_id].presence)
+    @boxes = Box.where(vault_id: params[:vault_id], parent_box_id: params[:box_id].presence)
     @params = params
   end
 

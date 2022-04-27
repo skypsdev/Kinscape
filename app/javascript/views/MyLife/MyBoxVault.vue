@@ -24,7 +24,7 @@ export default {
       clearVaultSorting: 'vaults/clearVaultSorting',
       getBox: 'vaults/getBox'
     }),
-    getItems() {
+    async getItems() {
       const { boxId } = this.$route.params
       const { vaultId } = this
 

@@ -1,11 +1,11 @@
 development:
-#  service: Disk
-#  root: <%#= Rails.root.join("tmp/storage_fixtures") %>
-  service: S3
-  access_key_id: <%= ENV['S3_KEY'] %>
-  secret_access_key: <%= ENV['S3_SECRET'] %>
-  bucket: kinscape-development
-  region: us-west-2
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage_fixtures") %>
+#  service: S3
+#  access_key_id: <%#= ENV['S3_KEY'] %>
+#  secret_access_key: <%#= ENV['S3_SECRET'] %>
+#  bucket: kinscape-development
+#  region: us-west-2
 
 test:
   service: Disk

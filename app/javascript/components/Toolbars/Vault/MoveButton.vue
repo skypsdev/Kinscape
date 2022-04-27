@@ -39,7 +39,7 @@ export default {
     ...mapState("vaults", ["selectedVaultItems"]),
     ...mapState('families', ['community']),
     isDisabled() {
-      return this.selectedVaultItems.every(item => this.isAsset(item) && this.canManage(item)) === false
+      return this.selectedVaultItems.every(item => this.isAsset(item) && !this.canManageAsset(item))
     }
   },
   methods: {

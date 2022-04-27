@@ -1,24 +1,33 @@
 <template>
-  <v-card class="dialog" flat>
-    <header v-if="!dialog.isToolbarHidden" class="dialog-header">
+  <v-card
+    v-bind="$attrs"
+    class="dialog"
+    flat
+  >
+    <header v-if="!dialog.isToolbarHidden && header" class="dialog-header">
       <h2 class="dialog-title">{{ dialogTitle }}</h2>
-      <slot name="close-btn" :handle-close="handleClose">
-        <v-btn
-          icon
-          @click="handleClose"
-        >
+      <slot v-if="!dialog.hideCloseBtn" name="close-btn" :handle-close="handleClose">
+        <v-btn icon @click="handleClose">
           <v-icon big>mdi-close</v-icon>
         </v-btn>
       </slot>
     </header>
 
-    <v-card-text class="dialog-content">
+    <v-card-text
+        v-if="$slots.content"
+        class="dialog-content"
+        :style="{
+          'background-color': backgroundColor,
+          'margin-bottom': marginBottom,
+        }"
+    >
       <slot name="content" />
     </v-card-text>
 
     <v-card-actions
       v-if="$slots.actions"
-      class="justify-center mb-4"
+      class="dialog__footer"
+      :class="justifyCenter && 'justify-center'"
     >
       <slot name="actions" />
     </v-card-actions>
@@ -26,28 +35,49 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex'
 export default {
   props: {
+    justifyCenter: {
+      type: Boolean,
+      default: true,
+    },
+    closeGlobalDialog: {
+      type: Boolean, default: true
+    },
     title: { type: String, required: false },
+    header: { type: Boolean, default: true },
+    backgroundColor: {
+      type: String,
+      required: false,
+      default: "#ffffff"
+    },
+    marginBottom: {
+      type: String,
+      required: false,
+      default: "0"
+    },
   },
   computed: {
     ...mapState({
-           dialog: (state) => state.layout.dialog,
+      dialog: (state) => state.layout.dialog
     }),
     dialogTitle() {
       return this.title ?? this.dialog.title
-    },
+    }
   },
   methods: {
     ...mapActions({
-      closeDialog: 'layout/closeDialog',
+      closeDialog: 'layout/closeDialog'
     }),
     handleClose() {
-      this.closeDialog()
+      if (this.closeGlobalDialog) {
+        this.closeDialog()
+      }
+
       this.$emit('close')
-    },
-  },
+    }
+  }
 }
 </script>
 

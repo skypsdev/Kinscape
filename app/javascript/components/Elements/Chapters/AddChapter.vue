@@ -2,10 +2,11 @@
   <div class="d-flex">
     <template v-if="separator">
       <v-btn
-          class="add-chapter-button pl-0"
-          color="primary"
-          text
-          @click="handleCreateNewChapter"
+        v-bind="$attrs"
+        class="add-chapter-button pl-0"
+        color="primary"
+        text
+        @click="handleCreateNewChapter"
       >
         <v-icon class="mr-2">mdi-plus-circle-outline</v-icon>
         {{$i18n.t('stories.chapters.new')}}
@@ -15,11 +16,12 @@
 
     <template v-else>
       <v-btn
-          rounded
-          large
-          elevation="0"
-          color="primary"
-          @click="handleCreateNewChapter"
+        v-bind="$attrs"
+        rounded
+        large
+        elevation="0"
+        color="primary"
+        @click="handleCreateNewChapter"
       >
         <v-icon class="mr-2">mdi-plus-circle-outline</v-icon>
         {{$i18n.t('stories.chapters.new')}}
@@ -28,7 +30,7 @@
   </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -50,6 +52,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      activeTooltip: 'core/activeTooltip'
+    }),
     ...mapState({
       member: state => state.members.member,
       community: state => state.families.community,
@@ -65,7 +70,6 @@ export default {
     }),
     async handleCreateNewChapter () {
       let params = {
-        media_type: 'text',
         position: this.position,
         title: this.$i18n.t('sections.title_placeholder'),
         rich_body: '<p>' + this.$i18n.t('sections.body_placeholder') + '</p>'

@@ -17,14 +17,11 @@
     </v-col>
     <v-col class="d-flex">
       <p class="list-item__title ma-0">
-        {{ transformRoleString(memberRole) }}
+        {{ $i18n.t(`families.member_roles.${member.role}`) }}
       </p>
     </v-col>
     <v-col class="d-flex">
-      <p v-if="isInvitation" class="list-item__column-text ma-0">
-        {{ member.createdAt ? this.$i18n.l('date.formats.default', member.createdAt) : '-'  }}
-      </p>
-      <p class="list-item__column-text ma-0" v-else>
+      <p class="list-item__column-text ma-0">
         {{ member.createdAt ? this.$i18n.l('date.formats.default', member.createdAt) : '-'  }}
       </p>
     </v-col>
@@ -65,13 +62,14 @@
             small
             color="primary"
             elevation="0"
+            @click="goToMember(true)"
         >
           <v-icon>mdi-email-outline</v-icon>
         </v-btn>
         <CommunityMemberOptions
             class="mr-7"
             :member="member"
-            v-if="(isActiveUser && !isAdmin(member.userType) && isCurrentUserAdmin) || isInvitation"
+            v-if="(isActiveUser && !isAdmin(member.role) && isCurrentUserAdmin) || isInvitation"
         />
       </div>
     </v-col>
@@ -98,16 +96,13 @@ export default {
   computed: {
     ...mapState({
       currentUser: state => state.core.user,
-      isCurrentUserAdmin: state => state.user.isAdmin
+      community: state => state.families.community
     }),
-    memberRole () {
-      return this.member.role
-    },
     isCurrentUserAdmin() {
-      return this.member.isCurrentUserConnector
+      return this.community.isAdmin
     },
     isActiveUser() {
-      return !!this.member.userId
+      return this.member.role !== 'offline_member'
     },
     isCurrentUser() {
       if (this.isActiveUser) {
@@ -120,7 +115,8 @@ export default {
   methods: {
     ...mapActions({
       resendInvitations: 'families/resendInvitations',
-      cancelInvitations: 'families/cancelInvitations'
+      cancelInvitations: 'families/cancelInvitations',
+      setDialog: 'layout/setDialog'
     }),
     sendResendInvitation() {
       this.resendInvitations([this.member.id])
@@ -128,19 +124,27 @@ export default {
     sendCancelInvitation() {
       this.cancelInvitations([this.member.id])
     },
-    goToMember() {
-      if (!this.isInvitation) {
-        this.$router.push({
-          name: 'member',
-          params: { id: this.member.id }
+    goToMember(message = false) {
+      if (this.isInvitation) { return }
+      this.$router.push({
+        name: 'member',
+        params: { id: this.member.id }
+      })
+
+      if (message) {
+        this.setDialog({
+          component: 'SendMessageToMembersDialog',
+          title: this.$i18n.t('requests.title'),
+          data: {
+            kinshipsIds: [this.member.id.toString()],
+            familyId: this.community.id,
+            locked: true
+          }
         })
       }
     },
-    transformRoleString(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1).split('_').join('-');
-    },
-    isAdmin(userType) {
-      return userType === 'admin'
+    isAdmin(role) {
+      return role === 'admin'
     },
   }
 }

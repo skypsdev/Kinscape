@@ -9,31 +9,24 @@ module Api
       end
 
       def show
-        vault = Vault.find(params[:id])
         authorize! :read, vault
-        @pagy, records = pagy_array(boxes + attachments, items: params[:per_page].presence || 10)
-        response_service.render_collection(VaultItemSerializer, records)
+        response_service.render(VaultSerializer, vault)
       end
 
       private
+
+      def vault
+        @vault = if params[:showcase].present?
+                   User.find_by(email: Showcase::USER_EMAIL).vault
+                 else
+                   Vault.find(params[:id])
+                 end
+      end
 
       def all_vaults
         Vault.where(owner_type: 'User', owner_id: current_user.id).or(
           Vault.where(owner_type: 'Family', owner_id: current_user.families.ids)
         )
-      end
-
-      def filter_params
-        params.permit(:query, :sort_direction, :sort_by, :box_id, :id)
-      end
-
-      def boxes
-        @boxes ||= BoxFilter.call(params: filter_params)
-      end
-
-      def attachments
-        condition = ActiveModel::Type::Boolean.new.cast(params[:only_boxes])
-        @attachments ||= condition ? [] : AttachmentFilter.call(params: filter_params)
       end
     end
   end

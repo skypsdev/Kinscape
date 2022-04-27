@@ -4,7 +4,7 @@ class InvitationsController < ApplicationController
   def decline
     # TODO: revisit before merging to master
     invitation = Invitation.find_by(id: params[:id])
-    return redirect_to "/communities/#{invitation.family.uid}/?accepted=true" if invitation&.accepted?
+    return redirect_to "/communities/#{invitation.family.id}/?accepted=true" if invitation&.accepted_at.present?
 
     invitation&.destroy!
     sign_out if @user

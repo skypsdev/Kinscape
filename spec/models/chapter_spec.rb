@@ -1,23 +1,8 @@
-# == Schema Information
-#
-# Table name: chapters
-#
-#  id               :bigint           not null, primary key
-#  chapterable_id   :integer
-#  chapterable_type :string
-#  position         :integer
-#  title            :string
-#  body             :text
-#  media_type       :string
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#
 require 'spec_helper'
 
 RSpec.describe Chapter, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:chapterable) }
-    it { is_expected.to have_many(:media_files) }
   end
 
   # Chapterable as family object

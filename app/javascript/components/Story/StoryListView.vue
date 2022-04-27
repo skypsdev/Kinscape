@@ -10,7 +10,7 @@
     </v-row>
     <StoryListItem
         v-for="story in stories"
-        :key="story.id"
+        :key="story.publication.id"
         :story="story"
     />
   </div>

@@ -1,0 +1,59 @@
+#driver-popover-item {
+  background: $secondary-lightest !important;
+  border-radius: 5px;
+  padding: 31px 24px 21px 42px !important;
+  min-width: 512px !important;
+
+  .driver-popover-title {
+    font-family: Enriqueta !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font-size: 23px !important;
+    line-height: 31px !important;
+    margin-bottom: 12px !important;
+    text-align: justify;
+    color: $secondary-darker;
+  }
+
+  .driver-popover-description {
+    font-family: Lato !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 18px !important;
+    line-height: 26px !important;
+    margin-bottom: 24px !important;
+    color: $color-tertiary !important;
+  }
+
+  .driver-next-btn,
+  .driver-prev-btn {
+    min-width: 119px !important;
+    border-radius: 24px !important;
+    font-family: Lato !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+    line-height: 26px !important;
+    color: #ffffff !important;
+    min-width: 71px!important;
+    padding: 0 17.7777777778px;
+    text-shadow: none !important;
+
+    &.driver-disabled {
+      display: none !important;
+    }
+
+}
+
+.driver-btn-group driver-navigation-btns{
+    display: flex;
+}
+.driver-next-btn{
+    background: $color-primary !important;
+}
+.driver-prev-btn{
+    background: transparent !important;
+    color: #E75739!important;
+    border: none!important;
+}
+}

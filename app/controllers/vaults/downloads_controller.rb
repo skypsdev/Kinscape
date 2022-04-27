@@ -19,10 +19,11 @@ module Vaults
     end
 
     def file_url(attachment)
-      attachment.url(
-        expires_in: 30.seconds,
+      Rails.application.routes.url_helpers.rails_blob_url(
+        attachment,
         disposition: :attachment,
-        filename: attachment.title || attachment.filename.to_s
+        filename: attachment.title || attachment.filename.to_s,
+        only_path: true
       )
     end
   end

@@ -2,7 +2,7 @@ module Stories
   class GenerateZipService < ApplicationService
     def initialize(story)
       @story = story
-      @download_dir_path = Rails.root.join('tmp', 'stories', "story-#{story.uid}")
+      @download_dir_path = Rails.root.join('tmp', 'stories', "story-#{story.id}")
       @zip_file = Tempfile.new
     end
 
@@ -20,12 +20,12 @@ module Stories
     def attachments
       ids = ActionText::RichText.where(name: 'rich_body', record_type: 'Section', record_id: story.sections.ids)
       attachments = ActiveStorage::Attachment.where(name: 'embeds', record_type: 'ActionText::RichText', record_id: ids)
-      attachments.filter_map do |attachment|
+      attachments.filter_map.with_index do |attachment, index|
         next if attachment.content_type.include?('image')
 
         {
-          url: attachment.url,
-          filename: "#{attachment.filename}_#{attachment.id}"
+          url: Rails.application.routes.url_helpers.rails_blob_url(attachment, only_path: true),
+          filename: "#{index}_#{attachment.filename}"
         }
       end
     end

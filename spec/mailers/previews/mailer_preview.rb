@@ -1,72 +1,129 @@
 class MailerPreview < ActionMailer::Preview
-  def invitation
-    Mailer.invitation(invitation: Invitation.last)
+  # run rails db:seed before using previews
+
+  def role_change
+    Mailer.role_change(kinship: Kinship.default_access.first)
   end
 
-  def existing_user_invitation
-    # recipient must be present in invitation
-    Mailer.existing_user_invitation(invitation: Invitation.last)
+  def admin_transfer
+    Mailer.admin_transfer(ownership_transfer: ownership)
   end
 
-  def email_confirmation
-    recipient = User.new first_name: 'Jake',
-                         last_name: 'Smith',
-                         email: 'jake.smith@example.com',
-                         confirmation_token: 'token'
-
-    Mailer.email_confirmation recipient: recipient
+  def admin_transfer_accepted
+    Mailer.admin_transfer_accepted(ownership_transfer: ownership)
   end
 
-  def story_published
-    publisher = User.first
-    recipient = User.last
+  def admin_transfer_rejected
+    Mailer.admin_transfer_rejected(ownership_transfer: ownership)
+  end
 
-    Mailer.story_published(
-      publisher: publisher,
-      recipient: recipient,
-      story: Story.first,
-      family: publisher.families.first
+  def community_story_deleted
+    Mailer.community_story_deleted(publication: Publication.community_type.first, user: User.first)
+  end
+
+  def shared_story_deleted
+    Mailer.shared_story_deleted(publication: Publication.shared_type.first, user: User.first)
+  end
+
+  def removed_from_community
+    Mailer.removed_from_community(kinship: Kinship.default_access.first, user: User.first)
+  end
+
+  def community_deleted
+    Mailer.community_deleted(family: Family.default_access.first, user: User.first)
+  end
+
+  def change_active_to_offline_member
+    Mailer.change_active_to_offline_member(kinship: Kinship.default_access.first, user: User.first)
+  end
+
+  def invitation_family_no_account
+    invitation = Invitation.joins(:family).find_by(recipient_id: nil, families: { access_type: :default })
+    invitation ||= Invitation.create!(
+      email: 'siema@z.rana',
+      sender: User.first,
+      family: Family.default_access.first,
+      message: "Some message from invitation. \n with a new line!! \n \n and some space between"
     )
+    Mailer.invitation(invitation: invitation)
   end
 
-  def story_updated
-    Mailer.story_updated(
-      publisher: User.first,
+  def invitation_family_account
+    invitation = Invitation.joins(:family).where.not(recipient_id: nil).find_by(families: { access_type: :default })
+    invitation ||= Invitation.create!(
+      email: 'siema1@z.rana',
+      sender: User.first,
+      family: Family.default_access.first,
       recipient: User.last,
-      story: Story.first,
-      family: publisher.families.first
+      message: "Some message from invitation. \n with a new line!! \n \n and some space between"
+    )
+    Mailer.invitation(invitation: invitation)
+  end
+
+  def invitation_my_people_account
+    invitation = Invitation.joins(:family).where.not(recipient_id: nil).find_by(families: { access_type: :personal })
+    invitation ||= Invitation.create!(
+      email: 'siema2@z.rana',
+      sender: User.first,
+      family: User.first.personal_family,
+      recipient: User.last,
+      message: "Some message from invitation. \n with a new line!! \n \n and some space between"
+    )
+    Mailer.invitation(invitation: invitation)
+  end
+
+  def invitation_my_people_no_account
+    invitation = Invitation.joins(:family).find_by(recipient_id: nil, families: { access_type: :personal })
+    invitation ||= Invitation.create!(
+      email: 'siema3@z.rana',
+      sender: User.first,
+      family: User.first.personal_family,
+      message: "Some message from invitation. \n with a new line!! \n \n and some space between"
+    )
+    Mailer.invitation(invitation: invitation)
+  end
+
+  def invitation_offline_account
+    offline_member = Family.default_access.first.offline_members.first
+    offline_member ||= Family.default_access.first.offline_members.create!(nickname: 'offline name')
+    invitation = Invitation.joins(:kinship).where.not(recipient_id: nil).find_by(kinships: { role: :offline_member })
+    invitation ||= Invitation.create(
+      email: 'siema45@z.rana',
+      sender: User.first,
+      family: Family.default_access.first,
+      recipient: User.last,
+      kinship: offline_member,
+      message: "Some message from invitation. \n with a new line!! \n \n and some space between"
+    )
+    Mailer.invitation(invitation: invitation)
+  end
+
+  def invitation_offline_no_account
+    offline_member = Family.default_access.first.offline_members.first
+    offline_member ||= Family.default_access.first.offline_members.create!(nickname: 'offline name')
+    invitation = Invitation.joins(:kinship).find_by(recipient_id: nil, kinships: { role: :offline_member })
+    invitation ||= Invitation.create!(
+      email: 'siema5@z.rana',
+      sender: User.first,
+      family: Family.default_access.first,
+      kinship: offline_member,
+      message: "Some message from invitation. \n with a new line!! \n \n and some space between"
+    )
+    Mailer.invitation(invitation: invitation)
+  end
+
+  private
+
+  def ownership
+    OwnershipTransfer.first || OwnershipTransfer.create(
+      family: admin_kinship.family,
+      new_admin: admin_kinship.family.kinships.where.not(id: admin_kinship.id).first.user,
+      old_admin: admin_kinship.user,
+      expires_at: Time.current.tomorrow
     )
   end
 
-  def time_capsule_released
-    publisher = User.first
-    recipient = User.last
-    story = Story.first
-    time_capsule = story.publications.build publish_on: 2.days.from_now
-
-    Mailer.time_capsule_released(
-      publisher: publisher,
-      recipient: recipient,
-      time_capsule: time_capsule
-    )
-  end
-
-  def story_images
-    recipient = User.last
-    story = recipient.stories.last
-
-    Mailer.story_images(
-      recipient: recipient,
-      story: story,
-      file_url: 'https://www.example.com/download.zip'
-    )
-  end
-
-  def transfer_confirmation
-    Mailer.transfer_confirmation(ownership_transfer: OwnershipTransfer.last)
-  end
-
-  def trial_will_end
-    Mailer.trial_will_end(recipient: User.first)
+  def admin_kinship
+    @admin_kinship ||= Family.default_access.first.admin_kinship
   end
 end

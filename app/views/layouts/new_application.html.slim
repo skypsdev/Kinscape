@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    meta charset="utf-8"
+    meta name="ROBOTS" content="NOODPc"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    link rel="apple-touch-icon" href="#{image_path('touch-icons/touch-icon-80x80.png')}"
+    link rel="apple-touch-icon" sizes="152x152" href="#{image_path('touch-icons/touch-icon-152x152.png')}"
+    link rel="apple-touch-icon" sizes="180x180" href="#{image_path('touch-icons/touch-icon-180x180.png')}"
+    link rel="apple-touch-icon" sizes="167x167" href="#{image_path('touch-icons/touch-icon-167x167.png')}"
+    link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-css-reset@1.4.0/dist/reset.min.css"
+    script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js" defer="true"
+    title = page_title
+    = stylesheet_link_tag :application, media: 'all'
+    = csrf_meta_tags
+    = render 'analytics'
+  body class="#{yield (:body_class)}"
+    - if Rails.env.production?
+      = render 'apiary_analytics'
+    = yield

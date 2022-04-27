@@ -5,7 +5,7 @@
         {{ member.nickname || member.name }}
       </h1>
       <h2 class="profile-details__subheading mt-3 ml-sm-2">
-        {{ member.community.name }} - {{ capitalizeFirstLetter(member.userType) }}
+        {{ member.community.name }} -  {{ $i18n.t(`families.member_roles.${member.role}`) }}
       </h2>
       <v-row class="mt-8 ml-sm-1">
         <v-col cols="12" md="4">
@@ -80,9 +80,6 @@ export default {
         size: 'small'
       })
     },
-    capitalizeFirstLetter(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
   }
 }
 </script>

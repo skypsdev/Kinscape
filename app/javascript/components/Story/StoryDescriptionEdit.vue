@@ -80,11 +80,13 @@ export default {
     saveStoryChanges: debounce((ctx) => {
       const {story, form, $refs, updateStory} = ctx
       updateStory({
-        id: story.id,
+        id: story.publication.id,
         form: {
-          ...form,
-          ...$refs.DateRangPicker.form,
-          categories: $refs.Categories.selectedItems
+          story: {
+            ...form,
+            ...$refs.DateRangPicker.form,
+            categories: $refs.Categories.selectedItems
+          }
         }
       })
     }, 700)

@@ -13,7 +13,10 @@
     outlined
     multiple
   >
-    <template v-slot:no-data>
+    <template
+      v-if="isNew"
+      v-slot:append-item
+    >
       <v-list-item>
         <div class="combobox__item--first">
           <v-chip
@@ -24,13 +27,16 @@
             {{ search }}
           </v-chip>
           <v-spacer/>
-          <span
+          <a
             @click="$refs.comboboxInput.blur()"
             class="combobox__create"
             v-text="$i18n.t('stories.create_category')"
           />
         </div>
       </v-list-item>
+    </template>
+    <template v-slot:no-data>
+      <div />
     </template>
     <template v-slot:selection="{ attrs, item, parent, selected }">
       <v-chip
@@ -69,7 +75,6 @@
     </template>
   </v-combobox>
 </template>
-
 <script>
 export default {
   props: {
@@ -92,11 +97,17 @@ export default {
   computed: {
     selectedItems() {
       return this.model.map((item) => item.text)
+    },
+    isNew() {
+      return this.search && !this.items.find(
+        ({ text }) => text.toLowerCase() === this.search.toLowerCase()
+      )
     }
   },
   watch: {
     model (val, prev) {
-      if (val.length === prev.length) return
+      if (val.length === prev.length || this.duplicateTag(val)) return
+      val = this.trimTags(val)
       this.model = val.map(v => {
         if (typeof v === 'string') {
           v = {
@@ -119,8 +130,9 @@ export default {
   methods: {
     filter (item, queryText, itemText) {
       if (item.header) return false
+      if (!item.number) return false
 
-      const hasValue = val => val != null ? val : ''
+      const hasValue = val => val !== null ? val : ''
 
       const text = hasValue(itemText)
       const query = hasValue(queryText)
@@ -129,10 +141,35 @@ export default {
         .toLowerCase()
         .indexOf(query.toString().toLowerCase()) > -1
     },
+    trimTags (val) {
+      let tagData = []
+      val.forEach(el => {
+        if (typeof el !== 'string') {
+          tagData.push(el)
+        }
+        else if (el.trim() !== '') {
+          tagData.push(el.trim())
+        }
+      })
+      return tagData
+    },
+    duplicateTag (val) {
+      val = this.trimTags(val)
+      let newTag = val[val.length - 1]
+      if (typeof newTag === 'string'){
+        for(let i = 0; i < val.length - 1; i++) {
+          if(val[i].text === newTag) {
+            val.pop()
+            this.model = val
+            return true
+          }
+        }
+      }
+      return false
+    }
   },
 }
 </script>
-
 <style lang="scss" scoped>
   .combobox {
     &::v-deep {

@@ -1,12 +1,7 @@
 <template>
   <DialogContent>
-    <template #close-btn="{handleClose}">
-      <v-btn
-        icon
-        min-height="50"
-        min-width="50"
-        @click="handleClose"
-      >
+    <template #close-btn="{ handleClose }">
+      <v-btn icon min-height="50" min-width="50" @click="handleClose">
         <v-img
           max-width="25.67"
           :src="require('@/assets/images/vault/clear.svg')"
@@ -18,21 +13,18 @@
     <template v-slot:content>
       <div class="move-dialog__content mx-auto">
         <div class="move-dialog__header">
-          <h3> {{ $i18n.t('vaults.move_files_to_box_modal.title_one') }}</h3>
-          <h4> {{ $i18n.t('vaults.move_files_to_box_modal.sub_title') }}</h4>
+          <h3>{{ $i18n.t("vaults.move_files_to_box_modal.title_one") }}</h3>
+          <h4>{{ $i18n.t("vaults.move_files_to_box_modal.sub_title") }}</h4>
         </div>
         <div class="move-dialog__items">
-          <div
-            class="copy-items__header"
-            v-if="activeBox"
-          >
+          <div class="copy-items__header" v-if="activeBox">
             <button @click="backToParentBox">
               <v-img
                 max-width="16"
                 :src="require('@/assets/images/vault/arrow_back.svg')"
               />
             </button>
-            <span>{{activeBox.attributes.name}}</span>
+            <span>{{ activeBox.attributes.name }}</span>
           </div>
           <VaultMoveDialogBoxesList :open-box="openBox" />
         </div>
@@ -50,7 +42,7 @@
           :disabled="isLoading"
           @click="moveToSelectedBox"
         >
-          {{ $i18n.t('vaults.move_files_to_box_modal.move') }}
+          {{ $i18n.t("vaults.move_files_to_box_modal.move") }}
         </v-btn>
       </div>
     </template>
@@ -90,23 +82,25 @@ export default {
       const { length } = this.activeBox?.attributes.parentBoxes
 
       return this.activeBox?.attributes.parentBoxes[length - 1].id
+    },
+    boxId() {
+      const { boxId } = this.$route.params
+      return boxId || null
     }
   },
   created() {
-    const { boxId } = this.$route.params
-
-    if (boxId) {
-      this.loadInfo(boxId)
+    if (this.boxId) {
+      this.loadInfo(this.boxId)
     }
 
-    this.loadItems(boxId)
+    this.loadItems(this.boxId)
   },
   methods: {
     ...mapActions({
       closeDialog: 'layout/closeDialog',
       setSnackbar: 'layout/setSnackbar',
       setViewVaultMode: 'vaults/setViewVaultMode',
-      getVault: 'vaults/getVault',
+      getVaultItems: 'vaults/getVaultItems',
       getBox: 'vaults/getBox',
       clearSelectedAttachments: 'vaults/clearSelectedAttachments',
       clearVault: 'vaults/clearVault',
@@ -122,11 +116,12 @@ export default {
       this.getActionDialogBoxInfo({ vaultId: this.vaultId, boxId })
     },
     async moveToSelectedBox() {
+      const { boxId, vaultId } = this
       try {
         this.isLoading = true
 
         const model = {
-          vaultId: this.vaultId,
+          vaultId: vaultId,
           boxId: this?.activeBox?.id || null,
           ids: this.selectedIds.filesIds
         }
@@ -139,6 +134,10 @@ export default {
         this.closeDialog()
 
         this.clearVault()
+
+        // refetch data
+        if (this.insideBoxView) this.getBox({ vaultId, boxId })
+        else this.getVaultItems({ vaultId, params: { page: 1 } })
       } finally {
         this.isLoading = false
       }

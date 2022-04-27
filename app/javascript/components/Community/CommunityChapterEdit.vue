@@ -27,10 +27,10 @@
       </v-btn>
     </div>
 
-    <div class="chapter-edit-container">
-      <rich-editor
+    <div>
+      <RichEditor
           :current-user="currentUser"
-          :input="'section_content_' + chapter.id"
+          :input-name="'section_content_' + chapter.id"
           :value="richEditorValue"
           :upload-in-progress="false"
           :families="[community]"
@@ -44,7 +44,7 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
-import RichEditor from '../shared/rich-editor'
+import RichEditor from '../shared/RichEditor'
 import debounce from "lodash/debounce";
 
 export default {
@@ -90,7 +90,7 @@ export default {
     }),
     openChapterDeleteDialog() {
       this.setDialog({
-        title: 'Delete Chapter',
+        title: this.$i18n.t('stories.chapters.delete'),
         component: 'ChapterDeleteDialog',
         data: {
           section: this.chapter,

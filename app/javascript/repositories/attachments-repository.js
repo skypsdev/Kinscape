@@ -6,8 +6,11 @@ const parent = 'vaults'
 const resource = 'attachments'
 
 export default {
-  getVault(id, params = {}) {
-    return Repository.get(`/${parent}/${id}`, qs.stringify(decamelizeKeys(params), { arrayFormat: 'brackets' }))
+  getVaultItems(id, params = {}) {
+    return Repository.get(`/${parent}/${id}/items`, qs.stringify(decamelizeKeys(params), { arrayFormat: 'brackets' }))
+  },
+  getVault(id) {
+    return Repository.get(`/${parent}/${id}`)
   },
   getVaults(params = {}) {
     return Repository.get(`/${parent}`, qs.stringify(decamelizeKeys(params), { arrayFormat: 'brackets' }))
@@ -42,7 +45,4 @@ export default {
       { box_id: boxId, ids, new_vault_id: newVaultId }
     )
   },
-  getConfig(parentId) {
-    return Repository.get(`/${parent}/${parentId}/${resource}/upload_config`)
-  }
 }

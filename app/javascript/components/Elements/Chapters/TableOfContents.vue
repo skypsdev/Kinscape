@@ -1,8 +1,10 @@
 <template>
   <div
+      v-bind="$attrs"
       id="table-of-contents"
       class="table-of-contents d-flex flex-column overflow-y-auto"
   >
+  
     <h4
         v-if="hasItems"
         class="table-of-contents-title text-left mb-1">
@@ -39,27 +41,43 @@
         </li>
       </ul>
     </div>
-    <AddChapter
-        v-if="!isEditable && addChapterEnabled"
-        :view-type="dataType"
-        :position="links.length"
-        class="mb-3 align-self-center"
-    />
+
+    <Tooltip
+      v-if="isEditable || addChapterEnabled"
+      position="bottom right"
+      name="addChapter"
+      :icons="['mdi-plus-circle-outline']"
+      :title="$i18n.t('tooltips.add_chapter_title')"
+      :description="$i18n.t('tooltips.add_chapter_description')"
+    >
+      <template #activator="{ attrs }">
+        <AddChapter
+          v-bind="attrs"
+          :view-type="dataType"
+          :position="links.length"
+          :edit-mode="isEditMode"
+          class="mb-3 align-self-center"
+        />
+      </template>
+    </Tooltip>
   </div>
 </template>
 
 <script>
 import {mapActions, mapState} from 'vuex'
-import filters from '../../../utils/filters'
 import debounce from 'lodash/debounce'
-import AddChapter from "./AddChapter";
+
+import AddChapter from "./AddChapter"
+import Tooltip from '@/components/Elements/Tooltip.vue'
+import filters from '@/utils/filters'
 
 export default {
   filters: {
     truncate: filters.truncate,
   },
   components: {
-    AddChapter
+    AddChapter,
+    Tooltip
   },
   props: {
     isEditMode: {
@@ -86,7 +104,7 @@ export default {
       storyChapters: store => store.sections.all
     }),
     links() {
-      const links = this[this.dataType].content.links
+      const links = this?.[this.dataType]?.content?.links ?? []
       return links.sort((curr, prev) => curr.position - prev.position)
     },
     hasItems() {
@@ -110,8 +128,8 @@ export default {
       storyLoadSections: 'sections/loadNext',
       memberSetActiveChapter: 'members/setActiveChapter',
       communitySetActiveChapter: 'families/setCommunityActiveChapter',
-      storySetActiveChapter: 'stories/setStoryActiveChapter',
       memberUpdateChapter: 'members/updateChapter',
+      storySetActiveChapter: 'stories/setStoryActiveChapter',
       communityUpdateChapter: 'families/updateChapter',
       storyUpdateChapter: 'stories/updateChapter'
     }),
@@ -121,16 +139,18 @@ export default {
     async updateSectionPosition (event) {
       if (this.dataType === 'story') {
         while (this.storyChapters.length < (event.oldIndex + 1)) {
-          await this.storyLoadSections(this.story.id)
+          await this.storyLoadSections({id: this.story.publication.id})
         }
       }
       const section = this[`${this.dataType}Chapters`][event.oldIndex]
       section.attributes.position = event.newIndex
+      section.attributes.title = this[this.dataType].content.links[event.oldIndex].title
       section.attributes.object_type = this.dataType === 'member' ? 'Kinship' : 'Family'
       section.attributes.object_id = this[this.dataType].id
 
       this[`${this.dataType}Chapters`].splice(event.newIndex, 0,
           this[`${this.dataType}Chapters`].splice(event.oldIndex, 1)[0])
+
       this.saveChapterChanges(this, section)
     },
     saveChapterChanges: debounce((ctx, section) => {
@@ -147,6 +167,11 @@ export default {
 .table-of-contents {
   width: 100%;
   max-width: 208px;
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 .table-of-contents-title {
   font-family: Enriqueta;
@@ -156,12 +181,10 @@ export default {
   letter-spacing: -0.02em;
 }
 .table-of-contents-wrapper {
+  flex-grow: 1;
   width: 100%;
   background: $color-dark-white;
   padding: 8px 8px 8px 16px;
-  &--editable {
-    padding: 8px 8px 8px 46px;
-  }
   position: relative;
   a {
     cursor: pointer;

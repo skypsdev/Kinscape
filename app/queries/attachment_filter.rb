@@ -5,7 +5,7 @@ class AttachmentFilter < ApplicationQuery
                                             .includes(user: :kinships)
                                             .where(
                                               record_type: 'Vault',
-                                              record_id: params[:id],
+                                              record_id: params[:vault_id],
                                               box_id: params[:box_id].presence
                                             )
   end

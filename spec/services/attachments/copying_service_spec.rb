@@ -21,10 +21,8 @@ describe Attachments::CopyingService do
   let(:the_hynemans) { create :family, users: [jamie] }
   let(:mythbusters) { create :family, users: [jamie, adam] }
 
-  let(:mythbusters_vault) { create :vault, owner: mythbusters }
+  let(:mythbusters_vault) { mythbusters.vault }
   let(:mythbusters_box) { create :box, vault: mythbusters_vault }
-
-  let(:the_hynemans_vault) { create :vault, owner: the_hynemans }
 
   let(:jamie_blob_1) { create_file_blob }
   let(:jamie_blob_2) { create_file_blob(filename: 'image_2.png') }
@@ -75,12 +73,17 @@ describe Attachments::CopyingService do
     let(:vault) { jamie.vault }
     let(:new_vault) { jamie.vault }
     let(:current_user) { jamie }
-    let(:attachments) { [jamie_attachment_1, jamie_attachment_2] }
+    let(:attachments) { [jamie_attachment_1] }
 
-    it 'returns :same_vault error' do
-      expect { result }.to avoid_changing { mythbusters_vault.reload.files.size }
-        .and(avoid_changing { mythbusters_box.reload.attachments.count })
-      expect(service.errors).to eq ['Sharing to the same vault is not allowed.']
+    before { jamie_attachment_1 }
+
+    it 'copies files' do
+      expect { result }.to change { vault.reload.files.size }
+        .by(1)
+      expect(new_vault.files.attachments.last).to have_attributes(
+        copy_number: 1,
+        title: "#{jamie_attachment_1.filename.base}(1)"
+      )
     end
   end
 
@@ -90,18 +93,21 @@ describe Attachments::CopyingService do
     let(:current_user) { jamie }
     let(:attachments) { [jamie_attachment_1, jamie_attachment_2] }
 
-    before do
+    let(:existing_attachment) do
       described_class.new(
         vault: vault,
         new_vault: new_vault,
         current_user: current_user,
         attachments: [jamie_attachment_1],
         params: { ids: [jamie_attachment_1.id], box_id: box_id }
-      ).call
+      ).call.first
     end
 
     it 'shares same files to family vault' do
-      expect { result }.to change { mythbusters_vault.reload.files.size }.by(1)
+      expect { result }.to change { mythbusters_vault.reload.files.size }
+        .by(2)
+        .and avoid_changing { existing_attachment.reload.title }
+      expect(existing_attachment.title).to eq(nil)
     end
   end
 
@@ -113,7 +119,7 @@ describe Attachments::CopyingService do
     let(:jamie_attachment_1) { create :active_storage_attachment, record: the_hynemans, blob: jamie_blob_1 }
     let(:jamie_attachment_2) { create :active_storage_attachment, record: the_hynemans, blob: jamie_blob_2 }
 
-    it 'returns :family_to_family error' do
+    it 'shares files to another family vault' do
       expect { result }.to change { mythbusters_vault.reload.files.size }.by(2)
     end
   end

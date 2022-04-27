@@ -1,4 +1,0 @@
-:default:
-  api_key: "<%= ENV['FILEPICKER_API_KEY'] %>"
-test:
-  api_key: 'fake_filepicker_api_key'

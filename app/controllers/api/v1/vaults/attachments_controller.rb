@@ -1,5 +1,3 @@
-require 'filestack_config'
-
 module Api
   module V1
     module Vaults
@@ -11,7 +9,7 @@ module Api
             params: create_params,
             current_user: current_user
           )
-          response_service.render(VaultItemSerializer, attachment)
+          response_service.render_collection(VaultItemSerializer, attachment)
         end
 
         def update
@@ -41,15 +39,10 @@ module Api
           response_service.render_no_content
         end
 
-        def upload_config
-          # TODO: remove endpoint
-          render json: FilestackConfig.upload
-        end
-
         private
 
         def create_params
-          params.permit(:box_id, :file)
+          params.permit(:box_id, files: [:signed_id, :title])
         end
 
         def share_params

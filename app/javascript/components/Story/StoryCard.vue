@@ -73,8 +73,11 @@
           class="story-card__avatar"
           :src="story.publication.attributes.userAvatar"
         />
-        <span v-text="story.attributes.title" />
-
+        <span
+          class="story-title"
+          :data-story-id="story.publication.id"
+          v-text="story.attributes.title"
+        />
       </v-card-title>
     </v-card >
   </v-hover>
@@ -143,7 +146,7 @@ export default {
     },
     removeAppreciation() {
       this.appreciations.loading = true
-      AppreciationsRepository.deleteAppreciation(this.story.publication.id, this.appreciations.id)
+      AppreciationsRepository.deleteAppreciation(this.appreciations.id)
         .then(()=> {
           this.appreciations.count = this.appreciations.count -1
           this.appreciations.id = ''
@@ -157,10 +160,11 @@ export default {
     },
     createAppreciation() {
       this.appreciations.loading = true
-      AppreciationsRepository.createAppreciation(this.story.publication.id, {
+      AppreciationsRepository.createAppreciation({
         reaction: 'smile',
-        appreciableId: this.story.id,
-        appreciableType: 'Story'
+        appreciableId: this.story.publication.id,
+        appreciableType: 'Publication',
+        publicationId: this.story.publication.id
       })
         .then((res)=> {
           this.appreciations.count = this.appreciations.count +1

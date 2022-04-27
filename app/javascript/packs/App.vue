@@ -22,13 +22,20 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
+import { camelizeKeys } from 'humps'
 
 import MobileNavigation from '../components/Layout/MobileNavigation'
 import Header from '../components/Layout/Header'
 import Footer from '../components/Layout/Footer'
 import Dialog from '../components/Layout/Dialog/Dialog'
 import Snackbar from '../components/Layout/Snackbar'
+import { on } from '@/utils/functions'
 
+on(window, 'beforeunload', () => {
+  ['tour','fromPreviousTourStep','fromMyLifeTourStep','tour-stories','tour-community'].forEach(key=>{
+    localStorage.removeItem(key)
+    })
+})
 export default {
   components: {MobileNavigation, Header, Footer, Dialog, Snackbar},
   props: {
@@ -45,18 +52,41 @@ export default {
       isLoading: state => state.core.isLoading
     }),
   },
-  watch: {
-    currentUser: {
-      immediate: true,
-      deep: true,
-      handler(user) {
-        this.initApp(user)
+  async mounted () {
+    await this.initApp(this.currentUser)
+
+    this.loadFamilies( null, { root: true })
+
+    const { data } = camelizeKeys(this.currentUser)
+    if (data.attributes.onboarding.pending) {
+      this.showTooltips(false)
+
+      switch (data.attributes.registrationMethod) {
+      case 'member':
+        this.$router.push({ 'name': 'communities' })
+        break;
+      case 'follower':
+        this.$router.push({ 'name': 'stories' })
+        break;
+      default:
+        this.$router.push({ 'name': 'myProfile' })
+        break;
       }
+
+      this.setDialog({
+        component: 'WelcomeDialog',
+        isToolbarHidden: true,
+        size: 'big',
+        persistent: true
+      })
     }
   },
   methods: {
     ...mapActions({
-      initApp: 'core/initApp'
+      initApp: 'core/initApp',
+      setDialog: 'layout/setDialog',
+      showTooltips: 'core/showTooltips',
+      loadFamilies: 'families/loadQuickList'
     }),
     toggleMainMenu() {
       this.showMainMenu = !this.showMainMenu

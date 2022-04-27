@@ -8,16 +8,16 @@ module Api
           :send_message,
           params: {
             sender: current_user,
+            subject: request_params[:subject],
             message: request_params[:message],
             family: family,
-            recipients: recipient_emails,
-            recipients_name: kinships.map(&:nickname).join(', ')
+            recipients: recipient_emails
           }
         )
         ::MailerService.call(
           :sender_message_send,
           params: {
-            sender: current_user,
+            subject: request_params[:subject],
             message: request_params[:message],
             family: family,
             recipient: ["#{current_user.name} <#{current_user.email}>"],
@@ -38,19 +38,19 @@ module Api
       end
 
       def family
-        @family ||= Family.find_by_uid!(request_params[:family_id])
+        @family ||= Family.find(request_params[:family_id])
       end
 
       def recipient_emails
         kinships.map do |kinship|
-          "#{kinship.nickname} <#{kinship.user.email}>" # TODO: email from user or kinship?
+          "#{kinship.nickname} <#{kinship.user.email}>"
         end
       end
 
       def request_params
         params
           .require(:request)
-          .permit(:message, :family_id, kinships_ids: [])
+          .permit(:subject, :message, :family_id, kinships_ids: [])
       end
     end
   end
