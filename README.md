@@ -3,14 +3,6 @@ Kinscape
 
 ### Prerequisites
 
-- Copy repository with
-
-      git clone https://<github personal access token>@github.com/kinscape/kinscape.git
-
-- Add github personal access token to your terminal config (eg .bash.rc) 
-
-      export BUNDLE_GITHUB__COM=ghp_b7....
-
 - Rails and Ruby installation guide - [GO RAILS](https://gorails.com/setup)
 - Install Ruby version which is specified in `.ruby-version` file in root directory
 - Use bundler >= 2.1.4
